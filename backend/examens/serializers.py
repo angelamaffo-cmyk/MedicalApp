@@ -1,0 +1,8 @@
+from rest_framework import serializers
+from datetime import date
+from .models import Examen
+
+class ExamenSerializer(serializers.ModelSerializer):
+    patient_nom=serializers.CharField(source='consultation.patient.nom', read_only=True)
+    pattient_prenom=serializers.CharField(source='consultation.patient.nom', read_only=True)
+    consultation_date=serializers.DateField(source='consultation.date_consultation', read_only=True)
