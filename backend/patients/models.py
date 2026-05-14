@@ -1,6 +1,4 @@
 from django.db import models
-
-# Create your models here.
 from django.contrib.auth.models import User
 
 
@@ -17,14 +15,7 @@ class Patient(models.Model):
         ('O+', 'O+'), ('O-', 'O-'),
     ]
 
-    # Médecin propriétaire du dossier
-    personnel_medical = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='patients'
-    )
-
-    # Informations personnelles
+    personnel_medical = models.ForeignKey(User, on_delete=models.CASCADE, related_name='patients')
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100)
     sexe = models.CharField(max_length=1, choices=SEXE_CHOICES)
@@ -32,12 +23,9 @@ class Patient(models.Model):
     telephone = models.CharField(max_length=20)
     adresse = models.TextField(blank=True)
     groupe_sanguin = models.CharField(max_length=3, choices=GROUPE_SANGUIN_CHOICES)
-
-    # Contact d'urgence
     contact_urgence_nom = models.CharField(max_length=200, blank=True)
     contact_urgence_telephone = models.CharField(max_length=20, blank=True)
-
-    # Dates
+    est_actif = models.BooleanField(default=True)
     date_enregistrement = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)
 

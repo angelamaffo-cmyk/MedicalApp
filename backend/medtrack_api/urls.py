@@ -29,5 +29,6 @@ urlpatterns = [
     # path('api/', include('examens.urls')),
     # path('api/', include('resultats.urls')),
     path('api/', include('comptes.urls')),
-
+    path('api/', include('services.urls')),
+    path('api/', include('hospitalisations.urls')),
 ]

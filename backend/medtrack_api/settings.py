@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'examens',
     'resultats',
     'comptes',
+    'services',
+    'hospitalisations',
 ]
 
 MIDDLEWARE = [
