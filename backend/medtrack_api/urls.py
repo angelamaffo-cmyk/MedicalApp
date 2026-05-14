@@ -28,5 +28,6 @@ urlpatterns = [
      path('api/', include('consultations.urls')),
     # path('api/', include('examens.urls')),
     # path('api/', include('resultats.urls')),
+    path('api/', include('comptes.urls')),
 
 ]
