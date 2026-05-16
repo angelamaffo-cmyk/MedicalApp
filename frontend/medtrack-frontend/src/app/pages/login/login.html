@@ -1,0 +1,135 @@
+<div class="login-wrapper">
+
+  <!-- Partie gauche — Illustration -->
+  <div class="login-left d-none d-lg-flex">
+    <div class="left-content text-white text-center">
+      <i class="bi bi-heart-pulse-fill left-icon"></i>
+      <h2 class="fw-bold mt-3">MedTrack</h2>
+      <p class="left-subtitle">La santé de vos patients, notre priorité</p>
+      <div class="left-features mt-4">
+        <div class="left-feature-item">
+          <i class="bi bi-check-circle-fill me-2"></i>
+          Gestion complète des dossiers patients
+        </div>
+        <div class="left-feature-item">
+          <i class="bi bi-check-circle-fill me-2"></i>
+          Suivi des consultations en temps réel
+        </div>
+        <div class="left-feature-item">
+          <i class="bi bi-check-circle-fill me-2"></i>
+          Sécurité et confidentialité garanties
+        </div>
+        <div class="left-feature-item">
+          <i class="bi bi-check-circle-fill me-2"></i>
+          Accès réservé au personnel médical
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Partie droite — Formulaire -->
+  <div class="login-right">
+
+    <!-- Bouton retour accueil -->
+    <a routerLink="/accueil" class="btn-retour">
+      <i class="bi bi-arrow-left me-1"></i> Retour à l'accueil
+    </a>
+
+    <div class="login-form-wrapper">
+
+      <!-- Logo mobile uniquement -->
+      <div class="text-center d-lg-none mb-4">
+        <div class="login-logo-mobile">
+          <i class="bi bi-heart-pulse-fill"></i>
+        </div>
+        <h2 class="fw-bold text-primary">MedTrack</h2>
+      </div>
+
+      <h3 class="fw-bold mb-1">Connexion</h3>
+      <p class="text-muted mb-4">Accédez à votre espace médical sécurisé</p>
+
+      <!-- Message d'erreur -->
+      <div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+        <!-- Nom d'utilisateur -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-person me-1 text-primary"></i>Nom d'utilisateur
+          </label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            [class.is-invalid]="username?.invalid && username?.touched"
+            formControlName="username"
+            placeholder="Entrez votre nom d'utilisateur"
+          />
+          <div class="invalid-feedback">
+            <span *ngIf="username?.errors?.['required']">Ce champ est requis.</span>
+            <span *ngIf="username?.errors?.['minlength']">Minimum 3 caractères.</span>
+          </div>
+        </div>
+
+        <!-- Mot de passe -->
+        <div class="mb-4">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-lock me-1 text-primary"></i>Mot de passe
+          </label>
+          <div class="input-group input-group-lg">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              class="form-control"
+              [class.is-invalid]="password?.invalid && password?.touched"
+              formControlName="password"
+              placeholder="Entrez votre mot de passe"
+            />
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="togglePassword()"
+            >
+              <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
+            </button>
+            <div class="invalid-feedback">
+              <span *ngIf="password?.errors?.['required']">Ce champ est requis.</span>
+              <span *ngIf="password?.errors?.['minlength']">Minimum 6 caractères.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bouton connexion -->
+        <button
+          type="submit"
+          class="btn btn-primary btn-lg w-100 fw-bold"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!isLoading" class="bi bi-box-arrow-in-right me-2"></i>
+          {{ isLoading ? 'Connexion en cours...' : 'Se connecter' }}
+        </button>
+
+      </form>
+
+      <div class="text-center mt-4">
+        <small class="text-muted">
+          <i class="bi bi-shield-lock me-1"></i>
+          Accès réservé au personnel médical autorisé
+        </small>
+      </div>
+
+      <hr class="my-4">
+
+      <div class="text-center">
+        <small class="text-muted">
+          Institut Universitaire Saint Jean — MedTrack © 2026
+        </small>
+      </div>
+
+    </div>
+  </div>
+
+</div>

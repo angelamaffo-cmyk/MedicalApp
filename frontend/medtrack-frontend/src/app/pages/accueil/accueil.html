@@ -1,0 +1,144 @@
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark" style="background: rgba(0,0,0,0.2); position: absolute; width: 100%; z-index: 10;">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2">
+      <i class="bi bi-heart-pulse-fill text-white fs-4"></i>
+      <span class="fw-bold fs-4">MedTrack</span>
+    </a>
+    <button class="btn btn-light fw-semibold px-4" (click)="allerLogin()">
+      <i class="bi bi-box-arrow-in-right me-2"></i>Connexion
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero-section">
+  <div class="hero-overlay"></div>
+  <div class="container hero-content text-white text-center">
+    <div class="hero-badge mb-3">
+      <i class="bi bi-shield-check me-2"></i>Système de gestion médicale sécurisé
+    </div>
+    <h1 class="hero-title">Bienvenue sur <span class="text-warning">MedTrack</span></h1>
+    <p class="hero-subtitle">
+      La plateforme intelligente de gestion des patients, consultations,
+      examens et hospitalisations pour les professionnels de santé.
+    </p>
+    <button class="btn btn-warning btn-lg fw-bold px-5 py-3 mt-3" (click)="allerLogin()">
+      <i class="bi bi-arrow-right-circle me-2"></i>Accéder à la plateforme
+    </button>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">Tout ce dont vous avez besoin</h2>
+      <p class="text-muted">Une solution complète pour la gestion médicale</p>
+    </div>
+
+    <div class="row g-4">
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon bg-primary">
+            <i class="bi bi-people-fill"></i>
+          </div>
+          <h5 class="fw-bold">Gestion des patients</h5>
+          <p class="text-muted">Créez et gérez les dossiers patients en toute sécurité. Historique complet et traçabilité garantie.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon bg-success">
+            <i class="bi bi-clipboard2-pulse-fill"></i>
+          </div>
+          <h5 class="fw-bold">Consultations</h5>
+          <p class="text-muted">Enregistrez les consultations, diagnostics et traitements pour chaque patient.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon bg-warning">
+            <i class="bi bi-droplet-fill"></i>
+          </div>
+          <h5 class="fw-bold">Examens médicaux</h5>
+          <p class="text-muted">Prescrivez et suivez les examens biologiques, radiologiques et autres analyses.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon bg-danger">
+            <i class="bi bi-hospital-fill"></i>
+          </div>
+          <h5 class="fw-bold">Hospitalisations</h5>
+          <p class="text-muted">Gérez les admissions, lits et services. Suivez l'évolution des patients hospitalisés.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon bg-info">
+            <i class="bi bi-person-badge-fill"></i>
+          </div>
+          <h5 class="fw-bold">Gestion du personnel</h5>
+          <p class="text-muted">Médecins et infirmiers avec des accès différenciés selon leurs responsabilités.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon bg-secondary">
+            <i class="bi bi-shield-lock-fill"></i>
+          </div>
+          <h5 class="fw-bold">Sécurité maximale</h5>
+          <p class="text-muted">Authentification JWT, données chiffrées. Chaque médecin accède uniquement à ses patients.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-section py-5">
+  <div class="container">
+    <div class="row text-center g-4">
+      <div class="col-md-3">
+        <div class="stat-item">
+          <h2 class="stat-number text-primary">100%</h2>
+          <p class="text-muted">Sécurisé</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-item">
+          <h2 class="stat-number text-success">24/7</h2>
+          <p class="text-muted">Disponible</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-item">
+          <h2 class="stat-number text-warning">∞</h2>
+          <p class="text-muted">Traçabilité</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-item">
+          <h2 class="stat-number text-danger">0</h2>
+          <p class="text-muted">Perte de données</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer-section py-4 text-center text-white">
+  <p class="mb-0">
+    <i class="bi bi-heart-pulse-fill me-2"></i>
+    MedTrack © 2026 — Institut Universitaire Saint Jean | Développé par Angela Maffo
+  </p>
+</footer>

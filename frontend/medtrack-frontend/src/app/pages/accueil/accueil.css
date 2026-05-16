@@ -1,0 +1,115 @@
+/* HERO */
+.hero-section {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0d6efd 0%, #084298 50%, #052c65 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+  top: -100px;
+  right: -100px;
+}
+
+.hero-section::after {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+  bottom: -100px;
+  left: -100px;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 8rem 1rem 4rem;
+}
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 50px;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  backdrop-filter: blur(10px);
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+/* FEATURES */
+.features-section {
+  background: #f8f9fa;
+}
+
+.feature-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  height: 100%;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+.feature-icon {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.2rem;
+}
+
+.feature-icon i {
+  font-size: 1.8rem;
+  color: white;
+}
+
+/* STATS */
+.stats-section {
+  background: white;
+  border-top: 1px solid #e9ecef;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+}
+
+/* FOOTER */
+.footer-section {
+  background: linear-gradient(135deg, #0d6efd, #084298);
+}

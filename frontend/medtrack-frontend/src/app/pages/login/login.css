@@ -1,0 +1,148 @@
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+}
+
+/* ── Partie gauche ── */
+.login-left {
+  width: 45%;
+  background: linear-gradient(135deg, #0d6efd 0%, #084298 60%, #052c65 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-left::before {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+  top: -100px;
+  right: -100px;
+}
+
+.login-left::after {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+  bottom: -80px;
+  left: -80px;
+}
+
+.left-content {
+  position: relative;
+  z-index: 2;
+}
+
+.left-icon {
+  font-size: 5rem;
+  color: white;
+  opacity: 0.9;
+}
+
+.left-subtitle {
+  font-size: 1.1rem;
+  opacity: 0.85;
+  margin-top: 0.5rem;
+}
+
+.left-features {
+  text-align: left;
+  margin-top: 2rem;
+}
+
+.left-feature-item {
+  padding: 0.6rem 0;
+  font-size: 0.95rem;
+  opacity: 0.9;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.left-feature-item:last-child {
+  border-bottom: none;
+}
+
+/* ── Partie droite ── */
+.login-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f8f9fa;
+  padding: 2rem;
+  position: relative;
+}
+
+.login-form-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 450px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+/* ── Bouton retour ── */
+.btn-retour {
+  display: inline-flex;
+  align-items: center;
+  color: #0d6efd;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem 0;
+  transition: gap 0.2s;
+}
+
+.btn-retour:hover {
+  gap: 6px;
+  color: #084298;
+}
+
+/* ── Logo mobile ── */
+.login-logo-mobile {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #0d6efd, #084298);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.login-logo-mobile i {
+  font-size: 1.8rem;
+  color: white;
+}
+
+/* ── Formulaire ── */
+.form-control {
+  border-radius: 8px;
+  border: 1.5px solid #dee2e6;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+.btn-primary {
+  border-radius: 8px;
+  padding: 0.75rem;
+  transition: transform 0.1s;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
