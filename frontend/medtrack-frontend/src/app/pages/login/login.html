@@ -1,135 +1,116 @@
-<div class="login-wrapper">
+<div class="login-page">
 
-  <!-- Partie gauche — Illustration -->
-  <div class="login-left d-none d-lg-flex">
-    <div class="left-content text-white text-center">
-      <i class="bi bi-heart-pulse-fill left-icon"></i>
-      <h2 class="fw-bold mt-3">MedTrack</h2>
-      <p class="left-subtitle">La santé de vos patients, notre priorité</p>
-      <div class="left-features mt-4">
-        <div class="left-feature-item">
-          <i class="bi bi-check-circle-fill me-2"></i>
-          Gestion complète des dossiers patients
+  <!-- Cercles décoratifs arrière-plan -->
+  <div class="circle circle-1"></div>
+  <div class="circle circle-2"></div>
+  <div class="circle circle-3"></div>
+
+  <!-- Carte principale -->
+  <div class="login-card">
+
+    <!-- Partie gauche -->
+    <div class="login-left">
+      <div class="left-content">
+        <div class="logo-left mb-4">
+          <i class="bi bi-heart-pulse-fill"></i>
+          <span>MedTrack</span>
         </div>
-        <div class="left-feature-item">
-          <i class="bi bi-check-circle-fill me-2"></i>
-          Suivi des consultations en temps réel
-        </div>
-        <div class="left-feature-item">
-          <i class="bi bi-check-circle-fill me-2"></i>
-          Sécurité et confidentialité garanties
-        </div>
-        <div class="left-feature-item">
-          <i class="bi bi-check-circle-fill me-2"></i>
-          Accès réservé au personnel médical
-        </div>
+        <h2 class="left-title">Gestion Médicale Intelligente</h2>
+        <ul class="features-list">
+          <li><i class="bi bi-graph-up-arrow"></i> Suivi des patients en temps réel</li>
+          <li><i class="bi bi-calendar2-check"></i> Gestion des consultations</li>
+          <li><i class="bi bi-droplet-half"></i> Examens et résultats</li>
+          <li><i class="bi bi-hospital"></i> Gestion des hospitalisations</li>
+          <li><i class="bi bi-shield-check"></i> Sécurité et confidentialité</li>
+        </ul>
       </div>
+      <!-- Points décoratifs -->
+      <div class="dots-grid"></div>
     </div>
-  </div>
 
-  <!-- Partie droite — Formulaire -->
-  <div class="login-right">
+    <!-- Partie droite -->
+    <div class="login-right">
 
-    <!-- Bouton retour accueil -->
-    <a routerLink="/accueil" class="btn-retour">
-      <i class="bi bi-arrow-left me-1"></i> Retour à l'accueil
-    </a>
-
-    <div class="login-form-wrapper">
-
-      <!-- Logo mobile uniquement -->
-      <div class="text-center d-lg-none mb-4">
-        <div class="login-logo-mobile">
+      <!-- Header -->
+      <div class="right-header">
+        <div class="brand-logo">
           <i class="bi bi-heart-pulse-fill"></i>
         </div>
-        <h2 class="fw-bold text-primary">MedTrack</h2>
+        <a routerLink="/accueil" class="btn-retour">
+          Accueil <i class="bi bi-arrow-right"></i>
+        </a>
       </div>
 
-      <h3 class="fw-bold mb-1">Connexion</h3>
-      <p class="text-muted mb-4">Accédez à votre espace médical sécurisé</p>
+      <h3 class="login-title">Login</h3>
 
-      <!-- Message d'erreur -->
-      <div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
-        <i class="bi bi-exclamation-triangle-fill"></i>
-        <span>{{ errorMessage }}</span>
+      <!-- Tabs Médecin / Infirmier -->
+      <div class="login-tabs mb-4">
+        <button class="tab-btn active">
+          <i class="bi bi-person-badge"></i> Personnel Medical
+        </button>
+    
+      </div>
+
+      <!-- Message erreur -->
+      <div class="alert alert-danger py-2 small" *ngIf="errorMessage">
+        <i class="bi bi-exclamation-triangle me-1"></i>{{ errorMessage }}
       </div>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
-        <!-- Nom d'utilisateur -->
-        <div class="mb-3">
-          <label class="form-label fw-semibold">
-            <i class="bi bi-person me-1 text-primary"></i>Nom d'utilisateur
-          </label>
-          <input
-            type="text"
-            class="form-control form-control-lg"
-            [class.is-invalid]="username?.invalid && username?.touched"
-            formControlName="username"
-            placeholder="Entrez votre nom d'utilisateur"
-          />
-          <div class="invalid-feedback">
-            <span *ngIf="username?.errors?.['required']">Ce champ est requis.</span>
+        <!-- Username -->
+        <div class="field-group mb-3">
+          <label>Nom d'utilisateur</label>
+          <div class="field-input">
+            <i class="bi bi-person field-icon"></i>
+            <input
+              type="text"
+              formControlName="username"
+              [class.is-invalid]="username?.invalid && username?.touched"
+              placeholder="Votre nom d'utilisateur"
+            />
+          </div>
+          <div class="error-msg" *ngIf="username?.invalid && username?.touched">
+            <span *ngIf="username?.errors?.['required']">Champ requis.</span>
             <span *ngIf="username?.errors?.['minlength']">Minimum 3 caractères.</span>
           </div>
         </div>
 
-        <!-- Mot de passe -->
-        <div class="mb-4">
-          <label class="form-label fw-semibold">
-            <i class="bi bi-lock me-1 text-primary"></i>Mot de passe
-          </label>
-          <div class="input-group input-group-lg">
+        <!-- Password -->
+        <div class="field-group mb-4">
+          <label>Mot de passe</label>
+          <div class="field-input">
+            <i class="bi bi-lock field-icon"></i>
             <input
               [type]="showPassword ? 'text' : 'password'"
-              class="form-control"
-              [class.is-invalid]="password?.invalid && password?.touched"
               formControlName="password"
-              placeholder="Entrez votre mot de passe"
+              [class.is-invalid]="password?.invalid && password?.touched"
+              placeholder="Votre mot de passe"
             />
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              (click)="togglePassword()"
-            >
+            <button type="button" class="toggle-pwd" (click)="togglePassword()">
               <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
             </button>
-            <div class="invalid-feedback">
-              <span *ngIf="password?.errors?.['required']">Ce champ est requis.</span>
-              <span *ngIf="password?.errors?.['minlength']">Minimum 6 caractères.</span>
-            </div>
+          </div>
+          <div class="error-msg" *ngIf="password?.invalid && password?.touched">
+            <span *ngIf="password?.errors?.['required']">Champ requis.</span>
+            <span *ngIf="password?.errors?.['minlength']">Minimum 6 caractères.</span>
           </div>
         </div>
 
-        <!-- Bouton connexion -->
-        <button
-          type="submit"
-          class="btn btn-primary btn-lg w-100 fw-bold"
-          [disabled]="isLoading"
-        >
+        <!-- Bouton -->
+        <button type="submit" class="btn-login" [disabled]="isLoading">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
-          <i *ngIf="!isLoading" class="bi bi-box-arrow-in-right me-2"></i>
-          {{ isLoading ? 'Connexion en cours...' : 'Se connecter' }}
+          <span *ngIf="!isLoading">LOGIN</span>
+          <span *ngIf="isLoading">Connexion...</span>
         </button>
 
       </form>
 
-      <div class="text-center mt-4">
-        <small class="text-muted">
-          <i class="bi bi-shield-lock me-1"></i>
-          Accès réservé au personnel médical autorisé
-        </small>
-      </div>
-
-      <hr class="my-4">
-
-      <div class="text-center">
-        <small class="text-muted">
-          Institut Universitaire Saint Jean — MedTrack © 2026
-        </small>
-      </div>
+      <p class="footer-note mt-4">
+        <i class="bi bi-shield-lock me-1"></i>
+        Accès réservé au personnel médical autorisé
+      </p>
 
     </div>
   </div>
-
 </div>

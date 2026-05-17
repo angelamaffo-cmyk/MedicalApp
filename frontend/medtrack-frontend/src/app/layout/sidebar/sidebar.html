@@ -1,0 +1,83 @@
+<div class="sidebar" [class.sidebar-hidden]="!isOpen">
+
+  <!-- Logo -->
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <i class="bi bi-heart-pulse-fill"></i>
+    </div>
+    <span class="logo-text">MedTrack</span>
+  </div>
+
+  <!-- Menu principal -->
+  <div class="sidebar-section">
+    <span class="section-label">MENU</span>
+    <ul class="menu-list">
+
+      <li>
+        <a routerLink="/dashboard" routerLinkActive="active" class="menu-item">
+          <i class="bi bi-speedometer2"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/patients" routerLinkActive="active" class="menu-item">
+          <i class="bi bi-people-fill"></i>
+          <span>Patients</span>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/consultations" routerLinkActive="active" class="menu-item">
+          <i class="bi bi-clipboard2-pulse-fill"></i>
+          <span>Consultations</span>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/examens" routerLinkActive="active" class="menu-item">
+          <i class="bi bi-droplet-fill"></i>
+          <span>Examens</span>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/resultats" routerLinkActive="active" class="menu-item">
+          <i class="bi bi-file-medical-fill"></i>
+          <span>Résultats</span>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/hospitalisations" routerLinkActive="active" class="menu-item">
+          <i class="bi bi-hospital-fill"></i>
+          <span>Hospitalisations</span>
+        </a>
+      </li>
+
+    </ul>
+  </div>
+
+  <!-- Compte -->
+  <div class="sidebar-section mt-auto">
+    <span class="section-label">COMPTE</span>
+    <ul class="menu-list">
+
+      <li>
+        <a routerLink="/profil" routerLinkActive="active" class="menu-item">
+          <i class="bi bi-person-circle"></i>
+          <span>Mon profil</span>
+        </a>
+      </li>
+
+      <li>
+        <a class="menu-item logout-item" (click)="authService.logout()">
+          <i class="bi bi-box-arrow-right"></i>
+          <span>Déconnexion</span>
+        </a>
+      </li>
+
+    </ul>
+  </div>
+
+</div>

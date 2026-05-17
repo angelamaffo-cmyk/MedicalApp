@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent {
 
-   loginForm: FormGroup;
+  loginForm: FormGroup;
   isLoading = false;
   errorMessage = '';
   showPassword = false;
@@ -34,8 +34,7 @@ export class LoginComponent {
 
   get username() { return this.loginForm.get('username'); }
   get password() { return this.loginForm.get('password'); }
-
-  onSubmit(): void {
+onSubmit(): void {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
@@ -44,33 +43,15 @@ export class LoginComponent {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.authService.login(this.loginForm.value).subscribe({
-      next: () => {
-        this.authService.getMonProfil().subscribe({
-          next: (profil) => {
-            this.isLoading = false;
-            if (profil.premiere_connexion) {
-              this.router.navigate(['/changer-mot-de-passe']);
-            } else {
-              this.router.navigate(['/dashboard']);
-            }
-          },
-          error: () => {
-            this.isLoading = false;
-            this.router.navigate(['/dashboard']);
-          }
-        });
-      },
-      error: (err) => {
-        this.isLoading = false;
-        if (err.status === 401) {
-          this.errorMessage = 'Nom d\'utilisateur ou mot de passe incorrect.';
-        } else {
-          this.errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
-        }
-      }
-    });
+    // Simulation temporaire
+    setTimeout(() => {
+      this.isLoading = false;
+      localStorage.setItem('access_token', 'fake-token-temporaire');
+      // Redirection vers changer mot de passe après login
+      this.router.navigate(['/changer-mot-de-passe']);
+    }, 1000);
   }
+  
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;

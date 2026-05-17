@@ -1,0 +1,43 @@
+.mdp-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0d6efd 0%, #084298 100%);
+  padding: 1rem;
+}
+
+.mdp-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+.mdp-icon {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, #0d6efd, #084298);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.mdp-icon i {
+  font-size: 2rem;
+  color: white;
+}
+
+.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+.btn-primary {
+  padding: 0.75rem;
+  border-radius: 8px;
+}

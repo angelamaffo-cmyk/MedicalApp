@@ -1,1 +1,106 @@
-<p>changer-mot-de-passe works!</p>
+<div class="mdp-wrapper">
+  <div class="mdp-card">
+
+    <!-- Icône et titre -->
+    <div class="text-center mb-4">
+      <div class="mdp-icon">
+        <i class="bi bi-shield-lock-fill"></i>
+      </div>
+      <h3 class="fw-bold mt-3">Changer votre mot de passe</h3>
+      <p class="text-muted">
+        Vous vous connectez pour la première fois. <br>
+        Nous vous recommandons de changer votre mot de passe.
+      </p>
+    </div>
+
+    <!-- Messages -->
+    <div class="alert alert-success d-flex align-items-center gap-2" *ngIf="successMessage">
+      <i class="bi bi-check-circle-fill"></i>
+      <span>{{ successMessage }}</span>
+    </div>
+    <div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <!-- Ancien mot de passe -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Mot de passe actuel</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock"></i></span>
+          <input
+            [type]="showAncien ? 'text' : 'password'"
+            class="form-control"
+            [class.is-invalid]="ancien?.invalid && ancien?.touched"
+            formControlName="ancien_mot_de_passe"
+            placeholder="Votre mot de passe actuel"
+          />
+          <button type="button" class="btn btn-outline-secondary" (click)="showAncien = !showAncien">
+            <i class="bi" [class.bi-eye]="!showAncien" [class.bi-eye-slash]="showAncien"></i>
+          </button>
+          <div class="invalid-feedback">Ce champ est requis.</div>
+        </div>
+      </div>
+
+      <!-- Nouveau mot de passe -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Nouveau mot de passe</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+          <input
+            [type]="showNouveau ? 'text' : 'password'"
+            class="form-control"
+            [class.is-invalid]="nouveau?.invalid && nouveau?.touched"
+            formControlName="nouveau_mot_de_passe"
+            placeholder="Minimum 8 caractères"
+          />
+          <button type="button" class="btn btn-outline-secondary" (click)="showNouveau = !showNouveau">
+            <i class="bi" [class.bi-eye]="!showNouveau" [class.bi-eye-slash]="showNouveau"></i>
+          </button>
+          <div class="invalid-feedback">
+            <span *ngIf="nouveau?.errors?.['required']">Ce champ est requis.</span>
+            <span *ngIf="nouveau?.errors?.['minlength']">Minimum 8 caractères.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Confirmer mot de passe -->
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Confirmer le mot de passe</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+          <input
+            [type]="showConfirmer ? 'text' : 'password'"
+            class="form-control"
+            [class.is-invalid]="confirmer?.invalid && confirmer?.touched"
+            formControlName="confirmer_mot_de_passe"
+            placeholder="Répétez le nouveau mot de passe"
+          />
+          <button type="button" class="btn btn-outline-secondary" (click)="showConfirmer = !showConfirmer">
+            <i class="bi" [class.bi-eye]="!showConfirmer" [class.bi-eye-slash]="showConfirmer"></i>
+          </button>
+          <div class="invalid-feedback">
+            <span *ngIf="confirmer?.errors?.['required']">Ce champ est requis.</span>
+            <span *ngIf="confirmer?.errors?.['notMatch']">Les mots de passe ne correspondent pas.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Boutons -->
+      <div class="d-flex gap-3">
+        <button type="submit" class="btn btn-primary fw-bold flex-grow-1" [disabled]="isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!isLoading" class="bi bi-check-lg me-2"></i>
+          {{ isLoading ? 'Enregistrement...' : 'Changer le mot de passe' }}
+        </button>
+        <button type="button" class="btn btn-outline-secondary fw-semibold" (click)="passer()">
+          Passer
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>

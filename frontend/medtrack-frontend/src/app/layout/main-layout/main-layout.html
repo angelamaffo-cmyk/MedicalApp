@@ -1,0 +1,17 @@
+<div class="app-container" [class.sidebar-closed]="!sidebarOpen">
+
+  <!-- Sidebar -->
+  <app-sidebar [isOpen]="sidebarOpen"></app-sidebar>
+
+  <!-- Contenu principal -->
+  <div class="main-content">
+    <!-- Navbar -->
+    <app-navbar (toggleSidebar)="toggleSidebar()"></app-navbar>
+
+    <!-- Pages -->
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+</div>
