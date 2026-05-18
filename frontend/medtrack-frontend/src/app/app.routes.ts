@@ -34,6 +34,33 @@ export const routes: Routes = [
       { path: 'profil', loadComponent: () =>
           import('./pages/comptes/profil/profil').then(m => m.ProfilComponent)
       },
+      { path: 'patients/:id', loadComponent: () =>
+    import('./pages/patients/detail-patient/detail-patient').then(m => m.DetailPatientComponent)
+    },
+    { path: 'consultations', loadComponent: () =>
+    import('./pages/consultations/liste-consultations/liste-consultations').then(m => m.ListeConsultationsComponent)
+},
+{ path: 'consultations/nouveau', loadComponent: () =>
+    import('./pages/consultations/form-consultation/form-consultation').then(m => m.FormConsultationComponent)
+},
+{ path: 'consultations/modifier/:id', loadComponent: () =>
+    import('./pages/consultations/form-consultation/form-consultation').then(m => m.FormConsultationComponent)
+},
+{ path: 'consultations/:id', loadComponent: () =>
+    import('./pages/consultations/detail-consultation/detail-consultation').then(m => m.DetailConsultationComponent)
+},
+{ path: 'examens', loadComponent: () =>
+    import('./pages/examens/liste-examens/liste-examens').then(m => m.ListeExamensComponent)
+},
+{ path: 'examens/nouveau', loadComponent: () =>
+    import('./pages/examens/form-examen/form-examen').then(m => m.FormExamenComponent)
+},
+{ path: 'examens/modifier/:id', loadComponent: () =>
+    import('./pages/examens/form-examen/form-examen').then(m => m.FormExamenComponent)
+},
+{ path: 'examens/:id', loadComponent: () =>
+    import('./pages/examens/detail-examen/detail-examen').then(m => m.DetailExamenComponent)
+},
     ]
   },
 

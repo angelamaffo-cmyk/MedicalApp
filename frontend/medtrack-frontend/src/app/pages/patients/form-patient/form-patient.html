@@ -1,1 +1,209 @@
-<p>form-patient works!</p>
+<div class="page-header">
+  <div>
+    <h4 class="page-title">
+      <i class="bi bi-person-plus-fill me-2 text-primary"></i>
+      {{ isEditMode ? 'Modifier le patient' : 'Nouveau patient' }}
+    </h4>
+    <p class="page-subtitle">
+      {{ isEditMode ? 'Modifiez les informations du patient' : 'Remplissez les informations du nouveau patient' }}
+    </p>
+  </div>
+  <a routerLink="/patients" class="btn-retour">
+    <i class="bi bi-arrow-left me-2"></i>Retour
+  </a>
+</div>
+
+<!-- Messages -->
+<div class="alert alert-success d-flex align-items-center gap-2" *ngIf="successMessage">
+  <i class="bi bi-check-circle-fill"></i>
+  <span>{{ successMessage }}</span>
+</div>
+<div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
+  <i class="bi bi-exclamation-triangle-fill"></i>
+  <span>{{ errorMessage }}</span>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="row g-4">
+
+    <!-- Informations personnelles -->
+    <div class="col-12">
+      <div class="form-card">
+        <div class="form-card-header">
+          <i class="bi bi-person-fill text-primary"></i>
+          <h6>Informations personnelles</h6>
+        </div>
+        <div class="form-card-body">
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label class="form-label">Nom <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                [class.is-invalid]="nom?.invalid && nom?.touched"
+                formControlName="nom"
+                placeholder="Nom de famille"
+              />
+              <div class="invalid-feedback">
+                <span *ngIf="nom?.errors?.['required']">Le nom est requis.</span>
+                <span *ngIf="nom?.errors?.['minlength']">Minimum 2 caractères.</span>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Prénom <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                [class.is-invalid]="prenom?.invalid && prenom?.touched"
+                formControlName="prenom"
+                placeholder="Prénom"
+              />
+              <div class="invalid-feedback">
+                <span *ngIf="prenom?.errors?.['required']">Le prénom est requis.</span>
+                <span *ngIf="prenom?.errors?.['minlength']">Minimum 2 caractères.</span>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Sexe <span class="text-danger">*</span></label>
+              <select
+                class="form-select"
+                [class.is-invalid]="sexe?.invalid && sexe?.touched"
+                formControlName="sexe"
+              >
+                <option value="">----</option>
+                <option value="M">Masculin</option>
+                <option value="F">Féminin</option>
+              </select>
+              <div class="invalid-feedback">Le sexe est requis.</div>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Date de naissance <span class="text-danger">*</span></label>
+              <input
+                type="date"
+                class="form-control"
+                [class.is-invalid]="date_naissance?.invalid && date_naissance?.touched"
+                formControlName="date_naissance"
+              />
+              <div class="invalid-feedback">La date de naissance est requise.</div>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Groupe sanguin <span class="text-danger">*</span></label>
+              <select
+                class="form-select"
+                [class.is-invalid]="groupe_sanguin?.invalid && groupe_sanguin?.touched"
+                formControlName="groupe_sanguin"
+              >
+                <option value="">----</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+              </select>
+              <div class="invalid-feedback">Le groupe sanguin est requis.</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coordonnées -->
+    <div class="col-12">
+      <div class="form-card">
+        <div class="form-card-header">
+          <i class="bi bi-telephone-fill text-success"></i>
+          <h6>Coordonnées</h6>
+        </div>
+        <div class="form-card-body">
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label class="form-label">Téléphone <span class="text-danger">*</span></label>
+              <input
+                type="tel"
+                class="form-control"
+                [class.is-invalid]="telephone?.invalid && telephone?.touched"
+                formControlName="telephone"
+                placeholder="Ex: 677000000"
+              />
+              <div class="invalid-feedback">
+                <span *ngIf="telephone?.errors?.['required']">Le téléphone est requis.</span>
+                <span *ngIf="telephone?.errors?.['minlength']">Minimum 8 chiffres.</span>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Adresse</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="adresse"
+                placeholder="Adresse complète"
+              />
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact urgence -->
+    <div class="col-12">
+      <div class="form-card">
+        <div class="form-card-header">
+          <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+          <h6>Contact d'urgence</h6>
+        </div>
+        <div class="form-card-body">
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label class="form-label">Nom du contact</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="contact_urgence_nom"
+                placeholder="Nom complet"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Téléphone du contact</label>
+              <input
+                type="tel"
+                class="form-control"
+                formControlName="contact_urgence_telephone"
+                placeholder="Ex: 699000000"
+              />
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Boutons -->
+    <div class="col-12">
+      <div class="form-actions">
+        <a routerLink="/patients" class="btn-annuler">
+          <i class="bi bi-x-lg me-2"></i>Annuler
+        </a>
+        <button type="submit" class="btn-sauvegarder" [disabled]="isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!isLoading" class="bi bi-check-lg me-2"></i>
+          {{ isLoading ? 'Enregistrement...' : (isEditMode ? 'Modifier' : 'Enregistrer') }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</form>

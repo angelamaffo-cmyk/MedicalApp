@@ -1,4 +1,3 @@
-/* Header */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -22,7 +21,7 @@
 .btn-add {
   display: flex;
   align-items: center;
-  background: linear-gradient(135deg, #0d6efd, #084298);
+  background: linear-gradient(135deg, #fd7e14, #dc6a0f);
   color: white;
   text-decoration: none;
   padding: 0.6rem 1.2rem;
@@ -30,16 +29,14 @@
   font-weight: 600;
   font-size: 0.9rem;
   transition: all 0.2s;
-  box-shadow: 0 4px 15px rgba(13,110,253,0.3);
+  box-shadow: 0 4px 15px rgba(253,126,20,0.3);
 }
 
 .btn-add:hover {
   transform: translateY(-1px);
   color: white;
-  box-shadow: 0 6px 20px rgba(13,110,253,0.4);
 }
 
-/* Recherche */
 .search-bar {
   display: flex;
   align-items: center;
@@ -72,8 +69,8 @@
 }
 
 .search-input input:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 3px rgba(13,110,253,0.1);
+  border-color: #fd7e14;
+  box-shadow: 0 0 0 3px rgba(253,126,20,0.1);
 }
 
 .results-count {
@@ -83,7 +80,6 @@
   font-weight: 600;
 }
 
-/* Tableau */
 .table-card {
   background: white;
   border-radius: 16px;
@@ -91,17 +87,17 @@
   overflow: hidden;
 }
 
-.patients-table {
+.examens-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.patients-table thead tr {
-  background: #f8f9ff;
+.examens-table thead tr {
+  background: #fffaf5;
   border-bottom: 2px solid #e9ecef;
 }
 
-.patients-table th {
+.examens-table th {
   padding: 1rem 1.2rem;
   font-size: 0.8rem;
   font-weight: 700;
@@ -111,21 +107,15 @@
   text-align: left;
 }
 
-.patients-table td {
+.examens-table td {
   padding: 1rem 1.2rem;
   border-bottom: 1px solid #f0f4ff;
   vertical-align: middle;
 }
 
-.patients-table tbody tr:hover {
-  background: #f8f9ff;
-}
+.examens-table tbody tr:hover { background: #fffaf5; }
+.examens-table tbody tr:last-child td { border-bottom: none; }
 
-.patients-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-/* Avatar patient */
 .patient-info {
   display: flex;
   align-items: center;
@@ -133,62 +123,65 @@
 }
 
 .patient-avatar {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, #0d6efd, #084298);
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #fd7e14, #dc6a0f);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   flex-shrink: 0;
 }
 
 .patient-nom {
   font-weight: 600;
   color: #1a1f5e;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
-/* Badges */
-.badge-sexe {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
+.examen-nom {
+  display: block;
+  font-weight: 600;
+  color: #1a1f5e;
+  font-size: 0.88rem;
+}
+
+.labo-text {
+  display: block;
+  font-size: 0.78rem;
+  color: #adb5bd;
+}
+
+.type-badge {
   padding: 0.3rem 0.7rem;
   border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.badge-sexe.masculin {
-  background: #e8f4ff;
-  color: #0d6efd;
-}
-
-.badge-sexe.feminin {
-  background: #ffe8f4;
-  color: #d63384;
-}
-
-.age-badge {
-  font-weight: 600;
-  color: #495057;
-}
-
-.groupe-badge {
-  display: inline-block;
-  background: #fff3e8;
-  color: #fd7e14;
-  padding: 0.3rem 0.7rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
 }
 
-.statut-badge {
+.type-primary { background: #e8f4ff; color: #0d6efd; }
+.type-warning { background: #fff8e8; color: #fd7e14; }
+.type-info { background: #e8f8ff; color: #0dcaf0; }
+.type-danger { background: #fff0f0; color: #dc3545; }
+.type-success { background: #e8fff0; color: #198754; }
+.type-secondary { background: #f0f0f0; color: #6c757d; }
+
+.date-text {
+  font-size: 0.85rem;
+  color: #495057;
+  font-weight: 500;
+}
+
+.en-attente {
+  font-size: 0.82rem;
+  color: #fd7e14;
+  font-weight: 600;
+}
+
+.resultat-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
@@ -198,21 +191,10 @@
   font-weight: 600;
 }
 
-.statut-badge.actif {
-  background: #e8fff0;
-  color: #198754;
-}
+.resultat-badge.disponible { background: #e8fff0; color: #198754; }
+.resultat-badge.attente { background: #fff8e8; color: #fd7e14; }
 
-.statut-badge.inactif {
-  background: #fff0f0;
-  color: #dc3545;
-}
-
-/* Actions */
-.actions {
-  display: flex;
-  gap: 0.5rem;
-}
+.actions { display: flex; gap: 0.5rem; }
 
 .btn-action {
   width: 34px;
@@ -228,27 +210,11 @@
   font-size: 0.85rem;
 }
 
-.btn-action.edit {
-  background: #e8f4ff;
-  color: #0d6efd;
-}
+.btn-action.view { background: #e8fff0; color: #198754; }
+.btn-action.view:hover { background: #198754; color: white; }
+.btn-action.edit { background: #e8f4ff; color: #0d6efd; }
+.btn-action.edit:hover { background: #0d6efd; color: white; }
 
-.btn-action.edit:hover {
-  background: #0d6efd;
-  color: white;
-}
-
-.btn-action.view {
-  background: #e8fff0;
-  color: #198754;
-}
-
-.btn-action.view:hover {
-  background: #198754;
-  color: white;
-}
-
-/* Empty state */
 .empty-state {
   text-align: center;
   padding: 3rem !important;

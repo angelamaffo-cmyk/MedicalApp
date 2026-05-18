@@ -1,4 +1,3 @@
-/* Header */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -37,7 +36,6 @@
   color: white;
 }
 
-/* Cartes formulaire */
 .form-card {
   background: white;
   border-radius: 16px;
@@ -50,13 +48,11 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
-  background: #f8f9ff;
+  background: #f8fff8;
   border-bottom: 1px solid #e9ecef;
 }
 
-.form-card-header i {
-  font-size: 1.1rem;
-}
+.form-card-header i { font-size: 1.1rem; }
 
 .form-card-header h6 {
   margin: 0;
@@ -65,11 +61,8 @@
   font-size: 0.95rem;
 }
 
-.form-card-body {
-  padding: 1.5rem;
-}
+.form-card-body { padding: 1.5rem; }
 
-/* Champs */
 .form-label {
   font-size: 0.85rem;
   font-weight: 600;
@@ -88,11 +81,10 @@
 
 .form-control:focus,
 .form-select:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 3px rgba(13,110,253,0.1);
+  border-color: #198754;
+  box-shadow: 0 0 0 3px rgba(25,135,84,0.1);
 }
 
-/* Boutons actions */
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -121,7 +113,7 @@
   display: flex;
   align-items: center;
   padding: 0.7rem 1.5rem;
-  background: linear-gradient(135deg, #0d6efd, #084298);
+  background: linear-gradient(135deg, #198754, #146c43);
   color: white;
   border: none;
   border-radius: 10px;
@@ -129,12 +121,11 @@
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 4px 15px rgba(13,110,253,0.3);
+  box-shadow: 0 4px 15px rgba(25,135,84,0.3);
 }
 
 .btn-sauvegarder:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(13,110,253,0.4);
 }
 
 .btn-sauvegarder:disabled {

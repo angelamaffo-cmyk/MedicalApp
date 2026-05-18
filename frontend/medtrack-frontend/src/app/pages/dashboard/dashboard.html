@@ -1,29 +1,98 @@
-<nav class="navbar navbar-dark bg-primary">
-  <div class="container">
-    <a class="navbar-brand">
-      <i class="bi bi-heart-pulse-fill me-2"></i>MedTrack
+<!-- Titre -->
+<div class="page-header">
+  <div>
+    <h4 class="page-title">
+      <i class="bi bi-speedometer2 me-2 text-primary"></i>Tableau de bord
+    </h4>
+    <p class="page-subtitle">Bienvenue sur MedTrack — Vue d'ensemble de votre activité</p>
+  </div>
+  <div class="date-badge">
+    <i class="bi bi-calendar3 me-2"></i>
+    <!-- {{ today | date:'EEEE dd MMMM yyyy' }} -->
+  </div>
+</div>
+
+<!-- Statistiques -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3 col-sm-6" *ngFor="let stat of stats">
+    <a [routerLink]="stat.route" class="stat-card text-decoration-none">
+      <div class="stat-icon bg-{{ stat.couleur }}">
+        <i class="bi {{ stat.icon }}"></i>
+      </div>
+      <div class="stat-info">
+        <h3 class="stat-valeur">{{ stat.valeur }}</h3>
+        <p class="stat-label">{{ stat.label }}</p>
+      </div>
+      <i class="bi bi-arrow-up-right stat-arrow text-{{ stat.couleur }}"></i>
     </a>
-    <button class="btn btn-light btn-sm" (click)="logout()">
-      <i class="bi bi-box-arrow-right me-2"></i>Déconnexion
-    </button>
-  </div>  
-</nav>
+  </div>
+</div>
 
+<div class="row g-4">
 
-
-
-<div class="container mt-4">
-      <h6 class="mb-0">Bienvenue sur MedTrack.</h6>
-
-
-  <div class="row g-3 mt-2">
-    <div class="col-md-3">
-      <a routerLink="/patients" class="card text-decoration-none text-dark">
-        <div class="card-body text-center">
-          <i class="bi bi-people-fill fs-1 text-primary"></i>
-          <h6 class="mt-2">Patients</h6>
+  <!-- Activités récentes -->
+  <div class="col-md-7">
+    <div class="dashboard-card">
+      <div class="card-header-custom">
+        <h6><i class="bi bi-clock-history me-2 text-primary"></i>Activités récentes</h6>
+      </div>
+      <div class="card-body-custom">
+        <div class="activite-item" *ngFor="let activite of activitesRecentes">
+          <div class="activite-icon bg-{{ activite.couleur }}-light">
+            <i class="bi {{ activite.icon }} text-{{ activite.couleur }}"></i>
+          </div>
+          <div class="activite-info">
+            <p class="activite-message">{{ activite.message }}</p>
+            <span class="activite-temps">{{ activite.temps }}</span>
+          </div>
         </div>
-      </a>
+      </div>
     </div>
   </div>
+
+  <!-- Raccourcis -->
+  <div class="col-md-5">
+    <div class="dashboard-card">
+      <div class="card-header-custom">
+        <h6><i class="bi bi-lightning-fill me-2 text-warning"></i>Accès rapide</h6>
+      </div>
+      <div class="card-body-custom">
+        <div class="row g-3">
+          <div class="col-6" *ngFor="let raccourci of raccourcis">
+            <a [routerLink]="raccourci.route" class="raccourci-card text-decoration-none">
+              <div class="raccourci-icon bg-{{ raccourci.couleur }}-light">
+                <i class="bi {{ raccourci.icon }} text-{{ raccourci.couleur }}"></i>
+              </div>
+              <span class="raccourci-label">{{ raccourci.label }}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Infos système -->
+    <div class="dashboard-card mt-4">
+      <div class="card-header-custom">
+        <h6><i class="bi bi-info-circle-fill me-2 text-info"></i>Informations</h6>
+      </div>
+      <div class="card-body-custom">
+        <div class="info-row">
+          <span class="info-label">Système</span>
+          <span class="info-value text-success">
+            <i class="bi bi-circle-fill me-1" style="font-size:0.5rem"></i>En ligne
+          </span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Version</span>
+          <span class="info-value">MedTrack v1.0</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Établissement</span>
+          <span class="info-value">Saint Jean Ingénieur</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
 </div>

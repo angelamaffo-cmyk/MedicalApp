@@ -1,0 +1,134 @@
+<div class="page-header">
+  <div>
+    <h4 class="page-title">
+      <i class="bi bi-droplet-fill me-2 text-warning"></i>
+      {{ isEditMode ? 'Modifier l\'examen' : 'Prescrire un examen' }}
+    </h4>
+    <p class="page-subtitle">
+      {{ isEditMode ? 'Modifiez les informations de l\'examen' : 'Prescrivez un nouvel examen médical' }}
+    </p>
+  </div>
+  <a routerLink="/examens" class="btn-retour">
+    <i class="bi bi-arrow-left me-2"></i>Retour
+  </a>
+</div>
+
+<div class="alert alert-success d-flex align-items-center gap-2" *ngIf="successMessage">
+  <i class="bi bi-check-circle-fill"></i>
+  <span>{{ successMessage }}</span>
+</div>
+<div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
+  <i class="bi bi-exclamation-triangle-fill"></i>
+  <span>{{ errorMessage }}</span>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="row g-4">
+
+    <div class="col-12">
+      <div class="form-card">
+        <div class="form-card-header">
+          <i class="bi bi-droplet-fill text-warning"></i>
+          <h6>Informations de l'examen</h6>
+        </div>
+        <div class="form-card-body">
+          <div class="row g-3">
+
+            <div class="col-12">
+              <label class="form-label">Consultation concernée <span class="text-danger">*</span></label>
+              <select
+                class="form-select"
+                [class.is-invalid]="consultation?.invalid && consultation?.touched"
+                formControlName="consultation"
+              >
+                <option value="">Sélectionner une consultation</option>
+                <option *ngFor="let c of consultations" [value]="c.id">{{ c.label }}</option>
+              </select>
+              <div class="invalid-feedback">La consultation est requise.</div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Type d'examen <span class="text-danger">*</span></label>
+              <select
+                class="form-select"
+                [class.is-invalid]="type_examen?.invalid && type_examen?.touched"
+                formControlName="type_examen"
+              >
+                <option value="">Sélectionner</option>
+                <option *ngFor="let type of typesExamen" [value]="type">{{ type }}</option>
+              </select>
+              <div class="invalid-feedback">Le type est requis.</div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Nom de l'examen <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                [class.is-invalid]="nom_examen?.invalid && nom_examen?.touched"
+                formControlName="nom_examen"
+                placeholder="Ex: Numération Formule Sanguine"
+              />
+              <div class="invalid-feedback">Le nom est requis.</div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Date de prescription <span class="text-danger">*</span></label>
+              <input
+                type="date"
+                class="form-control"
+                [class.is-invalid]="date_prescription?.invalid && date_prescription?.touched"
+                formControlName="date_prescription"
+              />
+              <div class="invalid-feedback">La date de prescription est requise.</div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Date de réalisation</label>
+              <input
+                type="date"
+                class="form-control"
+                formControlName="date_realisation"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Laboratoire</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="laboratoire"
+                placeholder="Nom du laboratoire"
+              />
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Notes</label>
+              <textarea
+                class="form-control"
+                formControlName="notes"
+                rows="3"
+                placeholder="Notes supplémentaires"
+              ></textarea>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-actions">
+        <a routerLink="/examens" class="btn-annuler">
+          <i class="bi bi-x-lg me-2"></i>Annuler
+        </a>
+        <button type="submit" class="btn-sauvegarder" [disabled]="isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!isLoading" class="bi bi-check-lg me-2"></i>
+          {{ isLoading ? 'Enregistrement...' : (isEditMode ? 'Modifier' : 'Prescrire') }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</form>

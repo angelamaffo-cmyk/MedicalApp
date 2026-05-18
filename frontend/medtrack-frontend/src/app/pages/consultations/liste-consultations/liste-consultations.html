@@ -1,0 +1,94 @@
+<div class="page-header">
+  <div>
+    <h4 class="page-title">
+      <i class="bi bi-clipboard2-pulse-fill me-2 text-success"></i>Consultations
+    </h4>
+    <p class="page-subtitle">Gérez les consultations de vos patients</p>
+  </div>
+  <a routerLink="/consultations/nouveau" class="btn-add">
+    <i class="bi bi-plus-lg me-2"></i>Nouvelle consultation
+  </a>
+</div>
+
+<!-- Recherche -->
+<div class="search-bar">
+  <div class="search-input">
+    <i class="bi bi-search search-icon"></i>
+    <input
+      type="text"
+      [(ngModel)]="recherche"
+      (input)="filtrer()"
+      placeholder="Rechercher par patient, motif ou diagnostic..."
+    />
+  </div>
+  <span class="results-count">{{ consultationsFiltrees.length }} consultation(s)</span>
+</div>
+
+<!-- Spinner -->
+<div class="text-center py-5" *ngIf="isLoading">
+  <div class="spinner-border text-success"></div>
+  <p class="mt-2 text-muted">Chargement...</p>
+</div>
+
+<!-- Tableau -->
+<div class="table-card" *ngIf="!isLoading">
+  <table class="consultations-table">
+    <thead>
+      <tr>
+        <th>Patient</th>
+        <th>Date</th>
+        <th>Motif</th>
+        <th>Diagnostic</th>
+        <th>Traitement</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let consultation of consultationsFiltrees">
+        <td>
+          <div class="patient-info">
+            <div class="patient-avatar">
+              {{ consultation.patient_prenom[0] }}{{ consultation.patient_nom[0] }}
+            </div>
+            <span class="patient-nom">{{ consultation.patient_prenom }} {{ consultation.patient_nom }}</span>
+          </div>
+        </td>
+        <td>
+          <span class="date-badge">
+            <i class="bi bi-calendar3 me-1"></i>
+            {{ consultation.date_consultation | date:'dd/MM/yyyy' }}
+          </span>
+        </td>
+        <td>
+          <span class="motif-text">{{ consultation.motif }}</span>
+        </td>
+        <td>
+          <span class="diagnostic-badge">{{ consultation.diagnostic }}</span>
+        </td>
+        <td>
+          <span class="traitement-text">{{ consultation.traitement }}</span>
+        </td>
+        <td>
+          <div class="actions">
+            <a [routerLink]="['/consultations', consultation.id]" class="btn-action view" title="Voir détails">
+              <i class="bi bi-eye-fill"></i>
+            </a>
+            <a [routerLink]="['/consultations/modifier', consultation.id]" class="btn-action edit" title="Modifier">
+              <i class="bi bi-pencil-fill"></i>
+            </a>
+          </div>
+        </td>
+      </tr>
+
+      <tr *ngIf="consultationsFiltrees.length === 0">
+        <td colspan="6" class="empty-state">
+          <i class="bi bi-clipboard2 fs-1 text-muted"></i>
+          <p class="mt-2 text-muted">Aucune consultation trouvée</p>
+          <a routerLink="/consultations/nouveau" class="btn btn-success btn-sm">
+            Ajouter une consultation
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,161 @@
+<!-- Spinner
+<div class="text-center py-5" *ngIf="isLoading">
+  <div class="spinner-border text-success"></div>
+  <p class="mt-2 text-muted">Chargement...</p>
+</div> -->
+
+<div *ngIf="!isLoading && consultation">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="consultation-header-info">
+      <div class="consultation-avatar">
+        <i class="bi bi-clipboard2-pulse-fill"></i>
+      </div>
+      <div>
+        <h4 class="page-title">Consultation — {{ consultation.patient_prenom }} {{ consultation.patient_nom }}</h4>
+        <div class="d-flex align-items-center gap-2 mt-1">
+          <span class="date-badge">
+            <i class="bi bi-calendar3 me-1"></i>
+            {{ consultation.date_consultation | date:'dd/MM/yyyy' }}
+          </span>
+          <span class="statut-badge" [class.actif]="consultation.est_actif" [class.inactif]="!consultation.est_actif">
+            <i class="bi" [class.bi-check-circle-fill]="consultation.est_actif" [class.bi-x-circle-fill]="!consultation.est_actif"></i>
+            {{ consultation.est_actif ? 'Active' : 'Inactive' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="header-actions">
+      <a routerLink="/consultations" class="btn-retour">
+        <i class="bi bi-arrow-left me-1"></i> Retour
+      </a>
+      <a [routerLink]="['/consultations/modifier', consultation.id]" class="btn-modifier">
+        <i class="bi bi-pencil-fill me-1"></i> Modifier
+      </a>
+      <button
+        class="btn-toggle-statut"
+        [class.btn-desactiver]="consultation.est_actif"
+        [class.btn-activer]="!consultation.est_actif"
+        (click)="confirmToggle = true"
+      >
+        <i class="bi" [class.bi-toggle-on]="consultation.est_actif" [class.bi-toggle-off]="!consultation.est_actif"></i>
+        {{ consultation.est_actif ? 'Désactiver' : 'Activer' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Message succès -->
+  <div class="alert alert-success d-flex align-items-center gap-2 mb-3" *ngIf="successMessage">
+    <i class="bi bi-check-circle-fill"></i>
+    <span>{{ successMessage }}</span>
+  </div>
+
+  <!-- Modal confirmation -->
+  <div class="confirm-modal" *ngIf="confirmToggle">
+    <div class="confirm-box">
+      <div class="confirm-icon" [class.danger]="consultation.est_actif" [class.success]="!consultation.est_actif">
+        <i class="bi" [class.bi-toggle-off]="consultation.est_actif" [class.bi-toggle-on]="!consultation.est_actif"></i>
+      </div>
+      <h5>{{ consultation.est_actif ? 'Désactiver cette consultation ?' : 'Activer cette consultation ?' }}</h5>
+      <p class="text-muted">
+        {{ consultation.est_actif
+          ? 'La consultation sera archivée mais les données seront conservées.'
+          : 'La consultation sera réactivée.'
+        }}
+      </p>
+      <div class="confirm-actions">
+        <button class="btn-annuler-confirm" (click)="confirmToggle = false">Annuler</button>
+        <button
+          class="btn-confirmer"
+          [class.danger]="consultation.est_actif"
+          [class.success]="!consultation.est_actif"
+          (click)="toggleStatut()"
+        >
+          {{ consultation.est_actif ? 'Désactiver' : 'Activer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    <!-- Motif & Diagnostic -->
+    <div class="col-md-6">
+      <div class="detail-card">
+        <div class="detail-card-header">
+          <i class="bi bi-clipboard2-pulse-fill text-success"></i>
+          <h6>Consultation</h6>
+        </div>
+        <div class="detail-card-body">
+          <div class="detail-row">
+            <span class="detail-label">Patient</span>
+            <span class="detail-value">{{ consultation.patient_prenom }} {{ consultation.patient_nom }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Date</span>
+            <span class="detail-value">{{ consultation.date_consultation | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Motif</span>
+            <span class="detail-value">{{ consultation.motif }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagnostic -->
+    <div class="col-md-6">
+      <div class="detail-card">
+        <div class="detail-card-header">
+          <i class="bi bi-heart-pulse-fill text-danger"></i>
+          <h6>Diagnostic & Traitement</h6>
+        </div>
+        <div class="detail-card-body">
+          <div class="detail-section">
+            <span class="detail-label">Diagnostic</span>
+            <p class="detail-text">{{ consultation.diagnostic }}</p>
+          </div>
+          <div class="detail-section">
+            <span class="detail-label">Traitement</span>
+            <p class="detail-text">{{ consultation.traitement || 'Aucun traitement prescrit' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Observations -->
+    <div class="col-12" *ngIf="consultation.observations">
+      <div class="detail-card">
+        <div class="detail-card-header">
+          <i class="bi bi-journal-text text-info"></i>
+          <h6>Observations</h6>
+        </div>
+        <div class="detail-card-body">
+          <p class="detail-text">{{ consultation.observations }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Raccourcis examens -->
+    <div class="col-12">
+      <div class="detail-card">
+        <div class="detail-card-header">
+          <i class="bi bi-droplet-fill text-warning"></i>
+          <h6>Examens liés à cette consultation</h6>
+        </div>
+        <div class="detail-card-body">
+          <div class="d-flex align-items-center justify-content-between">
+            <p class="text-muted mb-0">Voir les examens prescrits lors de cette consultation</p>
+            <a routerLink="/examens" class="btn-examens">
+              <i class="bi bi-arrow-right me-1"></i> Voir les examens
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

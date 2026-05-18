@@ -1,4 +1,3 @@
-/* Header */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -22,7 +21,7 @@
 .btn-add {
   display: flex;
   align-items: center;
-  background: linear-gradient(135deg, #0d6efd, #084298);
+  background: linear-gradient(135deg, #198754, #146c43);
   color: white;
   text-decoration: none;
   padding: 0.6rem 1.2rem;
@@ -30,16 +29,14 @@
   font-weight: 600;
   font-size: 0.9rem;
   transition: all 0.2s;
-  box-shadow: 0 4px 15px rgba(13,110,253,0.3);
+  box-shadow: 0 4px 15px rgba(25,135,84,0.3);
 }
 
 .btn-add:hover {
   transform: translateY(-1px);
   color: white;
-  box-shadow: 0 6px 20px rgba(13,110,253,0.4);
 }
 
-/* Recherche */
 .search-bar {
   display: flex;
   align-items: center;
@@ -72,8 +69,8 @@
 }
 
 .search-input input:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 3px rgba(13,110,253,0.1);
+  border-color: #198754;
+  box-shadow: 0 0 0 3px rgba(25,135,84,0.1);
 }
 
 .results-count {
@@ -83,7 +80,6 @@
   font-weight: 600;
 }
 
-/* Tableau */
 .table-card {
   background: white;
   border-radius: 16px;
@@ -91,17 +87,17 @@
   overflow: hidden;
 }
 
-.patients-table {
+.consultations-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.patients-table thead tr {
-  background: #f8f9ff;
+.consultations-table thead tr {
+  background: #f8fff8;
   border-bottom: 2px solid #e9ecef;
 }
 
-.patients-table th {
+.consultations-table th {
   padding: 1rem 1.2rem;
   font-size: 0.8rem;
   font-weight: 700;
@@ -111,21 +107,20 @@
   text-align: left;
 }
 
-.patients-table td {
+.consultations-table td {
   padding: 1rem 1.2rem;
   border-bottom: 1px solid #f0f4ff;
   vertical-align: middle;
 }
 
-.patients-table tbody tr:hover {
-  background: #f8f9ff;
+.consultations-table tbody tr:hover {
+  background: #f8fff8;
 }
 
-.patients-table tbody tr:last-child td {
+.consultations-table tbody tr:last-child td {
   border-bottom: none;
 }
 
-/* Avatar patient */
 .patient-info {
   display: flex;
   align-items: center;
@@ -133,82 +128,55 @@
 }
 
 .patient-avatar {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, #0d6efd, #084298);
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #198754, #146c43);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   flex-shrink: 0;
 }
 
 .patient-nom {
   font-weight: 600;
   color: #1a1f5e;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
-/* Badges */
-.badge-sexe {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.3rem 0.7rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.badge-sexe.masculin {
-  background: #e8f4ff;
+.date-badge {
+  background: #f0f4ff;
   color: #0d6efd;
-}
-
-.badge-sexe.feminin {
-  background: #ffe8f4;
-  color: #d63384;
-}
-
-.age-badge {
+  padding: 0.3rem 0.7rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
   font-weight: 600;
+}
+
+.motif-text {
+  font-size: 0.88rem;
   color: #495057;
+  font-weight: 500;
 }
 
-.groupe-badge {
-  display: inline-block;
-  background: #fff3e8;
-  color: #fd7e14;
-  padding: 0.3rem 0.7rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 700;
-}
-
-.statut-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.3rem 0.7rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.statut-badge.actif {
+.diagnostic-badge {
   background: #e8fff0;
   color: #198754;
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
 }
 
-.statut-badge.inactif {
-  background: #fff0f0;
-  color: #dc3545;
+.traitement-text {
+  font-size: 0.88rem;
+  color: #495057;
+  font-style: italic;
 }
 
-/* Actions */
 .actions {
   display: flex;
   gap: 0.5rem;
@@ -228,16 +196,6 @@
   font-size: 0.85rem;
 }
 
-.btn-action.edit {
-  background: #e8f4ff;
-  color: #0d6efd;
-}
-
-.btn-action.edit:hover {
-  background: #0d6efd;
-  color: white;
-}
-
 .btn-action.view {
   background: #e8fff0;
   color: #198754;
@@ -248,7 +206,16 @@
   color: white;
 }
 
-/* Empty state */
+.btn-action.edit {
+  background: #e8f4ff;
+  color: #0d6efd;
+}
+
+.btn-action.edit:hover {
+  background: #0d6efd;
+  color: white;
+}
+
 .empty-state {
   text-align: center;
   padding: 3rem !important;

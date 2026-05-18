@@ -1,0 +1,161 @@
+<!-- <div class="text-center py-5" *ngIf="isLoading">
+  <div class="spinner-border text-warning"></div>
+  <p class="mt-2 text-muted">Chargement...</p>
+</div> -->
+
+<div *ngIf="!isLoading && examen">
+
+  <div class="page-header">
+    <div class="examen-header-info">
+      <div class="examen-avatar">
+        <i class="bi bi-droplet-fill"></i>
+      </div>
+      <div>
+        <h4 class="page-title">{{ examen.nom_examen }}</h4>
+        <div class="d-flex align-items-center gap-2 mt-1">
+          <span class="type-badge">{{ examen.type_examen }}</span>
+          <span class="statut-badge" [class.actif]="examen.est_actif" [class.inactif]="!examen.est_actif">
+            <i class="bi" [class.bi-check-circle-fill]="examen.est_actif" [class.bi-x-circle-fill]="!examen.est_actif"></i>
+            {{ examen.est_actif ? 'Actif' : 'Inactif' }}
+          </span>
+          <span class="resultat-badge" [class.disponible]="examen.a_resultat" [class.attente]="!examen.a_resultat">
+            <i class="bi" [class.bi-check-circle-fill]="examen.a_resultat" [class.bi-hourglass-split]="!examen.a_resultat"></i>
+            {{ examen.a_resultat ? 'Résultat disponible' : 'En attente de résultat' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <a routerLink="/examens" class="btn-retour">
+        <i class="bi bi-arrow-left me-1"></i> Retour
+      </a>
+      <a [routerLink]="['/examens/modifier', examen.id]" class="btn-modifier">
+        <i class="bi bi-pencil-fill me-1"></i> Modifier
+      </a>
+      <a routerLink="/resultats/nouveau" class="btn-resultat" *ngIf="!examen.a_resultat">
+        <i class="bi bi-file-medical-fill me-1"></i> Saisir résultat
+      </a>
+      <button
+        class="btn-toggle-statut"
+        [class.btn-desactiver]="examen.est_actif"
+        [class.btn-activer]="!examen.est_actif"
+        (click)="confirmToggle = true"
+      >
+        <i class="bi" [class.bi-toggle-on]="examen.est_actif" [class.bi-toggle-off]="!examen.est_actif"></i>
+        {{ examen.est_actif ? 'Désactiver' : 'Activer' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Message succès -->
+  <div class="alert alert-success d-flex align-items-center gap-2 mb-3" *ngIf="successMessage">
+    <i class="bi bi-check-circle-fill"></i>
+    <span>{{ successMessage }}</span>
+  </div>
+
+  <!-- Modal confirmation -->
+  <div class="confirm-modal" *ngIf="confirmToggle">
+    <div class="confirm-box">
+      <div class="confirm-icon" [class.danger]="examen.est_actif" [class.success]="!examen.est_actif">
+        <i class="bi" [class.bi-toggle-off]="examen.est_actif" [class.bi-toggle-on]="!examen.est_actif"></i>
+      </div>
+      <h5>{{ examen.est_actif ? 'Désactiver cet examen ?' : 'Activer cet examen ?' }}</h5>
+      <p class="text-muted">Les données seront conservées.</p>
+      <div class="confirm-actions">
+        <button class="btn-annuler-confirm" (click)="confirmToggle = false">Annuler</button>
+        <button
+          class="btn-confirmer"
+          [class.danger]="examen.est_actif"
+          [class.success]="!examen.est_actif"
+          (click)="toggleStatut()"
+        >
+          {{ examen.est_actif ? 'Désactiver' : 'Activer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    <div class="col-md-6">
+      <div class="detail-card">
+        <div class="detail-card-header">
+          <i class="bi bi-droplet-fill text-warning"></i>
+          <h6>Informations de l'examen</h6>
+        </div>
+        <div class="detail-card-body">
+          <div class="detail-row">
+            <span class="detail-label">Patient</span>
+            <span class="detail-value">{{ examen.patient_prenom }} {{ examen.patient_nom }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Type</span>
+            <span class="detail-value">{{ examen.type_examen }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Laboratoire</span>
+            <span class="detail-value">{{ examen.laboratoire || 'Non renseigné' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="detail-card">
+        <div class="detail-card-header">
+          <i class="bi bi-calendar3 text-primary"></i>
+          <h6>Dates</h6>
+        </div>
+        <div class="detail-card-body">
+          <div class="detail-row">
+            <span class="detail-label">Date de prescription</span>
+            <span class="detail-value">{{ examen.date_prescription | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Date de réalisation</span>
+            <span class="detail-value" *ngIf="examen.date_realisation">
+              {{ examen.date_realisation | date:'dd/MM/yyyy' }}
+            </span>
+            <span class="en-attente" *ngIf="!examen.date_realisation">
+              <i class="bi bi-clock me-1"></i>En attente
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12" *ngIf="examen.notes">
+      <div class="detail-card">
+        <div class="detail-card-header">
+          <i class="bi bi-journal-text text-info"></i>
+          <h6>Notes</h6>
+        </div>
+        <div class="detail-card-body">
+          <p class="detail-text">{{ examen.notes }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="detail-card">
+        <div class="detail-card-header">
+          <i class="bi bi-file-medical-fill text-success"></i>
+          <h6>Résultat</h6>
+        </div>
+        <div class="detail-card-body">
+          <div class="d-flex align-items-center justify-content-between">
+            <p class="text-muted mb-0">
+              {{ examen.a_resultat ? 'Le résultat de cet examen est disponible' : 'Aucun résultat enregistré pour cet examen' }}
+            </p>
+            <a routerLink="/resultats" class="btn-voir-resultat">
+              <i class="bi bi-arrow-right me-1"></i>
+              {{ examen.a_resultat ? 'Voir le résultat' : 'Saisir le résultat' }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

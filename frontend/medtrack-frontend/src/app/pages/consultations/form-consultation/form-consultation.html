@@ -1,0 +1,147 @@
+<div class="page-header">
+  <div>
+    <h4 class="page-title">
+      <i class="bi bi-clipboard2-plus-fill me-2 text-success"></i>
+      {{ isEditMode ? 'Modifier la consultation' : 'Nouvelle consultation' }}
+    </h4>
+    <p class="page-subtitle">
+      {{ isEditMode ? 'Modifiez les informations de la consultation' : 'Enregistrez une nouvelle consultation' }}
+    </p>
+  </div>
+  <a routerLink="/consultations" class="btn-retour">
+    <i class="bi bi-arrow-left me-2"></i>Retour
+  </a>
+</div>
+
+<!-- Messages -->
+<div class="alert alert-success d-flex align-items-center gap-2" *ngIf="successMessage">
+  <i class="bi bi-check-circle-fill"></i>
+  <span>{{ successMessage }}</span>
+</div>
+<div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
+  <i class="bi bi-exclamation-triangle-fill"></i>
+  <span>{{ errorMessage }}</span>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="row g-4">
+
+    <!-- Infos principales -->
+    <div class="col-12">
+      <div class="form-card">
+        <div class="form-card-header">
+          <i class="bi bi-clipboard2-pulse-fill text-success"></i>
+          <h6>Informations de la consultation</h6>
+        </div>
+        <div class="form-card-body">
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label class="form-label">Patient <span class="text-danger">*</span></label>
+              <select
+                class="form-select"
+                [class.is-invalid]="patient?.invalid && patient?.touched"
+                formControlName="patient"
+              >
+                <option value="">Sélectionner un patient</option>
+                <option *ngFor="let p of patients" [value]="p.id">
+                  {{ p.prenom }} {{ p.nom }}
+                </option>
+              </select>
+              <div class="invalid-feedback">Le patient est requis.</div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Date de consultation <span class="text-danger">*</span></label>
+              <input
+                type="date"
+                class="form-control"
+                [class.is-invalid]="date_consultation?.invalid && date_consultation?.touched"
+                formControlName="date_consultation"
+              />
+              <div class="invalid-feedback">La date est requise.</div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Motif <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                [class.is-invalid]="motif?.invalid && motif?.touched"
+                formControlName="motif"
+                placeholder="Motif de la consultation"
+              />
+              <div class="invalid-feedback">
+                <span *ngIf="motif?.errors?.['required']">Le motif est requis.</span>
+                <span *ngIf="motif?.errors?.['minlength']">Minimum 5 caractères.</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Détails médicaux -->
+    <div class="col-12">
+      <div class="form-card">
+        <div class="form-card-header">
+          <i class="bi bi-heart-pulse-fill text-danger"></i>
+          <h6>Détails médicaux</h6>
+        </div>
+        <div class="form-card-body">
+          <div class="row g-3">
+
+            <div class="col-12">
+              <label class="form-label">Diagnostic <span class="text-danger">*</span></label>
+              <textarea
+                class="form-control"
+                [class.is-invalid]="diagnostic?.invalid && diagnostic?.touched"
+                formControlName="diagnostic"
+                rows="3"
+                placeholder="Diagnostic médical"
+              ></textarea>
+              <div class="invalid-feedback">Le diagnostic est requis.</div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Traitement</label>
+              <textarea
+                class="form-control"
+                formControlName="traitement"
+                rows="3"
+                placeholder="Traitement prescrit"
+              ></textarea>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Observations</label>
+              <textarea
+                class="form-control"
+                formControlName="observations"
+                rows="3"
+                placeholder="Observations complémentaires"
+              ></textarea>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Boutons -->
+    <div class="col-12">
+      <div class="form-actions">
+        <a routerLink="/consultations" class="btn-annuler">
+          <i class="bi bi-x-lg me-2"></i>Annuler
+        </a>
+        <button type="submit" class="btn-sauvegarder" [disabled]="isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!isLoading" class="bi bi-check-lg me-2"></i>
+          {{ isLoading ? 'Enregistrement...' : (isEditMode ? 'Modifier' : 'Enregistrer') }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</form>

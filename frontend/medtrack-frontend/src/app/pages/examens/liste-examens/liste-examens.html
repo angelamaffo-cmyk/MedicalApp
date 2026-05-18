@@ -1,0 +1,106 @@
+<div class="page-header">
+  <div>
+    <h4 class="page-title">
+      <i class="bi bi-droplet-fill me-2 text-warning"></i>Examens médicaux
+    </h4>
+    <p class="page-subtitle">Gérez les examens prescrits à vos patients</p>
+  </div>
+  <a routerLink="/examens/nouveau" class="btn-add">
+    <i class="bi bi-plus-lg me-2"></i>Nouvel examen
+  </a>
+</div>
+
+<!-- Recherche -->
+<div class="search-bar">
+  <div class="search-input">
+    <i class="bi bi-search search-icon"></i>
+    <input
+      type="text"
+      [(ngModel)]="recherche"
+      (input)="filtrer()"
+      placeholder="Rechercher par patient, examen ou type..."
+    />
+  </div>
+  <span class="results-count">{{ examensFiltres.length }} examen(s)</span>
+</div>
+
+<!-- Spinner -->
+<div class="text-center py-5" *ngIf="isLoading">
+  <div class="spinner-border text-warning"></div>
+  <p class="mt-2 text-muted">Chargement...</p>
+</div>
+
+<!-- Tableau -->
+<div class="table-card" *ngIf="!isLoading">
+  <table class="examens-table">
+    <thead>
+      <tr>
+        <th>Patient</th>
+        <th>Examen</th>
+        <th>Type</th>
+        <th>Prescription</th>
+        <th>Réalisation</th>
+        <th>Résultat</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let examen of examensFiltres">
+        <td>
+          <div class="patient-info">
+            <div class="patient-avatar">
+              {{ examen.patient_prenom[0] }}{{ examen.patient_nom[0] }}
+            </div>
+            <span class="patient-nom">{{ examen.patient_prenom }} {{ examen.patient_nom }}</span>
+          </div>
+        </td>
+        <td>
+          <span class="examen-nom">{{ examen.nom_examen }}</span>
+          <span class="labo-text">{{ examen.laboratoire }}</span>
+        </td>
+        <td>
+          <span class="type-badge type-{{ getTypeColor(examen.type_examen) }}">
+            {{ examen.type_examen }}
+          </span>
+        </td>
+        <td>
+          <span class="date-text">{{ examen.date_prescription | date:'dd/MM/yyyy' }}</span>
+        </td>
+        <td>
+          <span *ngIf="examen.date_realisation" class="date-text">
+            {{ examen.date_realisation | date:'dd/MM/yyyy' }}
+          </span>
+          <span *ngIf="!examen.date_realisation" class="en-attente">
+            <i class="bi bi-clock me-1"></i>En attente
+          </span>
+        </td>
+        <td>
+          <span class="resultat-badge" [class.disponible]="examen.a_resultat" [class.attente]="!examen.a_resultat">
+            <i class="bi" [class.bi-check-circle-fill]="examen.a_resultat" [class.bi-hourglass-split]="!examen.a_resultat"></i>
+            {{ examen.a_resultat ? 'Disponible' : 'En attente' }}
+          </span>
+        </td>
+        <td>
+          <div class="actions">
+            <a [routerLink]="['/examens', examen.id]" class="btn-action view" title="Voir détails">
+              <i class="bi bi-eye-fill"></i>
+            </a>
+            <a [routerLink]="['/examens/modifier', examen.id]" class="btn-action edit" title="Modifier">
+              <i class="bi bi-pencil-fill"></i>
+            </a>
+          </div>
+        </td>
+      </tr>
+
+      <tr *ngIf="examensFiltres.length === 0">
+        <td colspan="7" class="empty-state">
+          <i class="bi bi-droplet fs-1 text-muted"></i>
+          <p class="mt-2 text-muted">Aucun examen trouvé</p>
+          <a routerLink="/examens/nouveau" class="btn btn-warning btn-sm text-white">
+            Prescrire un examen
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
