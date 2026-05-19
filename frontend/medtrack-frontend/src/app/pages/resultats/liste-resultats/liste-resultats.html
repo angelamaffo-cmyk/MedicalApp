@@ -1,0 +1,95 @@
+<div class="page-header">
+  <div>
+    <h4 class="page-title">
+      <i class="bi bi-file-medical-fill me-2 text-success"></i>Résultats d'examens
+    </h4>
+    <p class="page-subtitle">Consultez et gérez les résultats des examens</p>
+  </div>
+  <a routerLink="/resultats/nouveau" class="btn-add">
+    <i class="bi bi-plus-lg me-2"></i>Nouveau résultat
+  </a>
+</div>
+
+<div class="search-bar">
+  <div class="search-input">
+    <i class="bi bi-search search-icon"></i>
+    <input
+      type="text"
+      [(ngModel)]="recherche"
+      (input)="filtrer()"
+      placeholder="Rechercher par patient, examen ou conclusion..."
+    />
+  </div>
+  <span class="results-count">{{ resultatsFiltres.length }} résultat(s)</span>
+</div>
+
+<div class="text-center py-5" *ngIf="isLoading">
+  <div class="spinner-border text-success"></div>
+  <p class="mt-2 text-muted">Chargement...</p>
+</div>
+
+<div class="table-card" *ngIf="!isLoading">
+  <table class="resultats-table">
+    <thead>
+      <tr>
+        <th>Patient</th>
+        <th>Examen</th>
+        <th>Type</th>
+        <th>Date résultat</th>
+        <th>Conclusion</th>
+        <th>État</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let resultat of resultatsFiltres">
+        <td>
+          <div class="patient-info">
+            <div class="patient-avatar">
+              {{ resultat.patient_prenom[0] }}{{ resultat.patient_nom[0] }}
+            </div>
+            <span class="patient-nom">{{ resultat.patient_prenom }} {{ resultat.patient_nom }}</span>
+          </div>
+        </td>
+        <td>
+          <span class="examen-nom">{{ resultat.examen_nom }}</span>
+        </td>
+        <td>
+          <span class="type-badge">{{ resultat.examen_type }}</span>
+        </td>
+        <td>
+          <span class="date-text">{{ resultat.date_resultat | date:'dd/MM/yyyy' }}</span>
+        </td>
+        <td>
+          <span class="conclusion-text">{{ resultat.conclusion }}</span>
+        </td>
+        <td>
+          <span class="etat-badge" [class.normal]="resultat.est_normal" [class.anormal]="!resultat.est_normal">
+            <i class="bi" [class.bi-check-circle-fill]="resultat.est_normal" [class.bi-exclamation-triangle-fill]="!resultat.est_normal"></i>
+            {{ resultat.est_normal ? 'Normal' : 'Anormal' }}
+          </span>
+        </td>
+        <td>
+          <div class="actions">
+            <a [routerLink]="['/resultats', resultat.id]" class="btn-action view" title="Voir">
+              <i class="bi bi-eye-fill"></i>
+            </a>
+            <a [routerLink]="['/resultats/modifier', resultat.id]" class="btn-action edit" title="Modifier">
+              <i class="bi bi-pencil-fill"></i>
+            </a>
+          </div>
+        </td>
+      </tr>
+
+      <tr *ngIf="resultatsFiltres.length === 0">
+        <td colspan="7" class="empty-state">
+          <i class="bi bi-file-medical fs-1 text-muted"></i>
+          <p class="mt-2 text-muted">Aucun résultat trouvé</p>
+          <a routerLink="/resultats/nouveau" class="btn btn-success btn-sm">
+            Ajouter un résultat
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

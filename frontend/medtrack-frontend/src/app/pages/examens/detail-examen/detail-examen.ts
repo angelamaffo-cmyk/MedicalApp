@@ -21,7 +21,7 @@ interface Examen {
   templateUrl: './detail-examen.html',
   styleUrl: './detail-examen.css',
 })
-export class DetailExamenComponent {
+export class DetailExamenComponent implements OnInit {
   examen: Examen | null = null;
   isLoading = false;
   examenId: number | null = null;

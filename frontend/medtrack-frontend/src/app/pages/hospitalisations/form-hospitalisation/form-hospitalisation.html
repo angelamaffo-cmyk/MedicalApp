@@ -1,0 +1,105 @@
+<div class="page-header">
+  <div>
+    <h4 class="page-title">
+      <i class="bi bi-hospital-fill me-2 text-danger"></i>
+      {{ isEditMode ? 'Modifier l\'hospitalisation' : 'Nouvelle admission' }}
+    </h4>
+    <p class="page-subtitle">{{ isEditMode ? 'Modifiez les informations' : 'Admettez un patient en hospitalisation' }}</p>
+  </div>
+  <a routerLink="/hospitalisations" class="btn-retour">
+    <i class="bi bi-arrow-left me-2"></i>Retour
+  </a>
+</div>
+
+<div class="alert alert-success d-flex align-items-center gap-2" *ngIf="successMessage">
+  <i class="bi bi-check-circle-fill"></i><span>{{ successMessage }}</span>
+</div>
+<div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
+  <i class="bi bi-exclamation-triangle-fill"></i><span>{{ errorMessage }}</span>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="row g-4">
+
+    <div class="col-12">
+      <div class="form-card">
+        <div class="form-card-header">
+          <i class="bi bi-hospital-fill text-danger"></i>
+          <h6>Informations d'admission</h6>
+        </div>
+        <div class="form-card-body">
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label class="form-label">Patient <span class="text-danger">*</span></label>
+              <select class="form-select" [class.is-invalid]="patient?.invalid && patient?.touched" formControlName="patient">
+                <option value="">Sélectionner un patient</option>
+                <option *ngFor="let p of patients" [value]="p.id">{{ p.nom }}</option>
+              </select>
+              <div class="invalid-feedback">Le patient est requis.</div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Lit <span class="text-danger">*</span></label>
+              <select class="form-select" [class.is-invalid]="lit?.invalid && lit?.touched" formControlName="lit">
+                <option value="">Sélectionner un lit</option>
+                <option *ngFor="let l of lits" [value]="l.id">{{ l.nom }}</option>
+              </select>
+              <div class="invalid-feedback">Le lit est requis.</div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Date d'entrée <span class="text-danger">*</span></label>
+              <input type="datetime-local" class="form-control" [class.is-invalid]="date_entree?.invalid && date_entree?.touched" formControlName="date_entree" />
+              <div class="invalid-feedback">La date d'entrée est requise.</div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Date de sortie</label>
+              <input type="datetime-local" class="form-control" formControlName="date_sortie" />
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Motif d'admission <span class="text-danger">*</span></label>
+              <textarea
+                class="form-control"
+                [class.is-invalid]="motif_admission?.invalid && motif_admission?.touched"
+                formControlName="motif_admission"
+                rows="3"
+                placeholder="Décrivez le motif d'admission"
+              ></textarea>
+              <div class="invalid-feedback">Le motif est requis.</div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Statut</label>
+              <select class="form-select" formControlName="statut">
+                <option *ngFor="let s of statuts" [value]="s.value">{{ s.label }}</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Motif de sortie</label>
+              <input type="text" class="form-control" formControlName="motif_sortie" placeholder="Si applicable" />
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-actions">
+        <a routerLink="/hospitalisations" class="btn-annuler">
+          <i class="bi bi-x-lg me-2"></i>Annuler
+        </a>
+        <button type="submit" class="btn-sauvegarder" [disabled]="isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!isLoading" class="bi bi-check-lg me-2"></i>
+          {{ isLoading ? 'Enregistrement...' : (isEditMode ? 'Modifier' : 'Admettre') }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</form>

@@ -1,1 +1,218 @@
-<p>profil works!</p>
+<div class="page-header">
+  <div>
+    <h4 class="page-title">
+      <i class="bi bi-person-circle me-2 text-primary"></i>Mon profil
+    </h4>
+    <p class="page-subtitle">Gérez vos informations personnelles et votre sécurité</p>
+  </div>
+</div>
+
+<!-- Message succès -->
+<div class="alert alert-success d-flex align-items-center gap-2 mb-4" *ngIf="successMdp">
+  <i class="bi bi-check-circle-fill"></i>
+  <span>{{ successMdp }}</span>
+</div>
+
+<div class="row g-4">
+
+  <!-- Carte profil -->
+  <div class="col-md-4">
+    <div class="profil-card">
+      <div class="profil-avatar-big">
+        {{ profil.nom_complet[0] }}
+      </div>
+      <h5 class="profil-nom">{{ profil.nom_complet }}</h5>
+      <span class="role-badge">
+        <i class="bi {{ getRoleIcon() }} me-1"></i>
+        {{ getRoleLabel() }}
+      </span>
+      <div class="profil-meta">
+        <div class="meta-item">
+          <i class="bi bi-envelope-fill text-primary"></i>
+          <span>{{ profil.email }}</span>
+        </div>
+        <div class="meta-item">
+          <i class="bi bi-telephone-fill text-success"></i>
+          <span>{{ profil.telephone }}</span>
+        </div>
+        <div class="meta-item" *ngIf="profil.specialite">
+          <i class="bi bi-star-fill text-warning"></i>
+          <span>{{ profil.specialite }}</span>
+        </div>
+        <div class="meta-item">
+          <i class="bi bi-calendar3 text-info"></i>
+          <span>Membre depuis {{ profil.date_creation | date:'MMMM yyyy' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Infos détaillées -->
+  <div class="col-md-8">
+
+    <!-- Informations du compte -->
+    <div class="detail-card mb-4">
+      <div class="detail-card-header">
+        <i class="bi bi-person-fill text-primary"></i>
+        <h6>Informations du compte</h6>
+      </div>
+      <div class="detail-card-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="info-field">
+              <label>Nom complet</label>
+              <p>{{ profil.nom_complet }}</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-field">
+              <label>Nom d'utilisateur</label>
+              <p>{{ profil.username }}</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-field">
+              <label>Email</label>
+              <p>{{ profil.email }}</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-field">
+              <label>Téléphone</label>
+              <p>{{ profil.telephone }}</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-field">
+              <label>Rôle</label>
+              <p>
+                <span class="role-badge-sm">
+                  <i class="bi {{ getRoleIcon() }} me-1"></i>{{ getRoleLabel() }}
+                </span>
+              </p>
+            </div>
+          </div>
+          <div class="col-md-6" *ngIf="profil.specialite">
+            <div class="info-field">
+              <label>Spécialité</label>
+              <p>{{ profil.specialite }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sécurité -->
+    <div class="detail-card">
+      <div class="detail-card-header">
+        <i class="bi bi-shield-lock-fill text-warning"></i>
+        <h6>Sécurité</h6>
+        <button
+          class="btn-toggle-mdp ms-auto"
+          (click)="showMdpForm = !showMdpForm"
+        >
+          <i class="bi" [class.bi-chevron-down]="!showMdpForm" [class.bi-chevron-up]="showMdpForm"></i>
+          {{ showMdpForm ? 'Fermer' : 'Changer le mot de passe' }}
+        </button>
+      </div>
+
+      <div class="detail-card-body" *ngIf="!showMdpForm">
+        <div class="security-info">
+          <div class="security-item">
+            <div class="security-icon">
+              <i class="bi bi-lock-fill text-success"></i>
+            </div>
+            <div>
+              <p class="security-label">Mot de passe</p>
+              <p class="security-value">••••••••••</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulaire changement mdp -->
+      <div class="detail-card-body" *ngIf="showMdpForm">
+
+        <div class="alert alert-danger d-flex align-items-center gap-2 mb-3" *ngIf="errorMdp">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>{{ errorMdp }}</span>
+        </div>
+
+        <form [formGroup]="mdpForm" (ngSubmit)="onSubmitMdp()">
+          <div class="row g-3">
+
+            <div class="col-12">
+              <label class="form-label">Mot de passe actuel</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input
+                  [type]="showAncien ? 'text' : 'password'"
+                  class="form-control"
+                  [class.is-invalid]="ancien?.invalid && ancien?.touched"
+                  formControlName="ancien_mot_de_passe"
+                  placeholder="Votre mot de passe actuel"
+                />
+                <button type="button" class="btn btn-outline-secondary" (click)="showAncien = !showAncien">
+                  <i class="bi" [class.bi-eye]="!showAncien" [class.bi-eye-slash]="showAncien"></i>
+                </button>
+                <div class="invalid-feedback">Ce champ est requis.</div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Nouveau mot de passe</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                <input
+                  [type]="showNouveau ? 'text' : 'password'"
+                  class="form-control"
+                  [class.is-invalid]="nouveau?.invalid && nouveau?.touched"
+                  formControlName="nouveau_mot_de_passe"
+                  placeholder="Minimum 8 caractères"
+                />
+                <button type="button" class="btn btn-outline-secondary" (click)="showNouveau = !showNouveau">
+                  <i class="bi" [class.bi-eye]="!showNouveau" [class.bi-eye-slash]="showNouveau"></i>
+                </button>
+                <div class="invalid-feedback">
+                  <span *ngIf="nouveau?.errors?.['required']">Requis.</span>
+                  <span *ngIf="nouveau?.errors?.['minlength']">Minimum 8 caractères.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Confirmer le mot de passe</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                <input
+                  [type]="showConfirmer ? 'text' : 'password'"
+                  class="form-control"
+                  [class.is-invalid]="confirmer?.invalid && confirmer?.touched"
+                  formControlName="confirmer_mot_de_passe"
+                  placeholder="Répétez le mot de passe"
+                />
+                <button type="button" class="btn btn-outline-secondary" (click)="showConfirmer = !showConfirmer">
+                  <i class="bi" [class.bi-eye]="!showConfirmer" [class.bi-eye-slash]="showConfirmer"></i>
+                </button>
+                <div class="invalid-feedback">
+                  <span *ngIf="confirmer?.errors?.['required']">Requis.</span>
+                  <span *ngIf="confirmer?.errors?.['notMatch']">Les mots de passe ne correspondent pas.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <button type="submit" class="btn-changer-mdp" [disabled]="isLoadingMdp">
+                <span *ngIf="isLoadingMdp" class="spinner-border spinner-border-sm me-2"></span>
+                <i *ngIf="!isLoadingMdp" class="bi bi-check-lg me-2"></i>
+                {{ isLoadingMdp ? 'Enregistrement...' : 'Changer le mot de passe' }}
+              </button>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>

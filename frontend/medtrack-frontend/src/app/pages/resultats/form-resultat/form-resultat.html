@@ -1,0 +1,116 @@
+<div class="page-header">
+  <div>
+    <h4 class="page-title">
+      <i class="bi bi-file-medical-fill me-2 text-success"></i>
+      {{ isEditMode ? 'Modifier le résultat' : 'Nouveau résultat' }}
+    </h4>
+    <p class="page-subtitle">{{ isEditMode ? 'Modifiez le résultat' : 'Enregistrez un nouveau résultat d\'examen' }}</p>
+  </div>
+  <a routerLink="/resultats" class="btn-retour">
+    <i class="bi bi-arrow-left me-2"></i>Retour
+  </a>
+</div>
+
+<div class="alert alert-success d-flex align-items-center gap-2" *ngIf="successMessage">
+  <i class="bi bi-check-circle-fill"></i><span>{{ successMessage }}</span>
+</div>
+<div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
+  <i class="bi bi-exclamation-triangle-fill"></i><span>{{ errorMessage }}</span>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="row g-4">
+
+    <div class="col-12">
+      <div class="form-card">
+        <div class="form-card-header">
+          <i class="bi bi-file-medical-fill text-success"></i>
+          <h6>Informations du résultat</h6>
+        </div>
+        <div class="form-card-body">
+          <div class="row g-3">
+
+            <div class="col-md-8">
+              <label class="form-label">Examen concerné <span class="text-danger">*</span></label>
+              <select
+                class="form-select"
+                [class.is-invalid]="examen?.invalid && examen?.touched"
+                formControlName="examen"
+              >
+                <option value="">Sélectionner un examen</option>
+                <option *ngFor="let e of examens" [value]="e.id">{{ e.label }}</option>
+              </select>
+              <div class="invalid-feedback">L'examen est requis.</div>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Date du résultat <span class="text-danger">*</span></label>
+              <input
+                type="date"
+                class="form-control"
+                [class.is-invalid]="date_resultat?.invalid && date_resultat?.touched"
+                formControlName="date_resultat"
+              />
+              <div class="invalid-feedback">La date est requise.</div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Contenu du résultat <span class="text-danger">*</span></label>
+              <textarea
+                class="form-control"
+                [class.is-invalid]="contenu?.invalid && contenu?.touched"
+                formControlName="contenu"
+                rows="5"
+                placeholder="Détails du résultat (valeurs, mesures...)"
+              ></textarea>
+              <div class="invalid-feedback">Le contenu est requis.</div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Conclusion <span class="text-danger">*</span></label>
+              <textarea
+                class="form-control"
+                [class.is-invalid]="conclusion?.invalid && conclusion?.touched"
+                formControlName="conclusion"
+                rows="3"
+                placeholder="Conclusion médicale du résultat"
+              ></textarea>
+              <div class="invalid-feedback">La conclusion est requise.</div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">État du résultat <span class="text-danger">*</span></label>
+              <div class="etat-options">
+                <label class="etat-option" [class.selected-normal]="form.get('est_normal')?.value === true">
+                  <input type="radio" formControlName="est_normal" [value]="true" />
+                  <i class="bi bi-check-circle-fill text-success me-2"></i>
+                  Normal
+                </label>
+                <label class="etat-option" [class.selected-anormal]="form.get('est_normal')?.value === false">
+                  <input type="radio" formControlName="est_normal" [value]="false" />
+                  <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                  Anormal
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-actions">
+        <a routerLink="/resultats" class="btn-annuler">
+          <i class="bi bi-x-lg me-2"></i>Annuler
+        </a>
+        <button type="submit" class="btn-sauvegarder" [disabled]="isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!isLoading" class="bi bi-check-lg me-2"></i>
+          {{ isLoading ? 'Enregistrement...' : (isEditMode ? 'Modifier' : 'Enregistrer') }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</form>

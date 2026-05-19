@@ -61,6 +61,30 @@ export const routes: Routes = [
 { path: 'examens/:id', loadComponent: () =>
     import('./pages/examens/detail-examen/detail-examen').then(m => m.DetailExamenComponent)
 },
+{ path: 'hospitalisations', loadComponent: () =>
+    import('./pages/hospitalisations/liste-hospitalisations/liste-hospitalisations').then(m => m.ListeHospitalisationsComponent)
+},
+{ path: 'hospitalisations/nouveau', loadComponent: () =>
+    import('./pages/hospitalisations/form-hospitalisation/form-hospitalisation').then(m => m.FormHospitalisationComponent)
+},
+{ path: 'hospitalisations/modifier/:id', loadComponent: () =>
+    import('./pages/hospitalisations/form-hospitalisation/form-hospitalisation').then(m => m.FormHospitalisationComponent)
+},
+{ path: 'hospitalisations/:id', loadComponent: () =>
+    import('./pages/hospitalisations/detail-hospitalisation/detail-hospitalisation').then(m => m.DetailHospitalisationComponent)
+},
+{ path: 'resultats', loadComponent: () =>
+    import('./pages/resultats/liste-resultats/liste-resultats').then(m => m.ListeResultatsComponent)
+},
+{ path: 'resultats/nouveau', loadComponent: () =>
+    import('./pages/resultats/form-resultat/form-resultat').then(m => m.FormResultatComponent)
+},
+{ path: 'resultats/modifier/:id', loadComponent: () =>
+    import('./pages/resultats/form-resultat/form-resultat').then(m => m.FormResultatComponent)
+},
+{ path: 'resultats/:id', loadComponent: () =>
+    import('./pages/resultats/detail-resultat/detail-resultat').then(m => m.DetailResultatComponent)
+},
     ]
   },
 
