@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , ChangeDetectorRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
-
+import { Examen } from '../../../models/examens.model';
+import { ExamenService } from '../../../services/examen.service';
+import { Consultation } from '../../../models/consultations.model';
+import { ConsultationService } from '../../../services/consultation.service';
 @Component({
   selector: 'app-form-examen',
   standalone:true,
@@ -14,14 +17,11 @@ export class FormExamenComponent implements OnInit {
   form: FormGroup;
   isLoading = false;
   isEditMode = false;
-  examenId: number | null = null;
+  examenId!: number ;
   successMessage = '';
   errorMessage = '';
-   consultations = [
-    { id: 1, label: 'Belmisse Temgoua — Paludisme (18/05/2026)' },
-    { id: 2, label: 'Jean Kamga — Gastrite (17/05/2026)' },
-    { id: 3, label: 'Marie Tchoupo — Bronchite (16/05/2026)' },
-  ];
+   consultations : Consultation[]= [];
+   
 
   typesExamen = [
     'BIOLOGIE', 'RADIOLOGIE', 'ECHOGRAPHIE',
@@ -30,7 +30,10 @@ export class FormExamenComponent implements OnInit {
    constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private examenService: ExamenService,
+    private consultationService: ConsultationService,
+    private cdr: ChangeDetectorRef
   ) {
       this.form = this.fb.group({
       consultation: ['', Validators.required],
@@ -44,19 +47,36 @@ export class FormExamenComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.examenId = this.route.snapshot.params['id'];
-    if (this.examenId) {
+    this.chargerConsultations();
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.examenId = Number(id);
       this.isEditMode = true;
-      this.form.patchValue({
-        consultation: 1,
-        type_examen: 'BIOLOGIE',
-        nom_examen: 'Numération Formule Sanguine',
-        date_prescription: '2026-05-18',
-        date_realisation: '2026-05-19',
-        laboratoire: 'Labo Central',
-        notes: 'Résultat urgent',
-      });
+      this.chargerExamen();
     }
+  }
+  chargerConsultations(): void {
+    this.consultationService.getAll().subscribe({
+      next: (data) => {
+        this.consultations = data;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+  chargerExamen(): void {
+    this.isLoading = true;
+    this.examenService.getOne(this.examenId).subscribe({
+      next: (data) => {
+        this.form.patchValue(data);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.errorMessage = 'Impossible de charger l\'examen.';
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
   get consultation() { return this.form.get('consultation'); }
   get type_examen() { return this.form.get('type_examen'); }
@@ -69,13 +89,34 @@ export class FormExamenComponent implements OnInit {
       return;
     }
       this.isLoading = true;
-    setTimeout(() => {
-      this.isLoading = false;
-      this.successMessage = this.isEditMode
-        ? 'Examen modifié avec succès !'
-        : 'Examen prescrit avec succès !';
-      setTimeout(() => this.router.navigate(['/examens']), 1500);
-    }, 1000);
+      const data: Examen = this.form.value;
+    if (this.isEditMode) {
+      this.examenService.update(this.examenId, data).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.successMessage = 'Examen modifié avec succès !';
+          setTimeout(() => this.router.navigate(['/examens']), 1500);
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.errorMessage = err.error?.detail || 'Erreur lors de la modification.';
+          this.cdr.detectChanges();
+        }
+      });
+      } else {
+      this.examenService.create(data).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.successMessage = 'Examen prescrit avec succès !';
+          setTimeout(() => this.router.navigate(['/examens']), 1500);
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.errorMessage = err.error?.detail || 'Erreur lors de la création.';
+          this.cdr.detectChanges();
+        }
+      });
+    }
   }
   
 }

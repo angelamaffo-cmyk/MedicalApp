@@ -1,19 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , ChangeDetectorRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
+import { ConsultationService } from '../../../services/consultation.service';
+import { Consultation } from '../../../models/consultations.model';
 
-interface Consultation {
-  id: number;
-  patient_nom: string;
-  patient_prenom: string;
-  date_consultation: string;
-  motif: string;
-  diagnostic: string;
-  traitement: string;
-  observations: string;
-  est_actif: boolean;
-  date_creation: string;
-}
+
 @Component({
   selector: 'app-detail-consultation',
   standalone:true,
@@ -21,45 +12,62 @@ interface Consultation {
   templateUrl: './detail-consultation.html',
   styleUrl: './detail-consultation.css',
 })
-export class DetailConsultationComponent {
+export class DetailConsultationComponent implements OnInit {
   consultation: Consultation | null = null;
   isLoading = false;
-  consultationId: number | null = null;
+  consultationId!: number ;
   confirmToggle = false;
   successMessage = '';
+    errorMessage = '';
+
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+     private consultationService: ConsultationService,
+    private cdr: ChangeDetectorRef
   ) {}
   ngOnInit(): void {
-    this.consultationId = this.route.snapshot.params['id'];
-    this.isLoading = true;
-
-    setTimeout(() => {
-      this.consultation = {
-        id: this.consultationId!,
-        patient_nom: 'Temgoua',
-        patient_prenom: 'Belmisse',
-        date_consultation: '2026-05-18',
-        motif: 'Fièvre persistante depuis 3 jours',
-        diagnostic: 'Paludisme simple',
-        traitement: 'Artemether 80mg — 3 fois par jour pendant 5 jours',
-        observations: 'Patient à revoir dans 3 jours. Éviter l\'automédication.',
-        est_actif: true,
-        date_creation: '2026-05-18',
-      };
-       this.isLoading = false;
-    }, 800);
+    const id = this.route.snapshot.paramMap.get('id');
+    if(id){
+      this.consultationId = Number(id);
+      this.chargerConsultation();
+    }
   }
+
+  chargerConsultation(): void {
+    this.isLoading = true;
+    this.consultationService.getOne(this.consultationId).subscribe({
+      next: (data) => {
+        this.consultation = data;
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+        error: () => {
+        this.errorMessage = 'Impossible de charger la consultation.';
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+    
 
   toggleStatut(): void {
     if (!this.consultation) return;
-    this.consultation.est_actif = !this.consultation.est_actif;
-    this.successMessage = this.consultation.est_actif
-      ? 'Consultation activée avec succès !'
-      : 'Consultation désactivée avec succès !';
-    this.confirmToggle = false;
-    setTimeout(() => this.successMessage = '', 3000);
+    const newStatut = !this.consultation.est_actif;
+    this.consultationService.toggleStatut(this.consultationId, newStatut).subscribe({
+      next: (data) => {
+        this.consultation!.est_actif = data.est_actif;
+        this.successMessage = newStatut ? 'Consultation activée !' : 'Consultation désactivée !';
+        this.confirmToggle = false;
+        this.cdr.detectChanges();
+        setTimeout(() => { this.successMessage = ''; this.cdr.detectChanges(); }, 3000);
+      },
+      error: () => {
+        this.errorMessage = 'Erreur lors du changement de statut.';
+        this.confirmToggle = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 }

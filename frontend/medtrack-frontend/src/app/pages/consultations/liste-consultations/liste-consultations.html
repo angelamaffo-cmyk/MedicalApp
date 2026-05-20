@@ -10,6 +10,34 @@
   </a>
 </div>
 
+<!-- Stats -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="mini-stat">
+      <i class="bi bi-clipboard2-pulse-fill text-success"></i>
+      <div>
+        <h5>{{ total }}</h5>
+        <small>Total consultations</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="mini-stat">
+      <i class="bi bi-check-circle-fill text-primary"></i>
+      <div>
+        <h5>{{ totalActives }}</h5>
+        <small>Actives</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Erreur -->
+<div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
+  <i class="bi bi-exclamation-triangle-fill"></i>
+  <span>{{ errorMessage }}</span>
+</div>
+
 <!-- Recherche -->
 <div class="search-bar">
   <div class="search-input">
@@ -17,11 +45,11 @@
     <input
       type="text"
       [(ngModel)]="recherche"
-      (input)="filtrer()"
+      (ngModelChange)="filtrer()"
       placeholder="Rechercher par patient, motif ou diagnostic..."
     />
   </div>
-  <span class="results-count">{{ consultationsFiltrees.length }} consultation(s)</span>
+  <span class="results-count">{{ consultationsFiltrees.length }} / {{ total }} consultation(s)</span>
 </div>
 
 <!-- Spinner -->
@@ -40,53 +68,59 @@
         <th>Motif</th>
         <th>Diagnostic</th>
         <th>Traitement</th>
+        <th>Statut</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let consultation of consultationsFiltrees">
+      <tr *ngFor="let c of consultationsFiltrees">
         <td>
           <div class="patient-info">
             <div class="patient-avatar">
-              {{ consultation.patient_prenom[0] }}{{ consultation.patient_nom[0] }}
+              {{ c.patient_prenom?.[0] }}{{ c.patient_nom?.[0] }}
             </div>
-            <span class="patient-nom">{{ consultation.patient_prenom }} {{ consultation.patient_nom }}</span>
+            <span class="patient-nom">{{ c.patient_prenom }} {{ c.patient_nom }}</span>
           </div>
         </td>
         <td>
           <span class="date-badge">
             <i class="bi bi-calendar3 me-1"></i>
-            {{ consultation.date_consultation | date:'dd/MM/yyyy' }}
+            {{ c.date_consultation | date:'dd/MM/yyyy' }}
+          </span>
+        </td>
+        <td><span class="motif-text">{{ c.motif }}</span></td>
+        <td><span class="diagnostic-badge">{{ c.diagnostic }}</span></td>
+        <td><span class="traitement-text">{{ c.traitement || '—' }}</span></td>
+        <td>
+          <span class="statut-badge" [class.actif]="c.est_actif" [class.inactif]="!c.est_actif">
+            <i class="bi" [class.bi-check-circle-fill]="c.est_actif" [class.bi-x-circle-fill]="!c.est_actif"></i>
+            {{ c.est_actif ? 'Active' : 'Inactive' }}
           </span>
         </td>
         <td>
-          <span class="motif-text">{{ consultation.motif }}</span>
-        </td>
-        <td>
-          <span class="diagnostic-badge">{{ consultation.diagnostic }}</span>
-        </td>
-        <td>
-          <span class="traitement-text">{{ consultation.traitement }}</span>
-        </td>
-        <td>
           <div class="actions">
-            <a [routerLink]="['/consultations', consultation.id]" class="btn-action view" title="Voir détails">
+            <a [routerLink]="['/consultations', c.id]" class="btn-action view" title="Voir">
               <i class="bi bi-eye-fill"></i>
             </a>
-            <a [routerLink]="['/consultations/modifier', consultation.id]" class="btn-action edit" title="Modifier">
+            <a [routerLink]="['/consultations/modifier', c.id]" class="btn-action edit" title="Modifier">
               <i class="bi bi-pencil-fill"></i>
             </a>
           </div>
         </td>
       </tr>
 
-      <tr *ngIf="consultationsFiltrees.length === 0">
-        <td colspan="6" class="empty-state">
+      <tr *ngIf="consultationsFiltrees.length === 0 && !isLoading">
+        <td colspan="7" class="empty-state">
           <i class="bi bi-clipboard2 fs-1 text-muted"></i>
-          <p class="mt-2 text-muted">Aucune consultation trouvée</p>
-          <a routerLink="/consultations/nouveau" class="btn btn-success btn-sm">
-            Ajouter une consultation
+          <p class="mt-2 text-muted">
+            {{ recherche ? 'Aucune consultation ne correspond à votre recherche' : 'Aucune consultation enregistrée' }}
+          </p>
+          <a routerLink="/consultations/nouveau" class="btn btn-success btn-sm" *ngIf="!recherche">
+            Nouvelle consultation
           </a>
+          <button class="btn btn-outline-secondary btn-sm" *ngIf="recherche" (click)="reinitialiser()">
+            Effacer la recherche
+          </button>
         </td>
       </tr>
     </tbody>

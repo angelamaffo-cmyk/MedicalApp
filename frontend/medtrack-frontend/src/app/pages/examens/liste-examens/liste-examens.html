@@ -10,6 +10,34 @@
   </a>
 </div>
 
+<!-- Stats -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="mini-stat">
+      <i class="bi bi-droplet-fill text-warning"></i>
+      <div><h5>{{ total }}</h5><small>Total examens</small></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="mini-stat">
+      <i class="bi bi-hourglass-split text-danger"></i>
+      <div><h5>{{ enAttente }}</h5><small>En attente</small></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="mini-stat">
+      <i class="bi bi-check-circle-fill text-success"></i>
+      <div><h5>{{ total - enAttente }}</h5><small>Réalisés</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- Erreur -->
+<div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
+  <i class="bi bi-exclamation-triangle-fill"></i>
+  <span>{{ errorMessage }}</span>
+</div>
+
 <!-- Recherche -->
 <div class="search-bar">
   <div class="search-input">
@@ -17,11 +45,11 @@
     <input
       type="text"
       [(ngModel)]="recherche"
-      (input)="filtrer()"
+      (ngModelChange)="filtrer()"
       placeholder="Rechercher par patient, examen ou type..."
     />
   </div>
-  <span class="results-count">{{ examensFiltres.length }} examen(s)</span>
+  <span class="results-count">{{ examensFiltres.length }} / {{ total }} examen(s)</span>
 </div>
 
 <!-- Spinner -->
@@ -40,65 +68,62 @@
         <th>Type</th>
         <th>Prescription</th>
         <th>Réalisation</th>
-        <th>Résultat</th>
+        <th>Statut</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let examen of examensFiltres">
+      <tr *ngFor="let e of examensFiltres">
         <td>
           <div class="patient-info">
             <div class="patient-avatar">
-              {{ examen.patient_prenom[0] }}{{ examen.patient_nom[0] }}
+              {{ e.patient_prenom?.[0] }}{{ e.patient_nom?.[0] }}
             </div>
-            <span class="patient-nom">{{ examen.patient_prenom }} {{ examen.patient_nom }}</span>
+            <span class="patient-nom">{{ e.patient_prenom }} {{ e.patient_nom }}</span>
           </div>
         </td>
         <td>
-          <span class="examen-nom">{{ examen.nom_examen }}</span>
-          <span class="labo-text">{{ examen.laboratoire }}</span>
+          <span class="examen-nom">{{ e.nom_examen }}</span>
+          <span class="labo-text" *ngIf="e.laboratoire">{{ e.laboratoire }}</span>
         </td>
         <td>
-          <span class="type-badge type-{{ getTypeColor(examen.type_examen) }}">
-            {{ examen.type_examen }}
-          </span>
+          <span class="type-badge type-{{ getTypeColor(e.type_examen) }}">{{ e.type_examen }}</span>
+        </td>
+        <td><span class="date-text">{{ e.date_prescription | date:'dd/MM/yyyy' }}</span></td>
+        <td>
+          <span *ngIf="e.date_realisation" class="date-text">{{ e.date_realisation | date:'dd/MM/yyyy' }}</span>
+          <span *ngIf="!e.date_realisation" class="en-attente"><i class="bi bi-clock me-1"></i>En attente</span>
         </td>
         <td>
-          <span class="date-text">{{ examen.date_prescription | date:'dd/MM/yyyy' }}</span>
-        </td>
-        <td>
-          <span *ngIf="examen.date_realisation" class="date-text">
-            {{ examen.date_realisation | date:'dd/MM/yyyy' }}
-          </span>
-          <span *ngIf="!examen.date_realisation" class="en-attente">
-            <i class="bi bi-clock me-1"></i>En attente
-          </span>
-        </td>
-        <td>
-          <span class="resultat-badge" [class.disponible]="examen.a_resultat" [class.attente]="!examen.a_resultat">
-            <i class="bi" [class.bi-check-circle-fill]="examen.a_resultat" [class.bi-hourglass-split]="!examen.a_resultat"></i>
-            {{ examen.a_resultat ? 'Disponible' : 'En attente' }}
+          <span class="statut-badge" [class.actif]="e.est_actif" [class.inactif]="!e.est_actif">
+            <i class="bi" [class.bi-check-circle-fill]="e.est_actif" [class.bi-x-circle-fill]="!e.est_actif"></i>
+            {{ e.est_actif ? 'Actif' : 'Inactif' }}
           </span>
         </td>
         <td>
           <div class="actions">
-            <a [routerLink]="['/examens', examen.id]" class="btn-action view" title="Voir détails">
+            <a [routerLink]="['/examens', e.id]" class="btn-action view" title="Voir">
               <i class="bi bi-eye-fill"></i>
             </a>
-            <a [routerLink]="['/examens/modifier', examen.id]" class="btn-action edit" title="Modifier">
+            <a [routerLink]="['/examens/modifier', e.id]" class="btn-action edit" title="Modifier">
               <i class="bi bi-pencil-fill"></i>
             </a>
           </div>
         </td>
       </tr>
 
-      <tr *ngIf="examensFiltres.length === 0">
+      <tr *ngIf="examensFiltres.length === 0 && !isLoading">
         <td colspan="7" class="empty-state">
           <i class="bi bi-droplet fs-1 text-muted"></i>
-          <p class="mt-2 text-muted">Aucun examen trouvé</p>
-          <a routerLink="/examens/nouveau" class="btn btn-warning btn-sm text-white">
+          <p class="mt-2 text-muted">
+            {{ recherche ? 'Aucun examen ne correspond à votre recherche' : 'Aucun examen enregistré' }}
+          </p>
+          <a routerLink="/examens/nouveau" class="btn btn-warning btn-sm text-white" *ngIf="!recherche">
             Prescrire un examen
           </a>
+          <button class="btn btn-outline-secondary btn-sm" *ngIf="recherche" (click)="reinitialiser()">
+            Effacer la recherche
+          </button>
         </td>
       </tr>
     </tbody>

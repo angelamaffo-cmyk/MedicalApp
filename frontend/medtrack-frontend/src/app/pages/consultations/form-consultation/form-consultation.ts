@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Patients } from './../../../models/patients.model';
+import { Component, OnInit , ChangeDetectorRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { PatientService } from '../../../services/patients.service';
+import { Consultation } from '../../../models/consultations.model';
+import { ConsultationService } from '../../../services/consultation.service';
 @Component({
   selector: 'app-form-consultation',
   standalone:true,
@@ -13,20 +17,20 @@ export class FormConsultationComponent implements OnInit {
 form: FormGroup;
   isLoading = false;
   isEditMode = false;
-  consultationId: number | null = null;
+  consultationId!: number ;
   successMessage = '';
   errorMessage = '';
 
   // Simulation liste patients
-  patients = [
-    { id: 1, nom: 'Temgoua', prenom: 'Belmisse' },
-    { id: 2, nom: 'Kamga', prenom: 'Jean' },
-    { id: 3, nom: 'Tchoupo', prenom: 'Marie' },
-  ];
+  patients : Patients[]=[];
+   
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private consultationService: ConsultationService,
+    private patientService: PatientService,
+    private cdr: ChangeDetectorRef
   ) {
      this.form = this.fb.group({
       patient: ['', Validators.required],
@@ -38,19 +42,38 @@ form: FormGroup;
     });
   }
    ngOnInit(): void {
-    this.consultationId = this.route.snapshot.params['id'];
-    if (this.consultationId) {
+    this.chargerPatients();
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.consultationId = Number(id);
       this.isEditMode = true;
-      // Simulation données existantes
-      this.form.patchValue({
-        patient: 1,
-        date_consultation: '2026-05-18',
-        motif: 'Fièvre persistante',
-        diagnostic: 'Paludisme',
-        traitement: 'Artemether 80mg',
-        observations: 'Patient à revoir dans 3 jours',
-      });
+      this.chargerConsultation();
+      
     }
+  }
+
+  chargerPatients(): void {
+    this.patientService.getPatients().subscribe({
+      next: (data) => {
+        this.patients = data;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+  chargerConsultation(): void {
+    this.isLoading = true;
+    this.consultationService.getOne(this.consultationId).subscribe({
+      next: (data) => {
+        this.form.patchValue(data);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: ()=>{
+        this.errorMessage='Impossible de charger la consultation';
+        this.isLoading=false;
+        this.cdr.detectChanges();
+      }
+    });
   }
   get patient() { return this.form.get('patient'); }
   get date_consultation() { return this.form.get('date_consultation'); }
@@ -64,13 +87,35 @@ form: FormGroup;
     }
       this.isLoading = true;
     this.errorMessage = '';
+      const data: Consultation = this.form.value;
 
-    setTimeout(() => {
-      this.isLoading = false;
-      this.successMessage = this.isEditMode
-        ? 'Consultation modifiée avec succès !'
-        : 'Consultation créée avec succès !';
-      setTimeout(() => this.router.navigate(['/consultations']), 1500);
-    }, 1000);
+    if (this.isEditMode) {
+      this.consultationService.update(this.consultationId, data).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.successMessage = 'Consultation modifiée avec succès !';
+          setTimeout(() => this.router.navigate(['/consultations']), 1500);
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.errorMessage = err.error?.detail || 'Erreur lors de la modification.';
+          this.cdr.detectChanges();
+        }
+      });
+      } else {
+      this.consultationService.create(data).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.successMessage = 'Consultation créée avec succès !';
+          setTimeout(() => this.router.navigate(['/consultations']), 1500);
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.errorMessage = err.error?.detail || 'Erreur lors de la création.';
+          this.cdr.detectChanges();
+        }
+      });
+    }
+  
   }
 }
