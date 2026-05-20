@@ -253,3 +253,15 @@
   text-align: center;
   padding: 3rem !important;
 }
+.mini-stat {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+}
+.mini-stat i { font-size: 1.5rem; }
+.mini-stat h5 { margin: 0; font-weight: 800; font-size: 1.3rem; color: #1a1f5e; }
+.mini-stat small { color: #6c757d; font-size: 0.8rem; }

@@ -1,8 +1,10 @@
+import { PatientService } from './../../../services/patients.service';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 
+import { Patients } from '../../../models/patients.model';
 @Component({
   selector: 'app-form-patient',
   standalone:true,
@@ -14,13 +16,14 @@ export class FormPatientComponent implements OnInit {
     form: FormGroup;
     isLoading = false;
     isEditMode = false;
-    patientId: number | null = null;
+    patientId!: number;
     successMessage = '';
     errorMessage = '';
     constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private patientService: PatientService
   ) {
       this.form = this.fb.group({
       nom: ['', [Validators.required, Validators.minLength(2)]],
@@ -35,46 +38,114 @@ export class FormPatientComponent implements OnInit {
     });
   }
    ngOnInit(): void {
-    this.patientId = this.route.snapshot.params['id'];
-    if (this.patientId) {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.patientId=Number(id);
       this.isEditMode = true;
-      // Simulation données existantes
-         this.form.patchValue({
-        nom: 'Temgoua',
-        prenom: 'Belmisse',
-        sexe: 'F',
-        date_naissance: '2000-01-15',
-        telephone: '677000001',
-        adresse: 'Yaoundé, Cameroun',
-        groupe_sanguin: 'A+',
-        contact_urgence_nom: 'Maffo Paul',
-        contact_urgence_telephone: '699000099',
-      });
+      this.chargerPatient();
     }
   }
-   get nom() { return this.form.get('nom'); }
-  get prenom() { return this.form.get('prenom'); }
-  get sexe() { return this.form.get('sexe'); }
-  get date_naissance() { return this.form.get('date_naissance'); }
-  get telephone() { return this.form.get('telephone'); }
-  get groupe_sanguin() { return this.form.get('groupe_sanguin'); }
 
+  chargerPatient(): void {
+
+    
+
+    this.isLoading = true;
+
+    this.patientService.getPatient(this.patientId).subscribe({
+
+      next: (patient) => {
+
+        this.form.patchValue(patient);
+
+        this.isLoading = false;
+      },
+       error: (err) => {
+
+        console.error(err);
+        this.errorMessage = 'Impossible de charger le patient';
+
+
+        this.isLoading = false;
+      }
+    });
+  }
+  get nom() {
+  return this.form.get('nom');
+}
+
+get prenom() {
+  return this.form.get('prenom');
+}
+
+get sexe() {
+  return this.form.get('sexe');
+}
+
+get date_naissance() {
+  return this.form.get('date_naissance');
+}
+
+get telephone() {
+  return this.form.get('telephone');
+}
+
+get groupe_sanguin() {
+  return this.form.get('groupe_sanguin');
+}
   onSubmit(): void {
+
     if (this.form.invalid) {
+
       this.form.markAllAsTouched();
+
       return;
     }
-    this.isLoading = true;
-    this.errorMessage = '';
+     this.isLoading = true;
 
-    // Simulation sauvegarde
-    setTimeout(() => {
-      this.isLoading = false;
-      this.successMessage = this.isEditMode
-        ? 'Patient modifié avec succès !'
-        : 'Patient créé avec succès !';
-      setTimeout(() => this.router.navigate(['/patients']), 1500);
-    }, 1000);
+    if (this.isEditMode ) {
+
+      this.patientService
+        .updatePatient(this.patientId, this.form.value)
+        .subscribe({
+
+          next: () => {
+
+            this.isLoading = false;
+
+            this.router.navigate(['/patients']);
+          },
+          error: (err) => {
+
+            console.error(err);
+            this.errorMessage = 'Erreur lors de la modification';
+
+
+            this.isLoading = false;
+          }
+        });
+
+    } else {
+      this.patientService
+        .createPatient(this.form.value)
+        .subscribe({
+
+          next: () => {
+
+            this.isLoading = false;
+
+            this.router.navigate(['/patients']);
+          },
+
+          error: (err) => {
+
+            console.error(err);
+            this.errorMessage = 'Erreur lors de la création';
+
+            this.isLoading = false;
+          }
+        });
+    }
   }
-  
 }
+      

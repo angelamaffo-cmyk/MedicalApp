@@ -31,12 +31,13 @@ export const routes: Routes = [
       { path: 'patients/modifier/:id', loadComponent: () =>
           import('./pages/patients/form-patient/form-patient').then(m => m.FormPatientComponent)
       },
+       { path: 'patients/:id', loadComponent: () =>
+    import('./pages/patients/detail-patient/detail-patient').then(m => m.DetailPatientComponent)
+    },
       { path: 'profil', loadComponent: () =>
           import('./pages/comptes/profil/profil').then(m => m.ProfilComponent)
       },
-      { path: 'patients/:id', loadComponent: () =>
-    import('./pages/patients/detail-patient/detail-patient').then(m => m.DetailPatientComponent)
-    },
+     
     { path: 'consultations', loadComponent: () =>
     import('./pages/consultations/liste-consultations/liste-consultations').then(m => m.ListeConsultationsComponent)
 },

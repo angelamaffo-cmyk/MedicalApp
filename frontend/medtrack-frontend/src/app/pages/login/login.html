@@ -87,9 +87,9 @@
               [class.is-invalid]="password?.invalid && password?.touched"
               placeholder="Votre mot de passe"
             />
-            <button type="button" class="toggle-pwd" (click)="togglePassword()">
+            <!-- <button type="button" class="toggle-pwd" (click)="togglePassword()">
               <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
-            </button>
+            </button> -->
           </div>
           <div class="error-msg" *ngIf="password?.invalid && password?.touched">
             <span *ngIf="password?.errors?.['required']">Champ requis.</span>

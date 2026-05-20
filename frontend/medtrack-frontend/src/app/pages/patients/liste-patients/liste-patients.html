@@ -10,24 +10,62 @@
   </a>
 </div>
 
-<!-- Barre de recherche -->
+<!-- Stats rapides -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="mini-stat">
+      <i class="bi bi-people-fill text-primary"></i>
+      <div>
+        <h5>{{ patients.length }}</h5>
+        <small>Total patients</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="mini-stat">
+      <i class="bi bi-check-circle-fill text-success"></i>
+      <div>
+        <h5>{{ totalActifs }}</h5>
+        <small>Actifs</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="mini-stat">
+      <i class="bi bi-x-circle-fill text-danger"></i>
+      <div>
+        <h5>{{ totalInactifs }}</h5>
+        <small>Inactifs</small>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Erreur -->
+<div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
+  <i class="bi bi-exclamation-triangle-fill"></i>
+  <span>{{ errorMessage }}</span>
+</div>
+
+<!-- Recherche -->
 <div class="search-bar">
   <div class="search-input">
     <i class="bi bi-search search-icon"></i>
     <input
       type="text"
       [(ngModel)]="recherche"
-      (input)="filtrer()"
+      (ngModelChange)="filtrer()"
       placeholder="Rechercher par nom, prénom ou téléphone..."
     />
   </div>
-  <span class="results-count">{{ patientsFiltres.length }} patient(s)</span>
+  <span class="results-count">
+    <i class="bi bi-funnel me-1"></i>{{ patientsFiltres.length }} / {{ patients.length }} patient(s)
+  </span>
 </div>
 
 <!-- Spinner -->
 <div class="text-center py-5" *ngIf="isLoading">
   <div class="spinner-border text-primary"></div>
-  <p class="mt-2 text-muted">Chargement...</p>
+  <p class="mt-2 text-muted">Chargement des patients...</p>
 </div>
 
 <!-- Tableau -->
@@ -62,7 +100,7 @@
             {{ patient.sexe === 'M' ? 'Masculin' : 'Féminin' }}
           </span>
         </td>
-        <td><span class="age-badge">{{ calculerAge(patient.date_naissance) }} ans</span></td>
+        <td><span class="age-badge">{{ patient.age || calculerAge(patient.date_naissance) }} ans</span></td>
         <td>{{ patient.telephone }}</td>
         <td><span class="groupe-badge">{{ patient.groupe_sanguin }}</span></td>
         <td>
@@ -73,29 +111,30 @@
         </td>
         <td>
           <div class="actions">
+            <a [routerLink]="['/patients', patient.id]" class="btn-action view" title="Voir détails">
+              <i class="bi bi-eye-fill"></i>
+            </a>
             <a [routerLink]="['/patients/modifier', patient.id]" class="btn-action edit" title="Modifier">
               <i class="bi bi-pencil-fill"></i>
             </a>
-            
-             <a [routerLink]="['/patients', patient.id]" class="btn-action view" title="Voir détails">
-                <i class="bi bi-eye-fill"></i>
-            </a>
-           
           </div>
         </td>
       </tr>
 
-      <!-- Aucun résultat -->
-      <tr *ngIf="patientsFiltres.length === 0">
+      <tr *ngIf="patientsFiltres.length === 0 && !isLoading">
         <td colspan="7" class="empty-state">
           <i class="bi bi-people fs-1 text-muted"></i>
-          <p class="mt-2 text-muted">Aucun patient trouvé</p>
-          <a routerLink="/patients/nouveau" class="btn btn-primary btn-sm">
+          <p class="mt-2 text-muted">
+            {{ recherche ? 'Aucun patient ne correspond à votre recherche' : 'Aucun patient enregistré' }}
+          </p>
+          <a routerLink="/patients/nouveau" class="btn btn-primary btn-sm" *ngIf="!recherche">
             Ajouter un patient
           </a>
+          <button class="btn btn-outline-secondary btn-sm" *ngIf="recherche" (click)="reinitialiser()">
+            Effacer la recherche
+          </button>
         </td>
       </tr>
-
     </tbody>
   </table>
 </div>

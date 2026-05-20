@@ -1,47 +1,76 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { PatientService } from '../../../services/patients.service';
+import { Patients } from '../../../models/patients.model';
 
-interface Patient {
-  id: number;
-  nom: string;
-  prenom: string;
-  sexe: string;
-  date_naissance: string;
-  telephone: string;
-  groupe_sanguin: string;
-  est_actif: boolean;
-}
 @Component({
   selector: 'app-liste-patients',
-  standalone:true,
-  imports: [CommonModule, RouterLink, FormsModule
-  ],
+  standalone: true,
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './liste-patients.html',
   styleUrl: './liste-patients.css',
 })
-export class ListePatientsComponent implements OnInit{
- patients: Patient[] = [
-    { id: 1, nom: 'Temgoua', prenom: 'Belmisse', sexe: 'F', date_naissance: '2000-01-15', telephone: '677000001', groupe_sanguin: 'A+', est_actif: true },
-    { id: 2, nom: 'Kamga', prenom: 'Jean', sexe: 'M', date_naissance: '1985-06-20', telephone: '699000002', groupe_sanguin: 'O+', est_actif: true },
-    { id: 3, nom: 'Tchoupo', prenom: 'Marie', sexe: 'F', date_naissance: '1990-03-10', telephone: '655000003', groupe_sanguin: 'B+', est_actif: false },
-  ];
-   patientsFiltres: Patient[] = [];
+export class ListePatientsComponent implements OnInit {
+  patients: Patients[] = [];
+  patientsFiltres: Patients[] = [];
   recherche = '';
   isLoading = false;
+  errorMessage = '';
+
+  constructor(
+    private patientService: PatientService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.patientsFiltres = this.patients;
+    this.chargerPatients();
+  }
+
+  chargerPatients(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.patientService.getPatients().subscribe({
+      next: (data) => {
+        this.patients = data;
+        this.patientsFiltres = data;
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error(err);
+        this.errorMessage = 'Erreur lors du chargement des patients.';
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  get totalActifs(): number {
+    return this.patients.filter(p => p.est_actif).length;
+  }
+
+  get totalInactifs(): number {
+    return this.patients.filter(p => !p.est_actif).length;
   }
 
   filtrer(): void {
-    const terme = this.recherche.toLowerCase();
+    if (!this.recherche.trim()) {
+      this.patientsFiltres = this.patients;
+      return;
+    }
+    const terme = this.recherche.toLowerCase().trim();
     this.patientsFiltres = this.patients.filter(p =>
       p.nom.toLowerCase().includes(terme) ||
       p.prenom.toLowerCase().includes(terme) ||
       p.telephone.includes(terme)
     );
+  }
+
+  reinitialiser(): void {
+    this.recherche = '';
+    this.patientsFiltres = this.patients;
   }
 
   calculerAge(dateNaissance: string): number {
