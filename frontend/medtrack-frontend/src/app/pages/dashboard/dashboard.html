@@ -26,11 +26,32 @@
       <i class="bi bi-arrow-up-right stat-arrow text-{{ stat.couleur }}"></i>
     </a>
   </div>
+  <!-- Stats examens détaillées -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="examen-stat-card total">
+      <i class="bi bi-droplet-fill"></i>
+      <div><h4>{{ statsExamens.total }}</h4><p>Total examens</p></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="examen-stat-card attente">
+      <i class="bi bi-hourglass-split"></i>
+      <div><h4>{{ statsExamens.enAttente }}</h4><p>En attente de réalisation</p></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="examen-stat-card realise">
+      <i class="bi bi-check-circle-fill"></i>
+      <div><h4>{{ statsExamens.realises }}</h4><p>Réalisés</p></div>
+    </div>
+  </div>
+</div>
 </div>
 
 <div class="row g-4">
 
-  <!-- Activités récentes -->
+  Activités récentes
   <div class="col-md-7">
     <div class="dashboard-card">
       <div class="card-header-custom">
@@ -38,14 +59,18 @@
       </div>
       <div class="card-body-custom">
         <div class="activite-item" *ngFor="let activite of activitesRecentes">
-          <div class="activite-icon bg-{{ activite.couleur }}-light">
-            <i class="bi {{ activite.icon }} text-{{ activite.couleur }}"></i>
-          </div>
-          <div class="activite-info">
-            <p class="activite-message">{{ activite.message }}</p>
-            <span class="activite-temps">{{ activite.temps }}</span>
-          </div>
-        </div>
+  <div class="activite-icon bg-{{ activite.couleur }}-light">
+    <i class="bi {{ activite.icon }} text-{{ activite.couleur }}"></i>
+  </div>
+  <div class="activite-info">
+    <p class="activite-message">{{ activite.message }}</p>
+    <span class="activite-temps">{{ activite.temps }}</span>
+  </div>
+</div>
+<div *ngIf="activitesRecentes.length === 0" class="text-center text-muted py-3">
+  <i class="bi bi-clock-history fs-2"></i>
+  <p class="mt-2">Aucune activité récente</p>
+</div>
       </div>
     </div>
   </div>

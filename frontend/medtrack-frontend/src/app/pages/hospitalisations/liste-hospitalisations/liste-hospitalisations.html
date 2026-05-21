@@ -13,39 +13,27 @@
 <!-- Stats rapides -->
 <div class="row g-3 mb-4">
   <div class="col-md-3">
-    <div class="mini-stat en-cours">
-      <i class="bi bi-clock-fill"></i>
-      <div>
-        <h5>{{ hospitalisations.length }}</h5>
-        <small>Total</small>
-      </div>
+    <div class="mini-stat">
+      <i class="bi bi-clock-fill text-primary"></i>
+      <div><h5>{{ total }}</h5><small>Total</small></div>
     </div>
   </div>
   <div class="col-md-3">
-    <div class="mini-stat warning">
-      <i class="bi bi-hospital"></i>
-      <div>
-        <h5>{{ hospitalisations.length - 1 }}</h5>
-        <small>En cours</small>
-      </div>
+    <div class="mini-stat">
+      <i class="bi bi-hospital text-warning"></i>
+      <div><h5>{{ enCours }}</h5><small>En cours</small></div>
     </div>
   </div>
   <div class="col-md-3">
-    <div class="mini-stat success">
-      <i class="bi bi-check-circle-fill"></i>
-      <div>
-        <h5>1</h5>
-        <small>Sortis</small>
-      </div>
+    <div class="mini-stat">
+      <i class="bi bi-check-circle-fill text-success"></i>
+      <div><h5>{{ sortis }}</h5><small>Sortis</small></div>
     </div>
   </div>
   <div class="col-md-3">
-    <div class="mini-stat info">
-      <i class="bi bi-arrow-right-circle-fill"></i>
-      <div>
-        <h5>0</h5>
-        <small>Transférés</small>
-      </div>
+    <div class="mini-stat">
+      <i class="bi bi-arrow-right-circle-fill text-info"></i>
+      <div><h5>{{ total - enCours - sortis }}</h5><small>Transférés</small></div>
     </div>
   </div>
 </div>
@@ -54,11 +42,11 @@
   <div class="search-input">
     <i class="bi bi-search search-icon"></i>
     <input
-      type="text"
-      [(ngModel)]="recherche"
-      (input)="filtrer()"
-      placeholder="Rechercher par patient, service ou statut..."
-    />
+  type="text"
+  [(ngModel)]="recherche"
+  (ngModelChange)="filtrer()"
+  placeholder="Rechercher par patient, service ou statut..."
+/>
   </div>
   <span class="results-count">{{ hospitalisationsFiltrees.length }} hospitalisation(s)</span>
 </div>
@@ -86,17 +74,15 @@
       <tr *ngFor="let h of hospitalisationsFiltrees">
         <td>
           <div class="patient-info">
-            <div class="patient-avatar">
-              {{ h.patient_prenom[0] }}{{ h.patient_nom[0] }}
-            </div>
+            
             <span class="patient-nom">{{ h.patient_prenom }} {{ h.patient_nom }}</span>
           </div>
         </td>
         <td>
-          <span class="service-text">{{ h.service }}</span>
-          <span class="lit-badge">{{ h.lit }}</span>
-        </td>
-        <td><span class="medecin-text">{{ h.medecin }}</span></td>
+  <span class="service-text">{{ h.service_nom }}</span>
+  <span class="lit-badge">{{ h.lit_numero }}</span>
+</td>
+<td><span class="medecin-text">{{ h.medecin_nom }}</span></td>
         <td><span class="date-text">{{ h.date_entree | date:'dd/MM/yyyy' }}</span></td>
         <td>
           <span *ngIf="h.date_sortie" class="date-text">{{ h.date_sortie | date:'dd/MM/yyyy' }}</span>

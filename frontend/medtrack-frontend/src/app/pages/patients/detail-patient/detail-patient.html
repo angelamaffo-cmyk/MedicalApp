@@ -1,4 +1,3 @@
-
 <div class="text-center py-5" *ngIf="isLoading">
   <div class="spinner-border text-primary"></div>
   <p class="mt-2 text-muted">Chargement du dossier patient...</p>
@@ -9,9 +8,7 @@
   <!-- Header -->
   <div class="page-header">
     <div class="patient-header-info">
-      <div class="patient-big-avatar">
-        {{ patient.prenom[0] }}{{ patient.nom[0] }}
-      </div>
+      <div class="patient-big-avatar">{{ patient.prenom[0] }}{{ patient.nom[0] }}</div>
       <div>
         <h4 class="page-title">{{ patient.prenom }} {{ patient.nom }}</h4>
         <div class="d-flex align-items-center gap-2 mt-1">
@@ -23,31 +20,22 @@
         </div>
       </div>
     </div>
-
-    <!-- Actions -->
     <div class="header-actions">
-      <a routerLink="/patients" class="btn-retour">
-        <i class="bi bi-arrow-left me-1"></i> Retour
-      </a>
-      <a [routerLink]="['/patients/modifier', patient.id]" class="btn-modifier">
-        <i class="bi bi-pencil-fill me-1"></i> Modifier
-      </a>
-      <button
-        class="btn-toggle-statut"
-        [class.btn-desactiver]="patient.est_actif"
-        [class.btn-activer]="!patient.est_actif"
-        (click)="confirmDesactiver = true"
-      >
+      <a routerLink="/patients" class="btn-retour"><i class="bi bi-arrow-left me-1"></i>Retour</a>
+      <a [routerLink]="['/patients/modifier', patient.id]" class="btn-modifier"><i class="bi bi-pencil-fill me-1"></i>Modifier</a>
+      <button class="btn-toggle-statut" [class.btn-desactiver]="patient.est_actif" [class.btn-activer]="!patient.est_actif" (click)="confirmDesactiver = true">
         <i class="bi" [class.bi-toggle-on]="patient.est_actif" [class.bi-toggle-off]="!patient.est_actif"></i>
         {{ patient.est_actif ? 'Désactiver' : 'Activer' }}
       </button>
     </div>
   </div>
 
-  <!-- Message succès -->
+  <!-- Messages -->
   <div class="alert alert-success d-flex align-items-center gap-2 mb-3" *ngIf="successMessage">
-    <i class="bi bi-check-circle-fill"></i>
-    <span>{{ successMessage }}</span>
+    <i class="bi bi-check-circle-fill"></i><span>{{ successMessage }}</span>
+  </div>
+  <div class="alert alert-danger d-flex align-items-center gap-2 mb-3" *ngIf="errorMessage">
+    <i class="bi bi-exclamation-triangle-fill"></i><span>{{ errorMessage }}</span>
   </div>
 
   <!-- Modal confirmation -->
@@ -57,134 +45,154 @@
         <i class="bi" [class.bi-toggle-off]="patient.est_actif" [class.bi-toggle-on]="!patient.est_actif"></i>
       </div>
       <h5>{{ patient.est_actif ? 'Désactiver ce patient ?' : 'Activer ce patient ?' }}</h5>
-      <p class="text-muted">
-        {{ patient.est_actif
-          ? 'Le dossier sera archivé mais toutes les données seront conservées.'
-          : 'Le dossier sera réactivé et accessible à nouveau.'
-        }}
-      </p>
+      <p class="text-muted">Les données seront conservées.</p>
       <div class="confirm-actions">
-        <button class="btn-annuler-confirm" (click)="confirmDesactiver = false">
-          Annuler
-        </button>
-        <button
-          class="btn-confirmer"
-          [class.danger]="patient.est_actif"
-          [class.success]="!patient.est_actif"
-          (click)="toggleStatut()"
-        >
+        <button class="btn-annuler-confirm" (click)="confirmDesactiver = false">Annuler</button>
+        <button class="btn-confirmer" [class.danger]="patient.est_actif" [class.success]="!patient.est_actif" (click)="toggleStatut()">
           {{ patient.est_actif ? 'Désactiver' : 'Activer' }}
         </button>
       </div>
     </div>
   </div>
 
-  <div class="row g-4">
-
-    <!-- Infos personnelles -->
-    <div class="col-md-6">
-      <div class="detail-card">
-        <div class="detail-card-header">
-          <i class="bi bi-person-fill text-primary"></i>
-          <h6>Informations personnelles</h6>
-        </div>
-        <div class="detail-card-body">
-          <div class="detail-row">
-            <span class="detail-label">Nom complet</span>
-            <span class="detail-value">{{ patient.prenom }} {{ patient.nom }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Sexe</span>
-            <span class="detail-value">{{ patient.sexe === 'M' ? 'Masculin' : 'Féminin' }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Date de naissance</span>
-            <span class="detail-value">{{ patient.date_naissance | date:'dd/MM/yyyy' }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Âge</span>
-            <span class="detail-value">{{ calculerAge(patient.date_naissance) }} ans</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Groupe sanguin</span>
-            <span class="groupe-badge">{{ patient.groupe_sanguin }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Coordonnées -->
-    <div class="col-md-6">
-      <div class="detail-card">
-        <div class="detail-card-header">
-          <i class="bi bi-telephone-fill text-success"></i>
-          <h6>Coordonnées</h6>
-        </div>
-        <div class="detail-card-body">
-          <div class="detail-row">
-            <span class="detail-label">Téléphone</span>
-            <span class="detail-value">{{ patient.telephone }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Adresse</span>
-            <span class="detail-value">{{ patient.adresse || 'Non renseignée' }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Enregistré le</span>
-            <span class="detail-value">{{ patient.date_enregistrement | date:'dd/MM/yyyy' }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Contact urgence -->
-    <div class="col-md-6">
-      <div class="detail-card">
-        <div class="detail-card-header">
-          <i class="bi bi-exclamation-triangle-fill text-warning"></i>
-          <h6>Contact d'urgence</h6>
-        </div>
-        <div class="detail-card-body">
-          <div class="detail-row">
-            <span class="detail-label">Nom</span>
-            <span class="detail-value">{{ patient.contact_urgence_nom || 'Non renseigné' }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Téléphone</span>
-            <span class="detail-value">{{ patient.contact_urgence_telephone || 'Non renseigné' }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Raccourcis -->
-    <div class="col-md-6">
-      <div class="detail-card">
-        <div class="detail-card-header">
-          <i class="bi bi-grid-fill text-info"></i>
-          <h6>Dossier médical</h6>
-        </div>
-        <div class="detail-card-body">
-          <div class="shortcuts">
-            <a routerLink="/consultations" class="shortcut-item">
-              <i class="bi bi-clipboard2-pulse-fill text-primary"></i>
-              <span>Consultations</span>
-              <i class="bi bi-chevron-right ms-auto"></i>
-            </a>
-            <a routerLink="/examens" class="shortcut-item">
-              <i class="bi bi-droplet-fill text-warning"></i>
-              <span>Examens</span>
-              <i class="bi bi-chevron-right ms-auto"></i>
-            </a>
-            <a routerLink="/hospitalisations" class="shortcut-item">
-              <i class="bi bi-hospital-fill text-danger"></i>
-              <span>Hospitalisations</span>
-              <i class="bi bi-chevron-right ms-auto"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-
+  <!-- Onglets -->
+  <div class="onglets-nav mb-4">
+    <button class="onglet-btn" [class.active]="ongletActif === 'infos'" (click)="changerOnglet('infos')">
+      <i class="bi bi-person-fill me-1"></i>Informations
+    </button>
+    <button class="onglet-btn" [class.active]="ongletActif === 'consultations'" (click)="changerOnglet('consultations')">
+      <i class="bi bi-clipboard2-pulse-fill me-1"></i>Consultations
+    </button>
+    <button class="onglet-btn" [class.active]="ongletActif === 'examens'" (click)="changerOnglet('examens')">
+      <i class="bi bi-droplet-fill me-1"></i>Examens
+    </button>
+    <button class="onglet-btn" [class.active]="ongletActif === 'hospitalisations'" (click)="changerOnglet('hospitalisations')">
+      <i class="bi bi-hospital-fill me-1"></i>Hospitalisations
+    </button>
   </div>
+
+  <!-- Onglet Infos -->
+  <div *ngIf="ongletActif === 'infos'">
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="detail-card">
+          <div class="detail-card-header"><i class="bi bi-person-fill text-primary"></i><h6>Informations personnelles</h6></div>
+          <div class="detail-card-body">
+            <div class="detail-row"><span class="detail-label">Nom complet</span><span class="detail-value">{{ patient.prenom }} {{ patient.nom }}</span></div>
+            <div class="detail-row"><span class="detail-label">Sexe</span><span class="detail-value">{{ patient.sexe === 'M' ? 'Masculin' : 'Féminin' }}</span></div>
+            <div class="detail-row"><span class="detail-label">Date de naissance</span><span class="detail-value">{{ patient.date_naissance | date:'dd/MM/yyyy' }}</span></div>
+            <div class="detail-row"><span class="detail-label">Âge</span><span class="detail-value">{{ calculerAge(patient.date_naissance) }} ans</span></div>
+            <div class="detail-row"><span class="detail-label">Groupe sanguin</span><span class="groupe-badge">{{ patient.groupe_sanguin }}</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="detail-card">
+          <div class="detail-card-header"><i class="bi bi-telephone-fill text-success"></i><h6>Coordonnées</h6></div>
+          <div class="detail-card-body">
+            <div class="detail-row"><span class="detail-label">Téléphone</span><span class="detail-value">{{ patient.telephone }}</span></div>
+            <div class="detail-row"><span class="detail-label">Adresse</span><span class="detail-value">{{ patient.adresse || 'Non renseignée' }}</span></div>
+            <div class="detail-row"><span class="detail-label">Enregistré le</span><span class="detail-value">{{ patient.date_enregistrement | date:'dd/MM/yyyy' }}</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="detail-card">
+          <div class="detail-card-header"><i class="bi bi-exclamation-triangle-fill text-warning"></i><h6>Contact d'urgence</h6></div>
+          <div class="detail-card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="detail-row"><span class="detail-label">Nom</span><span class="detail-value">{{ patient.contact_urgence_nom || 'Non renseigné' }}</span></div>
+              </div>
+              <div class="col-md-6">
+                <div class="detail-row"><span class="detail-label">Téléphone</span><span class="detail-value">{{ patient.contact_urgence_telephone || 'Non renseigné' }}</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Onglet Consultations -->
+  <div *ngIf="ongletActif === 'consultations'">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h6 class="fw-bold text-success mb-0"><i class="bi bi-clipboard2-pulse-fill me-2"></i>{{ consultations.length }} consultation(s)</h6>
+      <a routerLink="/consultations/nouveau" class="btn-add-small"><i class="bi bi-plus me-1"></i>Nouvelle</a>
+    </div>
+    <div class="liste-card" *ngFor="let c of consultations">
+      <div class="liste-card-left">
+        <div class="liste-icon bg-success"><i class="bi bi-clipboard2-pulse-fill"></i></div>
+        <div>
+          <p class="liste-titre">{{ c.motif }}</p>
+          <p class="liste-sous">{{ c.date_consultation | date:'dd/MM/yyyy' }} — {{ c.diagnostic }}</p>
+        </div>
+      </div>
+      <a [routerLink]="['/consultations', c.id]" class="btn-voir">
+        <i class="bi bi-eye-fill me-1"></i>Voir
+      </a>
+    </div>
+    <div class="empty-mini" *ngIf="consultations.length === 0">
+      <i class="bi bi-clipboard2 fs-2 text-muted"></i>
+      <p class="text-muted mt-2">Aucune consultation enregistrée</p>
+    </div>
+  </div>
+
+  <!-- Onglet Examens -->
+  <div *ngIf="ongletActif === 'examens'">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h6 class="fw-bold text-warning mb-0"><i class="bi bi-droplet-fill me-2"></i>{{ examens.length }} examen(s)</h6>
+      <a routerLink="/examens/nouveau" class="btn-add-small"><i class="bi bi-plus me-1"></i>Prescrire</a>
+    </div>
+    <div class="liste-card" *ngFor="let e of examens">
+      <div class="liste-card-left">
+        <div class="liste-icon bg-warning"><i class="bi bi-droplet-fill"></i></div>
+        <div>
+          <p class="liste-titre">{{ e.nom_examen }}</p>
+          <p class="liste-sous">{{ e.type_examen }} — {{ e.date_prescription | date:'dd/MM/yyyy' }}</p>
+        </div>
+      </div>
+      <div class="d-flex gap-2">
+        <a [routerLink]="['/examens', e.id]" class="btn-voir"><i class="bi bi-eye-fill me-1"></i>Voir</a>
+        <a [routerLink]="['/resultats/nouveau']" [queryParams]="{examen: e.id}" class="btn-resultat-small" *ngIf="!e.a_resultat">
+          <i class="bi bi-file-medical-fill me-1"></i>Résultat
+        </a>
+        <a routerLink="/resultats" class="btn-voir-resultat-small" *ngIf="e.a_resultat">
+          <i class="bi bi-check-circle-fill me-1"></i>Résultat reçu
+        </a>
+      </div>
+    </div>
+    <div class="empty-mini" *ngIf="examens.length === 0">
+      <i class="bi bi-droplet fs-2 text-muted"></i>
+      <p class="text-muted mt-2">Aucun examen prescrit</p>
+    </div>
+  </div>
+
+  <!-- Onglet Hospitalisations -->
+  <div *ngIf="ongletActif === 'hospitalisations'">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h6 class="fw-bold text-danger mb-0"><i class="bi bi-hospital-fill me-2"></i>{{ hospitalisations.length }} hospitalisation(s)</h6>
+      <a routerLink="/hospitalisations/nouveau" class="btn-add-small"><i class="bi bi-plus me-1"></i>Admettre</a>
+    </div>
+    <div class="liste-card" *ngFor="let h of hospitalisations">
+      <div class="liste-card-left">
+        <div class="liste-icon bg-danger"><i class="bi bi-hospital-fill"></i></div>
+        <div>
+          <p class="liste-titre">{{ h.motif_admission }}</p>
+          <p class="liste-sous">
+            {{ h.date_entree | date:'dd/MM/yyyy' }} —
+            <span class="statut-mini statut-{{ getStatutColor(h.statut) }}">{{ getStatutLabel(h.statut) }}</span>
+          </p>
+        </div>
+      </div>
+      <a [routerLink]="['/hospitalisations', h.id]" class="btn-voir">
+        <i class="bi bi-eye-fill me-1"></i>Voir
+      </a>
+    </div>
+    <div class="empty-mini" *ngIf="hospitalisations.length === 0">
+      <i class="bi bi-hospital fs-2 text-muted"></i>
+      <p class="text-muted mt-2">Aucune hospitalisation enregistrée</p>
+    </div>
+  </div>
+
 </div>

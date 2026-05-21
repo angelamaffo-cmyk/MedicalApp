@@ -1,20 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HospitalisationsService } from '../../../services/hospitalisations.service';
+import { Hospitalisation } from '../../../models/hospitalisations.model';
 
-interface Hospitalisation{
-   id: number;
-  patient_nom: string;
-  patient_prenom: string;
-  service: string;
-  lit: string;
-  medecin: string;
-  date_entree: string;
-  date_sortie: string | null;
-  motif_admission: string;
-  statut: string;
-}
+
 @Component({
   selector: 'app-liste-hospitalisations',
   standalone:true,
@@ -23,48 +14,68 @@ interface Hospitalisation{
   styleUrl: './liste-hospitalisations.css',
 })
 export class ListeHospitalisationsComponent implements OnInit{
- hospitalisations: Hospitalisation[] = [
-    { id: 1, patient_nom: 'Temgoua', patient_prenom: 'Belmisse', service: 'Médecine Interne', lit: 'Lit 05', medecin: 'Dr Kamga', date_entree: '2026-05-15', date_sortie: null, motif_admission: 'Paludisme grave', statut: 'EN_COURS' },
-    { id: 2, patient_nom: 'Nguemo', patient_prenom: 'Paul', service: 'Chirurgie', lit: 'Lit 12', medecin: 'Dr Biya', date_entree: '2026-05-10', date_sortie: '2026-05-18', motif_admission: 'Appendicite', statut: 'SORTI' },
-    { id: 3, patient_nom: 'Tchoupo', patient_prenom: 'Marie', service: 'Pédiatrie', lit: 'Lit 03', medecin: 'Dr Kamga', date_entree: '2026-05-17', date_sortie: null, motif_admission: 'Bronchite sévère', statut: 'EN_COURS' },
-  ];
+ hospitalisations: Hospitalisation[] = [];
 
    hospitalisationsFiltrees: Hospitalisation[] = [];
   recherche = '';
   isLoading = false;
+  errorMessage = '';
 
-   statutColors: any = {
-    'EN_COURS': 'warning',
-    'SORTI': 'success',
-    'TRANSFERE': 'info',
-    'DECEDE': 'danger',
-  };
+   constructor(
+    private hospitalisationService: HospitalisationsService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+   
 
   ngOnInit(): void {
-    this.hospitalisationsFiltrees = this.hospitalisations;
+this.chargerHospitalisations();  
+}
+chargerHospitalisations(): void {
+    this.isLoading = true;
+    this.hospitalisationService.getAll().subscribe({
+      next: (data) => {
+        this.hospitalisations = data;
+        this.hospitalisationsFiltrees = data;
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.errorMessage = 'Erreur lors du chargement.';
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
+  get total(): number { return this.hospitalisations.length; }
+  get enCours(): number { return this.hospitalisations.filter(h => h.statut === 'EN_COURS').length; }
+  get sortis(): number { return this.hospitalisations.filter(h => h.statut === 'SORTI').length; }
 
     filtrer(): void {
-    const terme = this.recherche.toLowerCase();
+    if(!this.recherche.trim()){
+      this.hospitalisationsFiltrees=this.hospitalisations;
+      return;
+    }
+    const terme = this.recherche.toLowerCase().trim();
     this.hospitalisationsFiltrees = this.hospitalisations.filter(h =>
-      h.patient_nom.toLowerCase().includes(terme) ||
-      h.patient_prenom.toLowerCase().includes(terme) ||
-      h.service.toLowerCase().includes(terme) ||
+      h.patient_nom?.toLowerCase().includes(terme) ||
+      h.patient_prenom?.toLowerCase().includes(terme) ||
+      h.service_nom?.toLowerCase().includes(terme) ||
       h.statut.toLowerCase().includes(terme)
     );
   }
-
-  getStatutColor(statut: string): string {
-    return this.statutColors[statut] || 'secondary';
+  reinitialiser(): void {
+    this.recherche = '';
+    this.hospitalisationsFiltrees = this.hospitalisations;
   }
 
-    getStatutLabel(statut: string): string {
-    const labels: any = {
-      'EN_COURS': 'En cours',
-      'SORTI': 'Sorti',
-      'TRANSFERE': 'Transféré',
-      'DECEDE': 'Décédé',
-    };
+  getStatutColor(statut: string): string {
+    const colors: any = { 'EN_COURS': 'warning', 'SORTI': 'success', 'TRANSFERE': 'info', 'DECEDE': 'danger' };
+    return colors[statut] || 'secondary';
+  }
+
+  getStatutLabel(statut: string): string {
+    const labels: any = { 'EN_COURS': 'En cours', 'SORTI': 'Sorti', 'TRANSFERE': 'Transféré', 'DECEDE': 'Décédé' };
     return labels[statut] || statut;
   }
 }

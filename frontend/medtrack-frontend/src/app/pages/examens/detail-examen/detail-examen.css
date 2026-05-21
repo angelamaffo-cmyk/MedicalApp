@@ -267,3 +267,24 @@
   white-space: nowrap;
 }
 .btn-voir-resultat:hover { background: #198754; color: white; }
+
+.resultat-disponible {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  background: #e8fff0;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.etat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.etat-badge.normal { background: #e8fff0; color: #198754; }
+.etat-badge.anormal { background: #fff0f0; color: #dc3545; }

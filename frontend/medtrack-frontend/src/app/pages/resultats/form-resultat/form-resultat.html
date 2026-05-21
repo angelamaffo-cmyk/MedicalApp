@@ -20,7 +20,6 @@
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="row g-4">
-
     <div class="col-12">
       <div class="form-card">
         <div class="form-card-header">
@@ -32,64 +31,43 @@
 
             <div class="col-md-8">
               <label class="form-label">Examen concerné <span class="text-danger">*</span></label>
-              <select
-                class="form-select"
-                [class.is-invalid]="examen?.invalid && examen?.touched"
-                formControlName="examen"
-              >
+              <select class="form-select" [class.is-invalid]="examen?.invalid && examen?.touched" formControlName="examen">
                 <option value="">Sélectionner un examen</option>
-                <option *ngFor="let e of examens" [value]="e.id">{{ e.label }}</option>
+                <option *ngFor="let e of examens" [value]="e.id">
+                  {{ e.patient_prenom }} {{ e.patient_nom }} — {{ e.nom_examen }} ({{ e.date_prescription | date:'dd/MM/yyyy' }})
+                </option>
               </select>
               <div class="invalid-feedback">L'examen est requis.</div>
             </div>
 
             <div class="col-md-4">
               <label class="form-label">Date du résultat <span class="text-danger">*</span></label>
-              <input
-                type="date"
-                class="form-control"
-                [class.is-invalid]="date_resultat?.invalid && date_resultat?.touched"
-                formControlName="date_resultat"
-              />
+              <input type="date" class="form-control" [class.is-invalid]="date_resultat?.invalid && date_resultat?.touched" formControlName="date_resultat" />
               <div class="invalid-feedback">La date est requise.</div>
             </div>
 
             <div class="col-12">
               <label class="form-label">Contenu du résultat <span class="text-danger">*</span></label>
-              <textarea
-                class="form-control"
-                [class.is-invalid]="contenu?.invalid && contenu?.touched"
-                formControlName="contenu"
-                rows="5"
-                placeholder="Détails du résultat (valeurs, mesures...)"
-              ></textarea>
+              <textarea class="form-control" [class.is-invalid]="contenu?.invalid && contenu?.touched" formControlName="contenu" rows="5" placeholder="Détails du résultat (valeurs, mesures...)"></textarea>
               <div class="invalid-feedback">Le contenu est requis.</div>
             </div>
 
             <div class="col-12">
               <label class="form-label">Conclusion <span class="text-danger">*</span></label>
-              <textarea
-                class="form-control"
-                [class.is-invalid]="conclusion?.invalid && conclusion?.touched"
-                formControlName="conclusion"
-                rows="3"
-                placeholder="Conclusion médicale du résultat"
-              ></textarea>
+              <textarea class="form-control" [class.is-invalid]="conclusion?.invalid && conclusion?.touched" formControlName="conclusion" rows="3" placeholder="Conclusion médicale"></textarea>
               <div class="invalid-feedback">La conclusion est requise.</div>
             </div>
 
             <div class="col-12">
-              <label class="form-label">État du résultat <span class="text-danger">*</span></label>
+              <label class="form-label">État du résultat</label>
               <div class="etat-options">
                 <label class="etat-option" [class.selected-normal]="form.get('est_normal')?.value === true">
                   <input type="radio" formControlName="est_normal" [value]="true" />
-                  <i class="bi bi-check-circle-fill text-success me-2"></i>
-                  Normal
+                  <i class="bi bi-check-circle-fill text-success me-2"></i>Normal
                 </label>
                 <label class="etat-option" [class.selected-anormal]="form.get('est_normal')?.value === false">
                   <input type="radio" formControlName="est_normal" [value]="false" />
-                  <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
-                  Anormal
+                  <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Anormal
                 </label>
               </div>
             </div>
@@ -111,6 +89,5 @@
         </button>
       </div>
     </div>
-
   </div>
 </form>

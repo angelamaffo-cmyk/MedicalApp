@@ -1,7 +1,7 @@
 import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-
+import { ResultatsService } from '../../../services/resultats.service';
 import {
   RouterLink,
   ActivatedRoute,
@@ -11,7 +11,12 @@ import {
 import { PatientService } from '../../../services/patients.service';
 
 import { Patients } from '../../../models/patients.model';
-
+import { ConsultationService } from '../../../services/consultation.service';
+import { ExamenService } from '../../../services/examen.service';
+import { HospitalisationsService} from '../../../services/hospitalisations.service';
+import { Consultation } from '../../../models/consultations.model';
+import { Examen } from '../../../models/examens.model';
+import { Hospitalisation } from '../../../models/hospitalisations.model';
 @Component({
   selector: 'app-detail-patient',
   standalone: true,
@@ -23,6 +28,9 @@ import { Patients } from '../../../models/patients.model';
 export class DetailPatientComponent implements OnInit {
 
   patient: Patients | null = null;
+  consultations: Consultation[] = [];
+  examens: Examen[] = [];
+  hospitalisations: Hospitalisation[] = [];
 
   isLoading = false;
 
@@ -32,12 +40,16 @@ export class DetailPatientComponent implements OnInit {
 
   successMessage = '';
   errorMessage = '';
-
+ongletActif = 'infos'; 
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private patientService: PatientService,
+    private consultationService: ConsultationService,
+    private examenService: ExamenService,
+    private hospitalisationService: HospitalisationsService,
+    private resultatService: ResultatsService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -76,6 +88,52 @@ export class DetailPatientComponent implements OnInit {
 
         this.isLoading = false;
          this.cdr.detectChanges();
+      }
+    });
+  }
+  changerOnglet(onglet: string): void {
+    this.ongletActif = onglet;
+    if (onglet === 'consultations' && this.consultations.length === 0) {
+      this.chargerConsultations();
+    }
+    if (onglet === 'examens' && this.examens.length === 0) {
+      this.chargerExamens();
+    }
+    if (onglet === 'hospitalisations' && this.hospitalisations.length === 0) {
+      this.chargerHospitalisations();
+    }
+  }
+chargerConsultations(): void {
+    this.consultationService.getAll().subscribe({
+      next: (data) => {
+        this.consultations = data.filter(c => c.patient === this.patientId);
+        this.cdr.detectChanges();
+      }
+    });
+  }
+  chargerExamens(): void {
+  this.examenService.getAll().subscribe({
+    next: (examensData) => {
+      this.resultatService.getAll().subscribe({
+        next: (resultatsData) => {
+          this.examens = examensData
+            .filter(e => this.consultations.some(c => Number(c.id) === Number(e.consultation)))
+            .map(e => ({
+              ...e,
+              a_resultat: resultatsData.some(r => Number(r.examen) === Number(e.id))
+            }));
+          this.cdr.detectChanges();
+        }
+      });
+    }
+  });
+
+  }
+  chargerHospitalisations(): void {
+    this.hospitalisationService.getAll().subscribe({
+      next: (data) => {
+        this.hospitalisations = data.filter(h => h.patient === this.patientId);
+        this.cdr.detectChanges();
       }
     });
   }
@@ -124,17 +182,20 @@ export class DetailPatientComponent implements OnInit {
 
           this.successMessage = 'Statut modifié avec succès';
            this.cdr.detectChanges();
-
-          setTimeout(() => {
-            this.successMessage = '';
-          }, 3000);
         },
+        error: (err) => console.error(err)
+    });
+  }
 
-        error: (err) => {
+         
+       
+      getStatutLabel(statut: string): string {
+    const labels: any = { 'EN_COURS': 'En cours', 'SORTI': 'Sorti', 'TRANSFERE': 'Transféré', 'DECEDE': 'Décédé' };
+    return labels[statut] || statut;
+  }
 
-          console.error(err);
-           this.cdr.detectChanges();
-        }
-      });
+  getStatutColor(statut: string): string {
+    const colors: any = { 'EN_COURS': 'warning', 'SORTI': 'success', 'TRANSFERE': 'info', 'DECEDE': 'danger' };
+    return colors[statut] || 'secondary';
   }
 }

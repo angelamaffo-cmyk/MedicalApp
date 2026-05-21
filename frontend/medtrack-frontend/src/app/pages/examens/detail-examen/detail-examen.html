@@ -138,24 +138,52 @@
     </div>
 
     <div class="col-12">
-      <div class="detail-card">
-        <div class="detail-card-header">
-          <i class="bi bi-file-medical-fill text-success"></i>
-          <h6>Résultat</h6>
+  <div class="detail-card">
+    <div class="detail-card-header">
+      <i class="bi bi-file-medical-fill text-success"></i>
+      <h6>Résultat de l'examen</h6>
+    </div>
+    <div class="detail-card-body">
+
+      <!-- Pas encore de résultat -->
+      <div *ngIf="!resultat" class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-2 text-muted">
+          <i class="bi bi-hourglass-split text-warning fs-4"></i>
+          <p class="mb-0">Aucun résultat enregistré pour cet examen</p>
         </div>
-        <div class="detail-card-body">
-          <div class="d-flex align-items-center justify-content-between">
-            <p class="text-muted mb-0">
-              {{ examen.a_resultat ? 'Le résultat de cet examen est disponible' : 'Aucun résultat enregistré pour cet examen' }}
-            </p>
-            <a routerLink="/resultats" class="btn-voir-resultat">
-              <i class="bi bi-arrow-right me-1"></i>
-              {{ examen.a_resultat ? 'Voir le résultat' : 'Saisir le résultat' }}
-            </a>
-          </div>
+        <a [routerLink]="['/resultats/nouveau']" [queryParams]="{examen: examen?.id}" class="btn-resultat">
+          <i class="bi bi-file-medical-fill me-1"></i>Saisir le résultat
+        </a>
+      </div>
+
+      <!-- Résultat disponible -->
+      <div *ngIf="resultat">
+        <div class="resultat-disponible mb-3">
+          <i class="bi bi-check-circle-fill text-success me-2"></i>
+          <span class="fw-bold text-success">Résultat disponible</span>
+          <span class="etat-badge ms-2" [class.normal]="resultat.est_normal" [class.anormal]="!resultat.est_normal">
+            {{ resultat.est_normal ? 'Normal' : 'Anormal' }}
+          </span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Date du résultat</span>
+          <span class="detail-value">{{ resultat.date_resultat | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Conclusion</span>
+          <span class="detail-value">{{ resultat.conclusion }}</span>
+        </div>
+        <div class="mt-3">
+          <a [routerLink]="['/resultats', resultat.id]" class="btn-voir-resultat">
+            <i class="bi bi-eye-fill me-1"></i>Voir le résultat complet
+          </a>
         </div>
       </div>
+
+    </div>
+  </div>
+</div>
     </div>
 
   </div>
-</div>
+

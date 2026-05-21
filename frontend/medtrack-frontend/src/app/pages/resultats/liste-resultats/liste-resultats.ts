@@ -1,19 +1,11 @@
-import { Component , OnInit} from '@angular/core';
+import { Component , OnInit, ChangeDetectorRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ResultatsService } from '../../../services/resultats.service';
+import { Resultat } from '../../../models/resultats.model';
 
-interface Resultat{
-  id: number;
-  patient_nom: string;
-  patient_prenom: string;
-  examen_nom: string;
-  examen_type: string;
-  date_resultat: string;
-  conclusion: string;
-  est_normal: boolean;
-  est_actif: boolean;
-}
+
 @Component({
   selector: 'app-liste-resultats',
   standalone:true,
@@ -22,27 +14,54 @@ interface Resultat{
   styleUrl: './liste-resultats.css',
 })
 export class ListeResultatsComponent implements OnInit {
-  resultats: Resultat[] = [
-    { id: 1, patient_nom: 'Temgoua', patient_prenom: 'Belmisse', examen_nom: 'Numération Formule Sanguine', examen_type: 'BIOLOGIE', date_resultat: '2026-05-19', conclusion: 'Anémie légère détectée', est_normal: false, est_actif: true },
-    { id: 2, patient_nom: 'Kamga', patient_prenom: 'Jean', examen_nom: 'Radiographie Thorax', examen_type: 'RADIOLOGIE', date_resultat: '2026-05-18', conclusion: 'Résultat normal', est_normal: true, est_actif: true },
-    { id: 3, patient_nom: 'Tchoupo', patient_prenom: 'Marie', examen_nom: 'Échographie Abdominale', examen_type: 'ECHOGRAPHIE', date_resultat: '2026-05-17', conclusion: 'Légère inflammation détectée', est_normal: false, est_actif: true },
-
-  ];
+  resultats: Resultat[] = [];
+   
   resultatsFiltres: Resultat[]=[];
   recherche='';
   isLoading=false;
-
+  errorMessage='';
+   constructor(
+    private resultatService: ResultatsService,
+    private cdr: ChangeDetectorRef
+  ) {}
   ngOnInit():void{
-    this.resultatsFiltres= this.resultats;
+    this.chargerResultats();
   }
+  chargerResultats(): void {
+    this.isLoading = true;
+    this.resultatService.getAll().subscribe({
+      next: (data) => {
+        this.resultats = data;
+        this.resultatsFiltres = data;
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.errorMessage = 'Erreur lors du chargement.';
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+  get total(): number { return this.resultats.length; }
+  get normaux(): number { return this.resultats.filter(r => r.est_normal).length; }
+  get anormaux(): number { return this.resultats.filter(r => !r.est_normal).length; }
 
   filtrer(): void{
-    const terme = this.recherche.toLocaleLowerCase();
-    this.resultatsFiltres=this.resultats.filter(r=>
-      r.patient_nom.toLocaleLowerCase().includes(terme) ||
-      r.patient_prenom.toLocaleLowerCase().includes(terme)||
-      r.examen_nom.toLocaleLowerCase().includes(terme)||
-      r.conclusion.toLocaleLowerCase().includes(terme)
+    if(!this.recherche.trim()){
+      this.resultatsFiltres=this.resultats;
+      return;
+    }
+    const terme = this.recherche.toLowerCase().trim();
+    this.resultatsFiltres = this.resultats.filter(r =>
+      r.patient_nom?.toLowerCase().includes(terme) ||
+      r.patient_prenom?.toLowerCase().includes(terme) ||
+      r.examen_nom?.toLowerCase().includes(terme) ||
+      r.conclusion.toLowerCase().includes(terme)
     );
+  }
+  reinitialiser(): void {
+    this.recherche = '';
+    this.resultatsFiltres = this.resultats;
   }
 }

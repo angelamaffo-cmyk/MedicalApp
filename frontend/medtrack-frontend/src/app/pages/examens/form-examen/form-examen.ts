@@ -27,6 +27,16 @@ export class FormExamenComponent implements OnInit {
     'BIOLOGIE', 'RADIOLOGIE', 'ECHOGRAPHIE',
     'SCANNER', 'IRM', 'ECG', 'AUTRE'
   ];
+  laboratoires = [
+  'Laboratoire Central',
+  'Laboratoire Saint Jean',
+  'Laboratoire Pasteur',
+  'Service de Radiologie',
+  'Service d\'Imagerie Médicale',
+  'Service d\'Échographie',
+  'Cabinet d\'Analyses',
+  'Autre',
+];
    constructor(
     private fb: FormBuilder,
     private router: Router,

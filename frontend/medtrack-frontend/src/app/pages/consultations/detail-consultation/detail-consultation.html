@@ -140,22 +140,43 @@
     </div>
 
     <!-- Raccourcis examens -->
-    <div class="col-12">
-      <div class="detail-card">
-        <div class="detail-card-header">
-          <i class="bi bi-droplet-fill text-warning"></i>
-          <h6>Examens liés à cette consultation</h6>
-        </div>
-        <div class="detail-card-body">
-          <div class="d-flex align-items-center justify-content-between">
-            <p class="text-muted mb-0">Voir les examens prescrits lors de cette consultation</p>
-            <a routerLink="/examens" class="btn-examens">
-              <i class="bi bi-arrow-right me-1"></i> Voir les examens
-            </a>
+    <!-- Examens liés -->
+<!-- <div class="col-12">
+  <div class="detail-card">
+    <div class="detail-card-header">
+      <i class="bi bi-droplet-fill text-warning"></i>
+      <h6>Examens prescrits lors de cette consultation ({{ examens.length }})</h6>
+      <a routerLink="/examens/nouveau" class="btn-add-small ms-auto">
+        <i class="bi bi-plus me-1"></i>Prescrire
+      </a>
+    </div>
+    <div class="detail-card-body">
+      <div *ngIf="examens.length === 0" class="text-center text-muted py-3">
+        <i class="bi bi-droplet fs-2"></i>
+        <p class="mt-2">Aucun examen prescrit pour cette consultation</p>
+      </div>
+      <div class="liste-card" *ngFor="let e of examens">
+        <div class="liste-card-left">
+          <div class="liste-icon bg-warning"><i class="bi bi-droplet-fill"></i></div>
+          <div>
+            <p class="liste-titre">{{ e.nom_examen }}</p>
+            <p class="liste-sous">{{ e.type_examen }} — {{ e.date_prescription | date:'dd/MM/yyyy' }}</p>
           </div>
+        </div> -->
+        <!-- <div class="d-flex gap-2">
+          <a [routerLink]="['/examens', e.id]" class="btn-voir">
+            <i class="bi bi-eye-fill me-1"></i>Voir
+          </a>
+          <a [routerLink]="['/resultats/nouveau']" [queryParams]="{examen: e.id}" class="btn-resultat-small" *ngIf="!e.a_resultat">
+            <i class="bi bi-file-medical-fill me-1"></i>Saisir résultat
+          </a>
+          <span class="btn-voir-resultat-small" *ngIf="e.a_resultat">
+            <i class="bi bi-check-circle-fill me-1"></i>Résultat reçu
+          </span>
         </div>
       </div>
     </div>
-
+  </div> -->
+<!-- </div> -->
   </div>
 </div>

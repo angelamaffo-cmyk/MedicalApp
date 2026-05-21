@@ -13,7 +13,7 @@
       <div>
         <h4 class="page-title">{{ hospitalisation.patient_prenom }} {{ hospitalisation.patient_nom }}</h4>
         <div class="d-flex align-items-center gap-2 mt-1">
-          <span class="service-badge">{{ hospitalisation.service }} — {{ hospitalisation.lit }}</span>
+          <span class="service-badge">{{ hospitalisation.service_nom }} — {{ hospitalisation.lit }}</span>
           <span class="statut-badge statut-{{ getStatutClass(hospitalisation.statut) }}">
             {{ getStatutLabel(hospitalisation.statut) }}
           </span>
@@ -53,7 +53,7 @@
           </div>
           <div class="detail-row">
             <span class="detail-label">Service</span>
-            <span class="detail-value">{{ hospitalisation.service }}</span>
+            <span class="detail-value">{{ hospitalisation.service_nom }}</span>
           </div>
           <div class="detail-row">
             <span class="detail-label">Lit</span>
@@ -61,7 +61,7 @@
           </div>
           <div class="detail-row">
             <span class="detail-label">Médecin responsable</span>
-            <span class="detail-value">{{ hospitalisation.medecin }}</span>
+            <span class="detail-value">{{ hospitalisation.medecin_responsable }}</span>
           </div>
           <div class="detail-row">
             <span class="detail-label">Date d'entrée</span>
@@ -121,29 +121,7 @@
     </div>
 
     <!-- Observations -->
-    <div class="col-12">
-      <div class="detail-card">
-        <div class="detail-card-header">
-          <i class="bi bi-journal-text text-info"></i>
-          <h6>Observations ({{ hospitalisation.observations.length }})</h6>
-        </div>
-        <div class="detail-card-body">
-          <div *ngIf="hospitalisation.observations.length === 0" class="text-center text-muted py-3">
-            <i class="bi bi-journal fs-2"></i>
-            <p class="mt-2">Aucune observation enregistrée</p>
-          </div>
-          <div class="observation-item" *ngFor="let obs of hospitalisation.observations">
-            <div class="obs-header">
-              <div class="obs-auteur">
-                <i class="bi bi-person-circle me-1"></i>{{ obs.auteur }}
-              </div>
-              <span class="obs-date">{{ obs.date | date:'dd/MM/yyyy HH:mm' }}</span>
-            </div>
-            <p class="obs-contenu">{{ obs.contenu }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    
 
   </div>
 </div>

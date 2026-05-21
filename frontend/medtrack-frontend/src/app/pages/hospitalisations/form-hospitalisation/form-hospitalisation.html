@@ -34,7 +34,7 @@
               <label class="form-label">Patient <span class="text-danger">*</span></label>
               <select class="form-select" [class.is-invalid]="patient?.invalid && patient?.touched" formControlName="patient">
                 <option value="">Sélectionner un patient</option>
-                <option *ngFor="let p of patients" [value]="p.id">{{ p.nom }}</option>
+                <option *ngFor="let p of patients" [value]="p.id">{{ p.prenom }}{{ p.nom }}</option>
               </select>
               <div class="invalid-feedback">Le patient est requis.</div>
             </div>
@@ -43,8 +43,9 @@
               <label class="form-label">Lit <span class="text-danger">*</span></label>
               <select class="form-select" [class.is-invalid]="lit?.invalid && lit?.touched" formControlName="lit">
                 <option value="">Sélectionner un lit</option>
-                <option *ngFor="let l of lits" [value]="l.id">{{ l.nom }}</option>
-              </select>
+<option *ngFor="let l of lits" [value]="l.id">
+  Lit {{ l.numero }} — {{ l.service_nom }}
+</option>              </select>
               <div class="invalid-feedback">Le lit est requis.</div>
             </div>
 

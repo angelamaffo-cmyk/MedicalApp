@@ -10,24 +10,55 @@
   </a>
 </div>
 
+<!-- Stats -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="mini-stat">
+      <i class="bi bi-file-medical-fill text-success"></i>
+      <div><h5>{{ total }}</h5><small>Total résultats</small></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="mini-stat">
+      <i class="bi bi-check-circle-fill text-success"></i>
+      <div><h5>{{ normaux }}</h5><small>Normaux</small></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="mini-stat">
+      <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+      <div><h5>{{ anormaux }}</h5><small>Anormaux</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- Erreur -->
+<div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
+  <i class="bi bi-exclamation-triangle-fill"></i>
+  <span>{{ errorMessage }}</span>
+</div>
+
+<!-- Recherche -->
 <div class="search-bar">
   <div class="search-input">
     <i class="bi bi-search search-icon"></i>
     <input
       type="text"
       [(ngModel)]="recherche"
-      (input)="filtrer()"
+      (ngModelChange)="filtrer()"
       placeholder="Rechercher par patient, examen ou conclusion..."
     />
   </div>
-  <span class="results-count">{{ resultatsFiltres.length }} résultat(s)</span>
+  <span class="results-count">{{ resultatsFiltres.length }} / {{ total }} résultat(s)</span>
 </div>
 
+<!-- Spinner -->
 <div class="text-center py-5" *ngIf="isLoading">
   <div class="spinner-border text-success"></div>
   <p class="mt-2 text-muted">Chargement...</p>
 </div>
 
+<!-- Tableau -->
 <div class="table-card" *ngIf="!isLoading">
   <table class="resultats-table">
     <thead>
@@ -42,52 +73,49 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let resultat of resultatsFiltres">
+      <tr *ngFor="let r of resultatsFiltres">
         <td>
           <div class="patient-info">
             <div class="patient-avatar">
-              {{ resultat.patient_prenom[0] }}{{ resultat.patient_nom[0] }}
+              {{ r.patient_prenom?.[0] }}{{ r.patient_nom?.[0] }}
             </div>
-            <span class="patient-nom">{{ resultat.patient_prenom }} {{ resultat.patient_nom }}</span>
+            <span class="patient-nom">{{ r.patient_prenom }} {{ r.patient_nom }}</span>
           </div>
         </td>
+        <td><span class="examen-nom">{{ r.examen_nom }}</span></td>
+        <td><span class="type-badge">{{ r.examen_type }}</span></td>
+        <td><span class="date-text">{{ r.date_resultat | date:'dd/MM/yyyy' }}</span></td>
+        <td><span class="conclusion-text">{{ r.conclusion }}</span></td>
         <td>
-          <span class="examen-nom">{{ resultat.examen_nom }}</span>
-        </td>
-        <td>
-          <span class="type-badge">{{ resultat.examen_type }}</span>
-        </td>
-        <td>
-          <span class="date-text">{{ resultat.date_resultat | date:'dd/MM/yyyy' }}</span>
-        </td>
-        <td>
-          <span class="conclusion-text">{{ resultat.conclusion }}</span>
-        </td>
-        <td>
-          <span class="etat-badge" [class.normal]="resultat.est_normal" [class.anormal]="!resultat.est_normal">
-            <i class="bi" [class.bi-check-circle-fill]="resultat.est_normal" [class.bi-exclamation-triangle-fill]="!resultat.est_normal"></i>
-            {{ resultat.est_normal ? 'Normal' : 'Anormal' }}
+          <span class="etat-badge" [class.normal]="r.est_normal" [class.anormal]="!r.est_normal">
+            <i class="bi" [class.bi-check-circle-fill]="r.est_normal" [class.bi-exclamation-triangle-fill]="!r.est_normal"></i>
+            {{ r.est_normal ? 'Normal' : 'Anormal' }}
           </span>
         </td>
         <td>
           <div class="actions">
-            <a [routerLink]="['/resultats', resultat.id]" class="btn-action view" title="Voir">
+            <a [routerLink]="['/resultats', r.id]" class="btn-action view" title="Voir">
               <i class="bi bi-eye-fill"></i>
             </a>
-            <a [routerLink]="['/resultats/modifier', resultat.id]" class="btn-action edit" title="Modifier">
+            <a [routerLink]="['/resultats/modifier', r.id]" class="btn-action edit" title="Modifier">
               <i class="bi bi-pencil-fill"></i>
             </a>
           </div>
         </td>
       </tr>
 
-      <tr *ngIf="resultatsFiltres.length === 0">
+      <tr *ngIf="resultatsFiltres.length === 0 && !isLoading">
         <td colspan="7" class="empty-state">
           <i class="bi bi-file-medical fs-1 text-muted"></i>
-          <p class="mt-2 text-muted">Aucun résultat trouvé</p>
-          <a routerLink="/resultats/nouveau" class="btn btn-success btn-sm">
+          <p class="mt-2 text-muted">
+            {{ recherche ? 'Aucun résultat ne correspond à votre recherche' : 'Aucun résultat enregistré' }}
+          </p>
+          <a routerLink="/resultats/nouveau" class="btn btn-success btn-sm" *ngIf="!recherche">
             Ajouter un résultat
           </a>
+          <button class="btn btn-outline-secondary btn-sm" *ngIf="recherche" (click)="reinitialiser()">
+            Effacer la recherche
+          </button>
         </td>
       </tr>
     </tbody>

@@ -1,8 +1,14 @@
 import { ActivatedRoute, Router,RouterLink } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule,FormBuilder,FormGroup,Validators } from '@angular/forms';
-
+import { HospitalisationsService } from '../../../services/hospitalisations.service';
+import { PatientService } from '../../../services/patients.service';
+import { Patients } from '../../../models/patients.model';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
+import { Hospitalisation } from '../../../models/hospitalisations.model';
+import { Lit } from '../../../models/hospitalisations.model';
 
 @Component({
   selector: 'app-form-hospitalisation',
@@ -15,30 +21,16 @@ export class FormHospitalisationComponent implements OnInit{
   form: FormGroup;
   isLoading = false;
   isEditMode = false;
-  hospitalisationId: number | null = null;
+  hospitalisationId!: number ;
   successMessage = '';
   errorMessage = '';
 
-  patients = [
-    { id: 1, nom: 'Angela Maffo' },
-    { id: 2, nom: 'Jean Kamga' },
-    { id: 3, nom: 'Marie Tchoupo' },
-  ];
+  patients : Patients[]= [];
+   lits: Lit[] = [];
+  
 
-   services = [
-    { id: 1, nom: 'Médecine Interne' },
-    { id: 2, nom: 'Chirurgie' },
-    { id: 3, nom: 'Pédiatrie' },
-    { id: 4, nom: 'Urgences' },
-    { id: 5, nom: 'Maternité' },
-  ];
-    lits = [
-    { id: 1, nom: 'Lit 01' },
-    { id: 2, nom: 'Lit 02' },
-    { id: 3, nom: 'Lit 03' },
-    { id: 4, nom: 'Lit 04' },
-    { id: 5, nom: 'Lit 05' },
-  ];
+  
+  
   statuts = [
     { value: 'EN_COURS', label: 'En cours' },
     { value: 'SORTI', label: 'Sorti' },
@@ -49,7 +41,11 @@ export class FormHospitalisationComponent implements OnInit{
     constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private hospitalisationService: HospitalisationsService,
+    private patientService: PatientService,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
   ) {
      this.form = this.fb.group({
       patient: ['', Validators.required],
@@ -63,17 +59,42 @@ export class FormHospitalisationComponent implements OnInit{
       }
 
   ngOnInit(): void {
-    this.hospitalisationId = this.route.snapshot.params['id'];
-    if (this.hospitalisationId) {
+   this.chargerPatients();
+    this.chargerLits();
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.hospitalisationId = Number(id);
       this.isEditMode = true;
-      this.form.patchValue({
-        patient: 1,
-        lit: 1,
-        date_entree: '2026-05-15',
-        motif_admission: 'Paludisme grave',
-        statut: 'EN_COURS',
-      });
+      this.chargerHospitalisation();
     }
+  }
+  chargerPatients(): void {
+    this.patientService.getPatients().subscribe({
+      next: (data) => { this.patients = data; this.cdr.detectChanges(); }
+    });
+  }
+  chargerLits(): void {
+    this.http.get<Lit[]>(`${environment.apiUrl}/lits/`).subscribe({
+      next: (data) => {
+        this.lits = data.filter(l => l.statut === 'DISPONIBLE');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+   chargerHospitalisation(): void {
+    this.isLoading = true;
+    this.hospitalisationService.getOne(this.hospitalisationId).subscribe({
+      next: (data) => {
+        this.form.patchValue(data);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.errorMessage = 'Impossible de charger l\'hospitalisation.';
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
    get patient() { return this.form.get('patient'); }
   get lit() { return this.form.get('lit'); }
@@ -86,12 +107,34 @@ export class FormHospitalisationComponent implements OnInit{
       return;
     }
       this.isLoading = true;
-    setTimeout(() => {
-      this.isLoading = false;
-      this.successMessage = this.isEditMode
-        ? 'Hospitalisation modifiée avec succès !'
-        : 'Patient admis avec succès !';
-      setTimeout(() => this.router.navigate(['/hospitalisations']), 1500);
-    }, 1000);
+      const data: Hospitalisation = this.form.value;
+
+    if (this.isEditMode) {
+      this.hospitalisationService.update(this.hospitalisationId, data).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.successMessage = 'Hospitalisation modifiée avec succès !';
+          setTimeout(() => this.router.navigate(['/hospitalisations']), 1500);
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.errorMessage = err.error?.detail || 'Erreur lors de la modification.';
+          this.cdr.detectChanges();
+        }
+      });
+    } else {
+      this.hospitalisationService.create(data).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.successMessage = 'Patient admis avec succès !';
+          setTimeout(() => this.router.navigate(['/hospitalisations']), 1500);
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.errorMessage = err.error?.detail || 'Erreur lors de la création.';
+          this.cdr.detectChanges();
+        }
+      });
+    }
   }
 }

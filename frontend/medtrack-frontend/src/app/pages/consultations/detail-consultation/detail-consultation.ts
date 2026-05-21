@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { ConsultationService } from '../../../services/consultation.service';
 import { Consultation } from '../../../models/consultations.model';
-
+import { ExamenService } from '../../../services/examen.service';
+import { Examen } from '../../../models/examens.model';
 
 @Component({
   selector: 'app-detail-consultation',
@@ -14,6 +15,7 @@ import { Consultation } from '../../../models/consultations.model';
 })
 export class DetailConsultationComponent implements OnInit {
   consultation: Consultation | null = null;
+  examens: Examen[] = [];
   isLoading = false;
   consultationId!: number ;
   confirmToggle = false;
@@ -24,6 +26,7 @@ export class DetailConsultationComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
      private consultationService: ConsultationService,
+     private examenService: ExamenService,
     private cdr: ChangeDetectorRef
   ) {}
   ngOnInit(): void {
@@ -49,7 +52,14 @@ export class DetailConsultationComponent implements OnInit {
       }
     });
   }
-
+chargerExamens(): void {
+    this.examenService.getAll().subscribe({
+      next: (data) => {
+        this.examens = data.filter(e =>Number( e.consultation )===Number( this.consultationId));
+        this.cdr.detectChanges();
+      }
+    });
+  }
     
 
   toggleStatut(): void {

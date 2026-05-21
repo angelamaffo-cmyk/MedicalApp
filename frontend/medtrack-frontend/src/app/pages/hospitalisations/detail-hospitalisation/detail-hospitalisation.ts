@@ -1,22 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HospitalisationsService } from '../../../services/hospitalisations.service';
+import { Hospitalisation,Observation } from '../../../models/hospitalisations.model';
 
-interface Hospitalisation{
-  id: number;
-  patient_nom: string;
-  patient_prenom: string;
-  service: string;
-  lit: string;
-  medecin: string;
-  date_entree: string;
-  date_sortie: string | null;
-  motif_admission: string;
-  motif_sortie: string;
-  statut: string;
-  observations: { id: number; auteur: string; contenu: string; date: string }[];
-}
 @Component({
   selector: 'app-detail-hospitalisation',
   standalone:true,
@@ -27,13 +15,17 @@ interface Hospitalisation{
 export class DetailHospitalisationComponent implements OnInit {
   hospitalisation: Hospitalisation | null = null;
   isLoading = false;
-  hospitalisationId: number | null = null;
+  hospitalisationId!: number ;
   successMessage = '';
+  errorMessage = '';
   showObservationForm = false;
   observationForm: FormGroup;
 
   constructor(
     private route: ActivatedRoute,
+    private hospitalisationService: HospitalisationsService,
+    private cdr: ChangeDetectorRef,
+
     private fb: FormBuilder
   ) {
     this.observationForm = this.fb.group({
@@ -41,28 +33,27 @@ export class DetailHospitalisationComponent implements OnInit {
     });
   }
    ngOnInit(): void {
-    this.hospitalisationId = this.route.snapshot.params['id'];
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.hospitalisationId = Number(id);
+      this.chargerHospitalisation();
+    }
+        
+  }
+  chargerHospitalisation(): void {
     this.isLoading = true;
-    setTimeout(() => {
-       this.hospitalisation = {
-        id: this.hospitalisationId!,
-        patient_nom: 'Maffo',
-        patient_prenom: 'Angela',
-        service: 'Médecine Interne',
-        lit: 'Lit 05',
-        medecin: 'Dr Kamga',
-        date_entree: '2026-05-15T08:30',
-        date_sortie: null,
-        motif_admission: 'Paludisme grave avec complications neurologiques',
-        motif_sortie: '',
-        statut: 'EN_COURS',
-          observations: [
-          { id: 1, auteur: 'Dr Kamga', contenu: 'Patient stable. Température : 38.5°C. Traitement en cours.', date: '2026-05-15T10:00' },
-          { id: 2, auteur: 'Inf. Biya', contenu: 'Prise de médicaments effectuée. Patient coopératif.', date: '2026-05-16T08:00' },
-        ]
-      };
-      this.isLoading=false;
-    }, 800);
+    this.hospitalisationService.getOne(this.hospitalisationId).subscribe({
+      next: (data) => {
+        this.hospitalisation = data;
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.errorMessage = 'Impossible de charger l\'hospitalisation.';
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
   getStatutLabel(statut: string): string {
     const labels: any = { 'EN_COURS': 'En cours', 'SORTI': 'Sorti', 'TRANSFERE': 'Transféré', 'DECEDE': 'Décédé' };
@@ -74,17 +65,29 @@ export class DetailHospitalisationComponent implements OnInit {
   }
 
   ajouterObservation(): void {
-    if (this.observationForm.invalid) return;
-    this.hospitalisation?.observations.unshift({
-      id: Date.now(),
-      auteur: 'Utilisateur connecté',
-      contenu: this.observationForm.value.contenu,
-      date: new Date().toISOString()
+    if (this.observationForm.invalid || !this.hospitalisation) return;
+
+    const obs: Observation = {
+      hospitalisation: this.hospitalisationId,
+      contenu: this.observationForm.value.contenu
+    };
+    this.hospitalisationService.ajouterObservation(obs).subscribe({
+      next: (data) => {
+        if (!this.hospitalisation!.observations) {
+          this.hospitalisation!.observations = [];
+        }
+        this.hospitalisation!.observations.unshift(data);
+        this.observationForm.reset();
+        this.showObservationForm = false;
+        this.successMessage = 'Observation ajoutée avec succès !';
+        this.cdr.detectChanges();
+        setTimeout(() => { this.successMessage = ''; this.cdr.detectChanges(); }, 3000);
+      },
+      error: () => {
+        this.errorMessage = 'Erreur lors de l\'ajout de l\'observation.';
+        this.cdr.detectChanges();
+      }
     });
-      this.observationForm.reset();
-    this.showObservationForm = false;
-    this.successMessage = 'Observation ajoutée avec succès !';
-    setTimeout(() => this.successMessage = '', 3000);
   }
 
 }

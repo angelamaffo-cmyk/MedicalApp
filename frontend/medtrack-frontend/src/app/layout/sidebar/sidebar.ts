@@ -19,7 +19,7 @@ export class SidebarComponent {
     { label: 'Patients', icon: 'bi-people-fill', route: '/patients' },
     { label: 'Consultations', icon: 'bi-clipboard2-pulse-fill', route: '/consultations' },
     { label: 'Examens', icon: 'bi-droplet-fill', route: '/examens' },
-    { label: 'Résultats', icon: 'bi-file-medical-fill', route: '/resultats' },
+    { label: 'Resultats', icon: 'bi-file-medical-fill', route: '/resultats' },
     { label: 'Hospitalisations', icon: 'bi-hospital-fill', route: '/hospitalisations' },
   ];
 }

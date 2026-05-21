@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { ExamenService } from '../../../services/examen.service';
 import { Examen } from '../../../models/examens.model';
-
+import { ResultatsService } from '../../../services/resultats.service';
+import { Resultat } from '../../../models/resultats.model';
 @Component({
   selector: 'app-detail-examen',
   standalone: true,
@@ -13,6 +14,7 @@ import { Examen } from '../../../models/examens.model';
 })
 export class DetailExamenComponent implements OnInit {
   examen: Examen | null = null;
+  resultat: Resultat | null = null;
   isLoading = false;
   examenId!: number;
   confirmToggle = false;
@@ -22,6 +24,7 @@ export class DetailExamenComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private examenService: ExamenService,
+     private resultatService: ResultatsService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -39,11 +42,24 @@ export class DetailExamenComponent implements OnInit {
       next: (data) => {
         this.examen = data;
         this.isLoading = false;
+        this.chargerResultat();
         this.cdr.detectChanges();
       },
       error: () => {
         this.errorMessage = 'Impossible de charger l\'examen.';
         this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+  chargerResultat(): void {
+    this.resultatService.getAll().subscribe({
+      next: (data) => {
+        const r = data.find(res => Number(res.examen) === Number(this.examenId));
+        if (r) {
+          this.resultat = r;
+          if (this.examen) this.examen.a_resultat = true;
+        }
         this.cdr.detectChanges();
       }
     });

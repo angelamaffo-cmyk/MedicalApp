@@ -205,3 +205,18 @@
   color: #1a1f5e;
   font-weight: 600;
 }
+.examen-stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+}
+.examen-stat-card i { font-size: 1.8rem; }
+.examen-stat-card h4 { margin: 0; font-weight: 800; color: #1a1f5e; }
+.examen-stat-card p { margin: 0; font-size: 0.8rem; color: #6c757d; }
+.examen-stat-card.total i { color: #0d6efd; }
+.examen-stat-card.attente i { color: #fd7e14; }
+.examen-stat-card.realise i { color: #198754; }
