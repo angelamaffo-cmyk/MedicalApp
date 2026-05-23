@@ -1,0 +1,126 @@
+<div class="page-header">
+  <div>
+    <h4 class="page-title">
+      <i class="bi bi-people-fill me-2 text-primary"></i>Personnel médical
+    </h4>
+    <p class="page-subtitle">Gérez les comptes du personnel de l'établissement</p>
+  </div>
+  <a routerLink="/admin/creer-personnel" class="btn-add">
+    <i class="bi bi-person-plus-fill me-2"></i>Créer un compte
+  </a>
+</div>
+
+<!-- Stats -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="mini-stat">
+      <i class="bi bi-people-fill text-primary"></i>
+      <div><h5>{{ personnel.length }}</h5><small>Total personnel</small></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="mini-stat">
+      <i class="bi bi-person-badge-fill text-primary"></i>
+      <div><h5>{{ totalMedecins }}</h5><small>Médecins</small></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="mini-stat">
+      <i class="bi bi-heart-pulse-fill text-success"></i>
+      <div><h5>{{ totalInfirmiers }}</h5><small>Infirmiers</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- Messages -->
+<div class="alert alert-success d-flex align-items-center gap-2" *ngIf="successMessage">
+  <i class="bi bi-check-circle-fill"></i><span>{{ successMessage }}</span>
+</div>
+<div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
+  <i class="bi bi-exclamation-triangle-fill"></i><span>{{ errorMessage }}</span>
+</div>
+
+<!-- Recherche -->
+<div class="search-bar">
+  <div class="search-input">
+    <i class="bi bi-search search-icon"></i>
+    <input
+      type="text"
+      [(ngModel)]="recherche"
+      (ngModelChange)="filtrer()"
+      placeholder="Rechercher par nom, email ou rôle..."
+    />
+  </div>
+  <span class="results-count">{{ personnelFiltres.length }} / {{ personnel.length }} membre(s)</span>
+</div>
+
+<!-- Spinner -->
+<div class="text-center py-5" *ngIf="isLoading">
+  <div class="spinner-border text-primary"></div>
+  <p class="mt-2 text-muted">Chargement...</p>
+</div>
+
+<!-- Tableau -->
+<div class="table-card" *ngIf="!isLoading">
+  <table class="personnel-table">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Email</th>
+        <th>Rôle</th>
+        <th>Spécialité</th>
+        <th>Téléphone</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of personnelFiltres">
+        <td>
+          <div class="personnel-info">
+            <div class="personnel-avatar role-{{ getRoleCouleur(p.role) }}">
+              {{ p.nom_complet?.[0] || 'U' }}
+            </div>
+            <span class="personnel-nom">{{ p.nom_complet }}</span>
+          </div>
+        </td>
+        <td><span class="email-text">{{ p.email }}</span></td>
+        <td>
+          <span class="role-badge role-{{ getRoleCouleur(p.role) }}">
+            <i class="bi" [class.bi-person-badge-fill]="p.role === 'MEDECIN'" [class.bi-heart-pulse-fill]="p.role === 'INFIRMIER'"></i>
+            {{ p.role === 'MEDECIN' ? 'Médecin' : 'Infirmier' }}
+          </span>
+        </td>
+        <td><span class="specialite-text">{{ p.specialite || '—' }}</span></td>
+        <td><span class="tel-text">{{ p.telephone || '—' }}</span></td>
+        <td>
+          <span class="statut-badge" [class.actif]="p.est_actif" [class.inactif]="!p.est_actif">
+            <i class="bi" [class.bi-check-circle-fill]="p.est_actif" [class.bi-x-circle-fill]="!p.est_actif"></i>
+            {{ p.est_actif ? 'Actif' : 'Inactif' }}
+          </span>
+        </td>
+        <td>
+          <button
+            class="btn-toggle"
+            [class.btn-desactiver]="p.est_actif"
+            [class.btn-activer]="!p.est_actif"
+            (click)="toggleStatut(p)"
+          >
+            <i class="bi" [class.bi-toggle-on]="p.est_actif" [class.bi-toggle-off]="!p.est_actif"></i>
+            {{ p.est_actif ? 'Désactiver' : 'Activer' }}
+          </button>
+        </td>
+      </tr>
+
+      <tr *ngIf="personnelFiltres.length === 0 && !isLoading">
+        <td colspan="7" class="empty-state">
+          <i class="bi bi-people fs-1 text-muted"></i>
+          <p class="mt-2 text-muted">Aucun membre du personnel trouvé</p>
+          <a routerLink="/admin/creer-personnel" class="btn btn-primary btn-sm">
+            Créer un compte
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

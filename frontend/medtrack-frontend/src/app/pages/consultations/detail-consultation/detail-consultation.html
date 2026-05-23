@@ -32,10 +32,11 @@
       <a routerLink="/consultations" class="btn-retour">
         <i class="bi bi-arrow-left me-1"></i> Retour
       </a>
-      <a [routerLink]="['/consultations/modifier', consultation.id]" class="btn-modifier">
-        <i class="bi bi-pencil-fill me-1"></i> Modifier
-      </a>
-      <button
+      <a [routerLink]="['/consultations/modifier', consultation.id]" class="btn-modifier"
+   *ngIf="roleService.peutFaireConsultation()">
+  <i class="bi bi-pencil-fill me-1"></i>Modifier
+</a>
+      <button *ngIf="roleService.peutFaireConsultation()"
         class="btn-toggle-statut"
         [class.btn-desactiver]="consultation.est_actif"
         [class.btn-activer]="!consultation.est_actif"

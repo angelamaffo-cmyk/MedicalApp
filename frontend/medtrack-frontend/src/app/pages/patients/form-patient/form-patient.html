@@ -110,7 +110,19 @@
               </select>
               <div class="invalid-feedback">Le groupe sanguin est requis.</div>
             </div>
-
+              <!-- Médecin responsable — visible uniquement par l'infirmier -->
+<div class="col-md-6" *ngIf="roleService.isInfirmier()">
+  <label class="form-label">
+    Médecin responsable <span class="text-danger">*</span>
+  </label>
+  <select class="form-select" formControlName="medecin_responsable">
+    <option value="">Sélectionner un médecin</option>
+    <option *ngFor="let m of medecins" [value]="m.utilisateur_id || m.id">
+      {{ m.nom_complet }}
+    </option>
+  </select>
+  <small class="text-muted">Assignez ce patient à un médecin</small>
+</div>
           </div>
         </div>
       </div>
@@ -150,7 +162,7 @@
                 placeholder="Adresse complète"
               />
             </div>
-
+           
           </div>
         </div>
       </div>

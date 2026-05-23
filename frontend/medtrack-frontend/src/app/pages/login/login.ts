@@ -34,49 +34,49 @@ export class LoginComponent {
 
   get username() { return this.loginForm.get('username'); }
   get password() { return this.loginForm.get('password'); }
-onSubmit(): void {
+
+   onSubmit(): void {
   if (this.loginForm.invalid) {
     this.loginForm.markAllAsTouched();
     return;
   }
 
-    this.isLoading = true;
-    this.errorMessage = '';
+  this.isLoading = true;
+  this.errorMessage = '';
 
-    this.authService.login(this.loginForm.value).subscribe({
-    // next: () => {
-    //   this.authService.getMonProfil().subscribe({
-    //     next: (profil) => {
-    //       this.isLoading = false;
-    //       if (profil.premiere_connexion) {
-    //         this.router.navigate(['/changer-mot-de-passe']);
-    //       } else {
-    //         this.router.navigate(['/dashboard']);
-    //       }
-    //     },
-    //           error: () => {
-    //       this.isLoading = false;
-    //       this.router.navigate(['/dashboard']);
-    //     }
-    //   });
-    // },
+  // Vider le localStorage avant de se connecter
+  localStorage.clear();
+
+  this.authService.login(this.loginForm.value).subscribe({
     next: () => {
-  this.isLoading = false;
-  this.router.navigate(['/dashboard']);
-},
-      error: (err) => {
+      this.authService.getMonProfil().subscribe({
+        next: (profil) => {
+          this.isLoading = false;
+          if (profil.premiere_connexion) {
+            this.router.navigate(['/changer-mot-de-passe']);
+          } else {
+            this.router.navigate(['/dashboard']);
+          }
+        },
+        error: () => {
+          this.isLoading = false;
+          this.router.navigate(['/dashboard']);
+        }
+      });
+    },
+    error: (err) => {
       this.isLoading = false;
       if (err.status === 401) {
         this.errorMessage = 'Nom d\'utilisateur ou mot de passe incorrect.';
       } else if (err.status === 0) {
-        this.errorMessage = 'Impossible de contacter le serveur. Vérifiez que le backend est lancé.';
+        this.errorMessage = 'Impossible de contacter le serveur.';
       } else {
-        this.errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+        this.errorMessage = 'Une erreur est survenue.';
       }
     }
   });
+}
 
-  }
   
 
  

@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input , OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { AuthRoleService } from '../../services/auth-role.service';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -12,14 +13,13 @@ import { AuthService } from '../../services/auth.service';
 export class SidebarComponent {
   @Input() isOpen = true;
 
-  constructor(public authService: AuthService) {}
+  constructor(public authService: AuthService,
+        public roleService: AuthRoleService
 
-  menuItems = [
-    { label: 'Dashboard', icon: 'bi-speedometer2', route: '/dashboard' },
-    { label: 'Patients', icon: 'bi-people-fill', route: '/patients' },
-    { label: 'Consultations', icon: 'bi-clipboard2-pulse-fill', route: '/consultations' },
-    { label: 'Examens', icon: 'bi-droplet-fill', route: '/examens' },
-    { label: 'Resultats', icon: 'bi-file-medical-fill', route: '/resultats' },
-    { label: 'Hospitalisations', icon: 'bi-hospital-fill', route: '/hospitalisations' },
-  ];
+  ) {}
+
+    ngOnInit(): void {}
+
+
+  
 }

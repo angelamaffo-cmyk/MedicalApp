@@ -1,0 +1,169 @@
+<div class="page-header">
+  <div>
+    <h4 class="page-title">
+      <i class="bi bi-person-plus-fill me-2 text-primary"></i>Créer un compte personnel
+    </h4>
+    <p class="page-subtitle">Le nouveau membre recevra ses identifiants par email</p>
+  </div>
+  <a routerLink="/admin/personnel" class="btn-retour">
+    <i class="bi bi-arrow-left me-2"></i>Retour
+  </a>
+</div>
+
+<div class="alert alert-success d-flex align-items-center gap-2" *ngIf="successMessage">
+  <i class="bi bi-check-circle-fill"></i><span>{{ successMessage }}</span>
+</div>
+<div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
+  <i class="bi bi-exclamation-triangle-fill"></i><span>{{ errorMessage }}</span>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="row g-4">
+
+    <div class="col-12">
+      <div class="form-card">
+        <div class="form-card-header">
+          <i class="bi bi-person-fill text-primary"></i>
+          <h6>Informations personnelles</h6>
+        </div>
+        <div class="form-card-body">
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label class="form-label">Prénom <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                [class.is-invalid]="first_name?.invalid && first_name?.touched"
+                formControlName="first_name"
+                placeholder="Prénom"
+              />
+              <div class="invalid-feedback">Le prénom est requis.</div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Nom <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                [class.is-invalid]="last_name?.invalid && last_name?.touched"
+                formControlName="last_name"
+                placeholder="Nom de famille"
+              />
+              <div class="invalid-feedback">Le nom est requis.</div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Email <span class="text-danger">*</span></label>
+              <input
+                type="email"
+                class="form-control"
+                [class.is-invalid]="email?.invalid && email?.touched"
+                formControlName="email"
+                placeholder="email@exemple.com"
+              />
+              <div class="invalid-feedback">
+                <span *ngIf="email?.errors?.['required']">L'email est requis.</span>
+                <span *ngIf="email?.errors?.['email']">Email invalide.</span>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Téléphone</label>
+              <input
+                type="tel"
+                class="form-control"
+                formControlName="telephone"
+                placeholder="Ex: 677000000"
+              />
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-card">
+        <div class="form-card-header">
+          <i class="bi bi-shield-fill text-warning"></i>
+          <h6>Rôle et spécialité</h6>
+        </div>
+        <div class="form-card-body">
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label class="form-label">Rôle <span class="text-danger">*</span></label>
+              <div class="role-options">
+                <label class="role-option" [class.selected-medecin]="form.get('role')?.value === 'MEDECIN'">
+                  <input type="radio" formControlName="role" value="MEDECIN" />
+                  <i class="bi bi-person-badge-fill text-primary me-2"></i>
+                  <div>
+                    <span class="role-titre">Médecin</span>
+                    <span class="role-desc">Accès complet aux dossiers médicaux</span>
+                  </div>
+                </label>
+                <label class="role-option" [class.selected-infirmier]="form.get('role')?.value === 'INFIRMIER'">
+                  <input type="radio" formControlName="role" value="INFIRMIER" />
+                  <i class="bi bi-heart-pulse-fill text-success me-2"></i>
+                  <div>
+                    <span class="role-titre">Infirmier</span>
+                    <span class="role-desc">Accès limité selon les permissions</span>
+                  </div>
+                </label>
+              </div>
+              <div class="text-danger small mt-1" *ngIf="role?.invalid && role?.touched">
+                Le rôle est requis.
+              </div>
+            </div>
+
+            <div class="col-md-6" *ngIf="form.get('role')?.value === 'MEDECIN'">
+              <label class="form-label">Spécialité</label>
+              <select class="form-select" formControlName="specialite">
+                <option value="">Sélectionner</option>
+                <option value="Médecine Générale">Médecine Générale</option>
+                <option value="Pédiatrie">Pédiatrie</option>
+                <option value="Chirurgie">Chirurgie</option>
+                <option value="Gynécologie">Gynécologie</option>
+                <option value="Cardiologie">Cardiologie</option>
+                <option value="Neurologie">Neurologie</option>
+                <option value="Dermatologie">Dermatologie</option>
+                <option value="Ophtalmologie">Ophtalmologie</option>
+                <option value="Autre">Autre</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info email -->
+    <div class="col-12">
+      <div class="info-email-card">
+        <i class="bi bi-envelope-fill text-primary me-2"></i>
+        <div>
+          <p class="mb-0 fw-semibold">Un email sera automatiquement envoyé</p>
+          <small class="text-muted">
+            Le nouveau membre recevra son nom d'utilisateur et le mot de passe par défaut.
+            Il devra le changer lors de sa première connexion.
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-actions">
+        <a routerLink="/admin/personnel" class="btn-annuler">
+          <i class="bi bi-x-lg me-2"></i>Annuler
+        </a>
+        <button type="submit" class="btn-sauvegarder" [disabled]="isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!isLoading" class="bi bi-person-plus-fill me-2"></i>
+          {{ isLoading ? 'Création en cours...' : 'Créer le compte' }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</form>

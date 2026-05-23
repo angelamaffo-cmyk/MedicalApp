@@ -22,11 +22,9 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('profil');
-    this.router.navigate(['/login']);
-  }
+  localStorage.clear(); // ← Vide tout le localStorage
+  this.router.navigate(['/login']);
+}
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('access_token');

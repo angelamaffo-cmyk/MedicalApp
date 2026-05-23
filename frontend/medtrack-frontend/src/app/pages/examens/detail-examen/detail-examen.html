@@ -30,12 +30,15 @@
       <a routerLink="/examens" class="btn-retour">
         <i class="bi bi-arrow-left me-1"></i> Retour
       </a>
-      <a [routerLink]="['/examens/modifier', examen.id]" class="btn-modifier">
-        <i class="bi bi-pencil-fill me-1"></i> Modifier
-      </a>
-      <a routerLink="/resultats/nouveau" class="btn-resultat" *ngIf="!examen.a_resultat">
-        <i class="bi bi-file-medical-fill me-1"></i> Saisir résultat
-      </a>
+      <a [routerLink]="['/examens/modifier', examen.id]" class="btn-modifier"
+   *ngIf="roleService.peutFaireExamen()">
+  <i class="bi bi-pencil-fill me-1"></i>Modifier
+</a>
+      <a [routerLink]="['/resultats/nouveau']" [queryParams]="{examen: examen?.id}"
+   class="btn-resultat"
+   *ngIf="!resultat && roleService.peutFaireExamen()">
+  <i class="bi bi-file-medical-fill me-1"></i>Saisir le résultat
+</a>
       <button
         class="btn-toggle-statut"
         [class.btn-desactiver]="examen.est_actif"
@@ -151,7 +154,7 @@
           <i class="bi bi-hourglass-split text-warning fs-4"></i>
           <p class="mb-0">Aucun résultat enregistré pour cet examen</p>
         </div>
-        <a [routerLink]="['/resultats/nouveau']" [queryParams]="{examen: examen?.id}" class="btn-resultat">
+        <a [routerLink]="['/resultats/nouveau']" [queryParams]="{examen : examen?.id}" class="btn-resultat">
           <i class="bi bi-file-medical-fill me-1"></i>Saisir le résultat
         </a>
       </div>

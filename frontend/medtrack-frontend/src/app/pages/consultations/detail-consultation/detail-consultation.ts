@@ -5,7 +5,7 @@ import { ConsultationService } from '../../../services/consultation.service';
 import { Consultation } from '../../../models/consultations.model';
 import { ExamenService } from '../../../services/examen.service';
 import { Examen } from '../../../models/examens.model';
-
+import { AuthRoleService } from '../../../services/auth-role.service';
 @Component({
   selector: 'app-detail-consultation',
   standalone:true,
@@ -27,7 +27,8 @@ export class DetailConsultationComponent implements OnInit {
     private route: ActivatedRoute,
      private consultationService: ConsultationService,
      private examenService: ExamenService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public roleService:AuthRoleService
   ) {}
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');

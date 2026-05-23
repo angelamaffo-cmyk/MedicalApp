@@ -1,0 +1,117 @@
+<div class="page-header">
+  <div>
+    <h4 class="page-title">
+      <i class="bi bi-heart-pulse-fill me-2 text-success"></i>
+      {{ roleService.isInfirmier() ? 'Mes soins' : 'Soins infirmiers' }}
+    </h4>
+    <p class="page-subtitle">
+      {{ roleService.isInfirmier() ? 'Patients dont vous avez la charge des soins' : 'Suivi des soins infirmiers' }}
+    </p>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="row g-3 mb-4">
+  <div class="col-md-6">
+    <div class="mini-stat">
+      <i class="bi bi-heart-pulse-fill text-success"></i>
+      <div><h5>{{ total }}</h5><small>Total assignations</small></div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="mini-stat">
+      <i class="bi bi-check-circle-fill text-primary"></i>
+      <div><h5>{{ actives }}</h5><small>En cours</small></div>
+    </div>
+  </div>
+</div>
+
+<div class="alert alert-danger" *ngIf="errorMessage">
+  <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
+</div>
+
+<div class="search-bar">
+  <div class="search-input">
+    <i class="bi bi-search search-icon"></i>
+    <input type="text" [(ngModel)]="recherche" (ngModelChange)="filtrer()"
+           placeholder="Rechercher par patient ou soins..." />
+  </div>
+  <span class="results-count">{{ assignationsFiltrees.length }} assignation(s)</span>
+</div>
+
+<div class="text-center py-5" *ngIf="isLoading">
+  <div class="spinner-border text-success"></div>
+  <p class="mt-2 text-muted">Chargement...</p>
+</div>
+
+<div class="assignation-card" *ngFor="let a of assignationsFiltrees">
+  <div class="assignation-header">
+    <div class="patient-info">
+      <div class="patient-avatar-soin">
+        {{ a.patient_prenom?.[0] }}{{ a.patient_nom?.[0] }}
+      </div>
+      <div>
+        <h6 class="patient-nom-soin">{{ a.patient_prenom }} {{ a.patient_nom }}</h6>
+        <small class="text-muted">
+          Infirmier : <strong>{{ a.infirmier_nom }}</strong> —
+          Du {{ a.date_debut | date:'dd/MM/yyyy' }}
+          <span *ngIf="a.date_fin"> au {{ a.date_fin | date:'dd/MM/yyyy' }}</span>
+        </small>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <span class="statut-soin" [class.actif]="a.est_active" [class.termine]="!a.est_active">
+        {{ a.est_active ? 'En cours' : 'Terminé' }}
+      </span>
+      <!-- Bouton ajouter soin : infirmier seulement -->
+      <a [routerLink]="['/soins/nouveau']" [queryParams]="{assignation: a.id}"
+         class="btn-soin" *ngIf="roleService.isInfirmier() && a.est_active">
+        <i class="bi bi-plus me-1"></i>Ajouter soin
+      </a>
+    </div>
+  </div>
+
+  <!-- Soins prescrits -->
+  <div class="soins-a-faire">
+    <p class="label-soins">Soins prescrits :</p>
+    <p class="texte-soins">{{ a.soins_a_faire }}</p>
+  </div>
+
+  <!-- Progression des soins -->
+  <div class="progression-soins">
+    <div class="progression-header">
+      <p class="label-soins">Soins effectués</p>
+      <span class="nb-soins">{{ a.soins?.length || 0 }} soin(s)</span>
+    </div>
+
+    <!-- Historique -->
+    <div *ngIf="a.soins && a.soins.length > 0">
+      <div class="soin-item" *ngFor="let s of a.soins">
+        <div class="soin-header">
+          <div class="d-flex align-items-center gap-2">
+            <div class="soin-avatar">
+              <i class="bi bi-person-fill"></i>
+            </div>
+            <span class="soin-auteur">{{ s.infirmier_nom }}</span>
+          </div>
+          <span class="soin-date">{{ s.date_soin | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <p class="soin-description">{{ s.description }}</p>
+        <div class="soin-obs" *ngIf="s.observations">
+          <i class="bi bi-chat-left-text me-1 text-muted"></i>
+          <span class="text-muted">{{ s.observations }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aucun soin -->
+    <div *ngIf="!a.soins || a.soins.length === 0"
+         class="aucun-soin">
+      <i class="bi bi-hourglass-split text-warning me-2"></i>
+      <span class="text-muted">
+        {{ roleService.isInfirmier() ? 'Aucun soin enregistré — cliquez sur Ajouter soin' : 'Aucun soin enregistré par l\'infirmier' }}
+      </span>
+    </div>
+
+  </div>
+</div>

@@ -5,9 +5,14 @@
     </h4>
     <p class="page-subtitle">Gérez les dossiers de vos patients</p>
   </div>
-  <a routerLink="/patients/nouveau" class="btn-add">
-    <i class="bi bi-plus-lg me-2"></i>Nouveau patient
-  </a>
+  
+
+
+  <!-- Bouton nouveau patient : médecin ou infirmier seulement -->
+<a routerLink="/patients/nouveau" class="btn-add"
+   *ngIf="roleService.peutCreerPatient()">
+  <i class="bi bi-plus-lg me-2"></i>Nouveau patient
+</a>
 </div>
 
 <!-- Stats rapides -->
@@ -114,9 +119,10 @@
             <a [routerLink]="['/patients', patient.id]" class="btn-action view" title="Voir détails">
               <i class="bi bi-eye-fill"></i>
             </a>
-            <a [routerLink]="['/patients/modifier', patient.id]" class="btn-action edit" title="Modifier">
-              <i class="bi bi-pencil-fill"></i>
-            </a>
+            <a [routerLink]="['/patients/modifier', patient.id]" class="btn-action edit"
+   *ngIf="roleService.peutModifierPatient()" title="Modifier">
+  <i class="bi bi-pencil-fill"></i>
+</a>
           </div>
         </td>
       </tr>
@@ -127,9 +133,7 @@
           <p class="mt-2 text-muted">
             {{ recherche ? 'Aucun patient ne correspond à votre recherche' : 'Aucun patient enregistré' }}
           </p>
-          <a routerLink="/patients/nouveau" class="btn btn-primary btn-sm" *ngIf="!recherche">
-            Ajouter un patient
-          </a>
+        
           <button class="btn btn-outline-secondary btn-sm" *ngIf="recherche" (click)="reinitialiser()">
             Effacer la recherche
           </button>

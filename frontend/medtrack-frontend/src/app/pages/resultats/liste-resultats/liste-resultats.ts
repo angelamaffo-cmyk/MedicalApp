@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ResultatsService } from '../../../services/resultats.service';
 import { Resultat } from '../../../models/resultats.model';
-
+import { AuthRoleService } from '../../../services/auth-role.service';
 
 @Component({
   selector: 'app-liste-resultats',
@@ -22,7 +22,9 @@ export class ListeResultatsComponent implements OnInit {
   errorMessage='';
    constructor(
     private resultatService: ResultatsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+      public roleService: AuthRoleService,
+
   ) {}
   ngOnInit():void{
     this.chargerResultats();

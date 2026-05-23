@@ -1,0 +1,58 @@
+<p>form-soin works!</p>
+<div class="page-header">
+  <div>
+    <h4 class="page-title">
+      <i class="bi bi-heart-pulse-fill me-2 text-success"></i>Enregistrer un soin
+    </h4>
+    <p class="page-subtitle">Documentez le soin effectué pour le patient</p>
+  </div>
+  <a routerLink="/soins" class="btn-retour">
+    <i class="bi bi-arrow-left me-2"></i>Retour
+  </a>
+</div>
+
+<div class="alert alert-success" *ngIf="successMessage">
+  <i class="bi bi-check-circle-fill me-2"></i>{{ successMessage }}
+</div>
+<div class="alert alert-danger" *ngIf="errorMessage">
+  <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-card">
+    <div class="form-card-header">
+      <i class="bi bi-heart-pulse-fill text-success"></i>
+      <h6>Détails du soin</h6>
+    </div>
+    <div class="form-card-body">
+      <div class="row g-3">
+
+        <div class="col-12">
+          <label class="form-label">Description du soin <span class="text-danger">*</span></label>
+          <textarea class="form-control" formControlName="description" rows="4"
+                    [class.is-invalid]="form.get('description')?.invalid && form.get('description')?.touched"
+                    placeholder="Décrivez le soin effectué..."></textarea>
+          <div class="invalid-feedback">La description est requise.</div>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Observations</label>
+          <textarea class="form-control" formControlName="observations" rows="3"
+                    placeholder="Observations supplémentaires, état du patient..."></textarea>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions mt-3">
+    <a routerLink="/soins" class="btn-annuler">
+      <i class="bi bi-x-lg me-2"></i>Annuler
+    </a>
+    <button type="submit" class="btn-sauvegarder" [disabled]="isLoading">
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+      <i *ngIf="!isLoading" class="bi bi-check-lg me-2"></i>
+      {{ isLoading ? 'Enregistrement...' : 'Enregistrer le soin' }}
+    </button>
+  </div>
+</form>

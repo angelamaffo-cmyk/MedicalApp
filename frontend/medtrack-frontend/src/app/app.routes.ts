@@ -1,10 +1,11 @@
+import { ListeConsultationsComponent } from './pages/consultations/liste-consultations/liste-consultations';
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth-guard';
 import { LoginComponent } from './pages/login/login';
 import { AccueilComponent } from './pages/accueil/accueil';
 import { MainLayoutComponent } from './layout/main-layout/main-layout';
-
-
+import { adminGuard } from './guards/admin-guard';
+import { medecinGuard } from './guards/medecin-guard';
 export const routes: Routes = [
    // Pages publiques
   { path: 'accueil', component: AccueilComponent },
@@ -25,25 +26,32 @@ export const routes: Routes = [
       { path: 'patients', loadComponent: () =>
           import('./pages/patients/liste-patients/liste-patients').then(m => m.ListePatientsComponent)
       },
-      { path: 'patients/nouveau', loadComponent: () =>
-          import('./pages/patients/form-patient/form-patient').then(m => m.FormPatientComponent)
-      },
+      { path: 'patients/nouveau', canActivate: [authGuard, medecinGuard], loadComponent: () =>
+    import('./pages/patients/form-patient/form-patient').then(m => m.FormPatientComponent)
+},
       { path: 'patients/modifier/:id', loadComponent: () =>
           import('./pages/patients/form-patient/form-patient').then(m => m.FormPatientComponent)
       },
        { path: 'patients/:id', loadComponent: () =>
     import('./pages/patients/detail-patient/detail-patient').then(m => m.DetailPatientComponent)
     },
+    { path: 'patients/assigner-medecin/:id', loadComponent: () =>
+    import('./pages/patients/assigner-medecin/assigner-medecin').then(m => m.AssignerMedecinComponent)
+},
+{ path: 'patients/assigner-infirmier/:id', loadComponent: () =>
+    import('./pages/patients/assigner-infirmier/assigner-infirmier').then(m => m.AssignerInfirmierComponent)
+},
       { path: 'profil', loadComponent: () =>
           import('./pages/comptes/profil/profil').then(m => m.ProfilComponent)
       },
-     
-    { path: 'consultations', loadComponent: () =>
+     { path: 'consultations', loadComponent: () =>
     import('./pages/consultations/liste-consultations/liste-consultations').then(m => m.ListeConsultationsComponent)
 },
-{ path: 'consultations/nouveau', loadComponent: () =>
+
+    { path: 'consultations/nouveau', canActivate: [authGuard, medecinGuard], loadComponent: () =>
     import('./pages/consultations/form-consultation/form-consultation').then(m => m.FormConsultationComponent)
 },
+
 { path: 'consultations/modifier/:id', loadComponent: () =>
     import('./pages/consultations/form-consultation/form-consultation').then(m => m.FormConsultationComponent)
 },
@@ -53,7 +61,7 @@ export const routes: Routes = [
 { path: 'examens', loadComponent: () =>
     import('./pages/examens/liste-examens/liste-examens').then(m => m.ListeExamensComponent)
 },
-{ path: 'examens/nouveau', loadComponent: () =>
+{ path: 'examens/nouveau', canActivate: [authGuard, medecinGuard], loadComponent: () =>
     import('./pages/examens/form-examen/form-examen').then(m => m.FormExamenComponent)
 },
 { path: 'examens/modifier/:id', loadComponent: () =>
@@ -65,7 +73,7 @@ export const routes: Routes = [
 { path: 'resultats', loadComponent: () =>
     import('./pages/resultats/liste-resultats/liste-resultats').then(m => m.ListeResultatsComponent)
 },
-{ path: 'resultats/nouveau', loadComponent: () =>
+{ path: 'resultats/nouveau', canActivate: [authGuard], loadComponent: () =>
     import('./pages/resultats/form-resultat/form-resultat').then(m => m.FormResultatComponent)
 },
 { path: 'resultats/modifier/:id', loadComponent: () =>
@@ -74,17 +82,17 @@ export const routes: Routes = [
 { path: 'resultats/:id', loadComponent: () =>
     import('./pages/resultats/detail-resultat/detail-resultat').then(m => m.DetailResultatComponent)
 },
-{ path: 'hospitalisations', loadComponent: () =>
-    import('./pages/hospitalisations/liste-hospitalisations/liste-hospitalisations').then(m => m.ListeHospitalisationsComponent)
+{ path: 'admin/personnel', canActivate: [adminGuard], loadComponent: () =>
+    import('./pages/admin/liste-personnel/liste-personnel').then(m => m.ListePersonnelComponent)
 },
-{ path: 'hospitalisations/nouveau', loadComponent: () =>
-    import('./pages/hospitalisations/form-hospitalisation/form-hospitalisation').then(m => m.FormHospitalisationComponent)
+{ path: 'admin/creer-personnel', canActivate: [adminGuard], loadComponent: () =>
+    import('./pages/admin/creer-personnel/creer-personnel').then(m => m.CreerPersonnelComponent)
 },
-{ path: 'hospitalisations/modifier/:id', loadComponent: () =>
-    import('./pages/hospitalisations/form-hospitalisation/form-hospitalisation').then(m => m.FormHospitalisationComponent)
+{ path: 'soins', loadComponent: () =>
+    import('./pages/soins/liste-soins/liste-soins').then(m => m.ListeSoinsComponent)
 },
-{ path: 'hospitalisations/:id', loadComponent: () =>
-    import('./pages/hospitalisations/detail-hospitalisation/detail-hospitalisation').then(m => m.DetailHospitalisationComponent)
+{ path: 'soins/nouveau', loadComponent: () =>
+    import('./pages/soins/form-soin/form-soin').then(m => m.FormSoinComponent)
 },
 
     ]

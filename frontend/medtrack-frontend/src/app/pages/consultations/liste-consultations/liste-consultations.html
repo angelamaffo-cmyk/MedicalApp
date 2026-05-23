@@ -5,9 +5,10 @@
     </h4>
     <p class="page-subtitle">Gérez les consultations de vos patients</p>
   </div>
-  <a routerLink="/consultations/nouveau" class="btn-add">
-    <i class="bi bi-plus-lg me-2"></i>Nouvelle consultation
-  </a>
+<a routerLink="/consultations/nouveau" class="btn-add"
+   *ngIf="roleService.peutFaireConsultation()">
+  <i class="bi bi-plus-lg me-2"></i>Nouvelle consultation
+</a>
 </div>
 
 <!-- Stats -->
@@ -102,9 +103,10 @@
             <a [routerLink]="['/consultations', c.id]" class="btn-action view" title="Voir">
               <i class="bi bi-eye-fill"></i>
             </a>
-            <a [routerLink]="['/consultations/modifier', c.id]" class="btn-action edit" title="Modifier">
-              <i class="bi bi-pencil-fill"></i>
-            </a>
+            <a [routerLink]="['/consultations/modifier', c.id]" class="btn-action edit"
+   *ngIf="roleService.peutFaireConsultation()" title="Modifier">
+  <i class="bi bi-pencil-fill"></i>
+</a>
           </div>
         </td>
       </tr>
@@ -115,9 +117,7 @@
           <p class="mt-2 text-muted">
             {{ recherche ? 'Aucune consultation ne correspond à votre recherche' : 'Aucune consultation enregistrée' }}
           </p>
-          <a routerLink="/consultations/nouveau" class="btn btn-success btn-sm" *ngIf="!recherche">
-            Nouvelle consultation
-          </a>
+  
           <button class="btn btn-outline-secondary btn-sm" *ngIf="recherche" (click)="reinitialiser()">
             Effacer la recherche
           </button>

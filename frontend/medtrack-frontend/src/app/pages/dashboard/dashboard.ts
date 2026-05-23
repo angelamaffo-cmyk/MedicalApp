@@ -4,8 +4,9 @@ import { RouterLink } from '@angular/router';
 import { PatientService } from '../../services/patients.service';
 import { ConsultationService } from '../../services/consultation.service';
 import { ExamenService } from '../../services/examen.service';
-import { HospitalisationsService } from '../../services/hospitalisations.service';
 import { Activite } from '../../models/dashboard.model';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -35,8 +36,9 @@ export class DashboardComponent implements OnInit {
     private patientService: PatientService,
     private consultationService: ConsultationService,
     private examenService: ExamenService,
-    private hospitalisationService: HospitalisationsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient,
+
   ) {}
 
   ngOnInit(): void {
@@ -59,6 +61,24 @@ export class DashboardComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+    // Assignations reçues (pour médecin spécialiste)
+this.http.get<any[]>(`${environment.apiUrl}/assignations-medecin/`).subscribe({
+  next: (data) => {
+    const recues = data.filter(a => a.est_active);
+    if (recues.length > 0) {
+      recues.forEach(a => {
+        this.activitesRecentes.push({
+          message: `Patient référé — ${a.patient_prenom} ${a.patient_nom}`,
+          temps: new Date(a.date_assignation).toLocaleDateString('fr-FR'),
+          icon: 'bi-person-badge-fill',
+          couleur: 'primary'
+        });
+      });
+      this.activitesRecentes = this.activitesRecentes.slice(0, 5);
+      this.cdr.detectChanges();
+    }
+  }
+});
 
     // Consultations
     this.consultationService.getAll().subscribe({
@@ -91,11 +111,6 @@ export class DashboardComponent implements OnInit {
   
 
     // Hospitalisations en cours
-    this.hospitalisationService.getAll().subscribe({
-      next: (data) => {
-        this.stats[3].valeur = data.filter(h => h.statut === 'EN_COURS').length;
-        this.cdr.detectChanges();
-      }
-    });
+   
   }
 }

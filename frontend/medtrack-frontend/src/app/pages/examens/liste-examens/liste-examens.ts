@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Examen } from '../../../models/examens.model';
 import { ExamenService } from '../../../services/examen.service';
-
+import { AuthRoleService } from '../../../services/auth-role.service';
 @Component({
   selector: 'app-liste-examens',
   standalone:true,
@@ -29,7 +29,9 @@ export class ListeExamensComponent implements OnInit{
   };
   constructor(
     private examenService: ExamenService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+      public roleService: AuthRoleService,
+
   ) {}
   ngOnInit(): void {
     this.chargerExamens();

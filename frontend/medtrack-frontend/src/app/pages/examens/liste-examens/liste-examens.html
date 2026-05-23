@@ -5,9 +5,10 @@
     </h4>
     <p class="page-subtitle">Gérez les examens prescrits à vos patients</p>
   </div>
-  <a routerLink="/examens/nouveau" class="btn-add">
-    <i class="bi bi-plus-lg me-2"></i>Nouvel examen
-  </a>
+<a routerLink="/examens/nouveau" class="btn-add"
+   *ngIf="roleService.peutFaireExamen()">
+  <i class="bi bi-plus-lg me-2"></i>Nouvel examen
+</a>
 </div>
 
 <!-- Stats -->
@@ -105,9 +106,10 @@
             <a [routerLink]="['/examens', e.id]" class="btn-action view" title="Voir">
               <i class="bi bi-eye-fill"></i>
             </a>
-            <a [routerLink]="['/examens/modifier', e.id]" class="btn-action edit" title="Modifier">
-              <i class="bi bi-pencil-fill"></i>
-            </a>
+            <a [routerLink]="['/examens/modifier', e.id]" class="btn-action edit"
+   *ngIf="roleService.peutFaireExamen()" title="Modifier">
+  <i class="bi bi-pencil-fill"></i>
+</a>
           </div>
         </td>
       </tr>
@@ -118,9 +120,7 @@
           <p class="mt-2 text-muted">
             {{ recherche ? 'Aucun examen ne correspond à votre recherche' : 'Aucun examen enregistré' }}
           </p>
-          <a routerLink="/examens/nouveau" class="btn btn-warning btn-sm text-white" *ngIf="!recherche">
-            Prescrire un examen
-          </a>
+          
           <button class="btn btn-outline-secondary btn-sm" *ngIf="recherche" (click)="reinitialiser()">
             Effacer la recherche
           </button>

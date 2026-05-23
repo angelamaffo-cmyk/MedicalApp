@@ -22,11 +22,33 @@
     </div>
     <div class="header-actions">
       <a routerLink="/patients" class="btn-retour"><i class="bi bi-arrow-left me-1"></i>Retour</a>
-      <a [routerLink]="['/patients/modifier', patient.id]" class="btn-modifier"><i class="bi bi-pencil-fill me-1"></i>Modifier</a>
-      <button class="btn-toggle-statut" [class.btn-desactiver]="patient.est_actif" [class.btn-activer]="!patient.est_actif" (click)="confirmDesactiver = true">
-        <i class="bi" [class.bi-toggle-on]="patient.est_actif" [class.bi-toggle-off]="!patient.est_actif"></i>
-        {{ patient.est_actif ? 'Désactiver' : 'Activer' }}
-      </button>
+      <a [routerLink]="['/patients/modifier', patient.id]" class="btn-modifier"
+   *ngIf="roleService.peutModifierPatient()">
+    <i class="bi bi-pencil-fill me-1"></i>Modifier
+    </a>
+
+    <button class="btn-toggle-statut"
+        *ngIf="roleService.peutDesactiverPatient()"
+        [class.btn-desactiver]="patient.est_actif"
+        [class.btn-activer]="!patient.est_actif"
+        (click)="confirmDesactiver = true">
+    <i class="bi" [class.bi-toggle-on]="patient.est_actif" [class.bi-toggle-off]="!patient.est_actif"></i>
+    {{ patient.est_actif ? 'Désactiver' : 'Activer' }}
+    </button>
+
+    <!-- Assigner médecin : médecin seulement -->
+<a [routerLink]="['/patients/assigner-medecin', patient.id]"
+   class="btn-assigner-medecin"
+   *ngIf="roleService.peutAssignerMedecin()">
+  <i class="bi bi-person-badge-fill me-1"></i>Référer
+</a>
+
+<!-- Assigner infirmier : médecin seulement -->
+<a [routerLink]="['/patients/assigner-infirmier', patient.id]"
+   class="btn-assigner-infirmier"
+   *ngIf="roleService.peutAssignerInfirmier()">
+  <i class="bi bi-heart-pulse-fill me-1"></i>Soins infirmier
+</a>
     </div>
   </div>
 
@@ -60,15 +82,13 @@
     <button class="onglet-btn" [class.active]="ongletActif === 'infos'" (click)="changerOnglet('infos')">
       <i class="bi bi-person-fill me-1"></i>Informations
     </button>
-    <button class="onglet-btn" [class.active]="ongletActif === 'consultations'" (click)="changerOnglet('consultations')">
+    <button class="onglet-btn" [class.active]="ongletActif === 'consultations'" (click)="changerOnglet('consultations')" *ngIf="roleService.peutFaireConsultation()">
       <i class="bi bi-clipboard2-pulse-fill me-1"></i>Consultations
     </button>
-    <button class="onglet-btn" [class.active]="ongletActif === 'examens'" (click)="changerOnglet('examens')">
+    <button class="onglet-btn" [class.active]="ongletActif === 'examens'" (click)="changerOnglet('examens')" *ngIf="roleService.peutFaireConsultation()">
       <i class="bi bi-droplet-fill me-1"></i>Examens
     </button>
-    <button class="onglet-btn" [class.active]="ongletActif === 'hospitalisations'" (click)="changerOnglet('hospitalisations')">
-      <i class="bi bi-hospital-fill me-1"></i>Hospitalisations
-    </button>
+   
   </div>
 
   <!-- Onglet Infos -->
@@ -111,6 +131,55 @@
           </div>
         </div>
       </div>
+      <!-- Section assignation — visible par les médecins -->
+<div class="col-12" *ngIf="roleService.peutFaireConsultation()">
+  <div class="detail-card">
+    <div class="detail-card-header">
+      <i class="bi bi-share-fill text-primary"></i>
+      <h6>Assignations</h6>
+    </div>
+    <div class="detail-card-body">
+      <div class="row g-3">
+
+        <!-- Assigner à un médecin spécialiste -->
+        <div class="col-md-6" *ngIf="roleService.peutAssignerMedecin()">
+          <div class="assignation-option">
+            <div class="assignation-icon bg-primary">
+              <i class="bi bi-person-badge-fill"></i>
+            </div>
+            <div>
+              <p class="assignation-titre">Référer à un spécialiste</p>
+              <p class="assignation-desc">Transférer ce patient à un médecin spécialiste</p>
+            </div>
+            <a [routerLink]="['/patients/assigner-medecin', patient.id]"
+               class="btn-assigner ms-auto">
+              <i class="bi bi-arrow-right-circle-fill"></i>
+            </a>
+          </div>
+        </div>
+
+
+        <!-- Assigner à un infirmier -->
+        <div class="col-md-6" *ngIf="roleService.peutAssignerInfirmier()">
+          <div class="assignation-option">
+            <div class="assignation-icon bg-success">
+              <i class="bi bi-heart-pulse-fill"></i>
+            </div>
+            <div>
+              <p class="assignation-titre">Confier à un infirmier</p>
+              <p class="assignation-desc">Assigner des soins infirmiers pour ce patient</p>
+            </div>
+            <a [routerLink]="['/patients/assigner-infirmier', patient.id]"
+               class="btn-assigner ms-auto">
+              <i class="bi bi-arrow-right-circle-fill"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
     </div>
   </div>
 
@@ -168,31 +237,7 @@
     </div>
   </div>
 
-  <!-- Onglet Hospitalisations -->
-  <div *ngIf="ongletActif === 'hospitalisations'">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h6 class="fw-bold text-danger mb-0"><i class="bi bi-hospital-fill me-2"></i>{{ hospitalisations.length }} hospitalisation(s)</h6>
-      <a routerLink="/hospitalisations/nouveau" class="btn-add-small"><i class="bi bi-plus me-1"></i>Admettre</a>
-    </div>
-    <div class="liste-card" *ngFor="let h of hospitalisations">
-      <div class="liste-card-left">
-        <div class="liste-icon bg-danger"><i class="bi bi-hospital-fill"></i></div>
-        <div>
-          <p class="liste-titre">{{ h.motif_admission }}</p>
-          <p class="liste-sous">
-            {{ h.date_entree | date:'dd/MM/yyyy' }} —
-            <span class="statut-mini statut-{{ getStatutColor(h.statut) }}">{{ getStatutLabel(h.statut) }}</span>
-          </p>
-        </div>
-      </div>
-      <a [routerLink]="['/hospitalisations', h.id]" class="btn-voir">
-        <i class="bi bi-eye-fill me-1"></i>Voir
-      </a>
-    </div>
-    <div class="empty-mini" *ngIf="hospitalisations.length === 0">
-      <i class="bi bi-hospital fs-2 text-muted"></i>
-      <p class="text-muted mt-2">Aucune hospitalisation enregistrée</p>
-    </div>
-  </div>
+  
+    
 
 </div>

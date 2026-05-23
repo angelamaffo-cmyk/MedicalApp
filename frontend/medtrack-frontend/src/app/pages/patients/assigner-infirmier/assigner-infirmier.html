@@ -1,0 +1,75 @@
+<div class="page-header">
+  <div>
+    <h4 class="page-title">
+      <i class="bi bi-heart-pulse-fill me-2 text-success"></i>Assigner à un infirmier
+    </h4>
+    <p class="page-subtitle">Confier les soins du patient à un infirmier</p>
+  </div>
+  <a [routerLink]="['/patients', patientId]" class="btn-retour">
+    <i class="bi bi-arrow-left me-2"></i>Retour
+  </a>
+</div>
+
+<div class="alert alert-success" *ngIf="successMessage">
+  <i class="bi bi-check-circle-fill me-2"></i>{{ successMessage }}
+</div>
+<div class="alert alert-danger" *ngIf="errorMessage">
+  <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-card">
+    <div class="form-card-header">
+      <i class="bi bi-heart-pulse-fill text-success"></i>
+      <h6>Informations des soins</h6>
+    </div>
+    <div class="form-card-body">
+      <div class="row g-3">
+
+        <div class="col-12">
+          <label class="form-label">Infirmier <span class="text-danger">*</span></label>
+          <select class="form-select" formControlName="infirmier"
+                  [class.is-invalid]="form.get('infirmier')?.invalid && form.get('infirmier')?.touched">
+            <option value="">Sélectionner un infirmier</option>
+            <option *ngFor="let i of infirmiers" [value]="i.utilisateur_id">
+              {{ i.nom_complet }}
+            </option>
+          </select>
+          <div class="invalid-feedback">L'infirmier est requis.</div>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Soins à effectuer <span class="text-danger">*</span></label>
+          <textarea class="form-control" formControlName="soins_a_faire" rows="4"
+                    [class.is-invalid]="form.get('soins_a_faire')?.invalid && form.get('soins_a_faire')?.touched"
+                    placeholder="Décrivez les soins à effectuer..."></textarea>
+          <div class="invalid-feedback">Les soins sont requis.</div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Date de début <span class="text-danger">*</span></label>
+          <input type="date" class="form-control" formControlName="date_debut"
+                 [class.is-invalid]="form.get('date_debut')?.invalid && form.get('date_debut')?.touched" />
+          <div class="invalid-feedback">La date de début est requise.</div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Date de fin (optionnelle)</label>
+          <input type="date" class="form-control" formControlName="date_fin" />
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions mt-3">
+    <a [routerLink]="['/patients', patientId]" class="btn-annuler">
+      <i class="bi bi-x-lg me-2"></i>Annuler
+    </a>
+    <button type="submit" class="btn-sauvegarder" [disabled]="isLoading">
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+      <i *ngIf="!isLoading" class="bi bi-check-lg me-2"></i>
+      {{ isLoading ? 'Assignation...' : 'Assigner' }}
+    </button>
+  </div>
+</form>

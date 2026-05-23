@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ConsultationService} from '../../../services/consultation.service';
 import { Consultation } from '../../../models/consultations.model';
-
+import { AuthRoleService } from '../../../services/auth-role.service';
 @Component({
   selector: 'app-liste-consultations',
   standalone:true,
@@ -22,7 +22,9 @@ consultations: Consultation[] = [];
 
   constructor(
     private consultationService: ConsultationService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+      public roleService: AuthRoleService,
+
   ) {}
 
   ngOnInit(): void {

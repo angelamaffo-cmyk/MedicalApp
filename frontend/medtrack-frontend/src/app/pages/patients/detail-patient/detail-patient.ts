@@ -1,5 +1,5 @@
 import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
-
+import { AuthRoleService } from '../../../services/auth-role.service';
 import { CommonModule } from '@angular/common';
 import { ResultatsService } from '../../../services/resultats.service';
 import {
@@ -13,10 +13,8 @@ import { PatientService } from '../../../services/patients.service';
 import { Patients } from '../../../models/patients.model';
 import { ConsultationService } from '../../../services/consultation.service';
 import { ExamenService } from '../../../services/examen.service';
-import { HospitalisationsService} from '../../../services/hospitalisations.service';
 import { Consultation } from '../../../models/consultations.model';
 import { Examen } from '../../../models/examens.model';
-import { Hospitalisation } from '../../../models/hospitalisations.model';
 @Component({
   selector: 'app-detail-patient',
   standalone: true,
@@ -30,7 +28,6 @@ export class DetailPatientComponent implements OnInit {
   patient: Patients | null = null;
   consultations: Consultation[] = [];
   examens: Examen[] = [];
-  hospitalisations: Hospitalisation[] = [];
 
   isLoading = false;
 
@@ -48,9 +45,10 @@ ongletActif = 'infos';
     private patientService: PatientService,
     private consultationService: ConsultationService,
     private examenService: ExamenService,
-    private hospitalisationService: HospitalisationsService,
     private resultatService: ResultatsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+      public roleService: AuthRoleService,
+
   ) {}
 
   ngOnInit(): void {
@@ -99,9 +97,7 @@ ongletActif = 'infos';
     if (onglet === 'examens' && this.examens.length === 0) {
       this.chargerExamens();
     }
-    if (onglet === 'hospitalisations' && this.hospitalisations.length === 0) {
-      this.chargerHospitalisations();
-    }
+    
   }
 chargerConsultations(): void {
     this.consultationService.getAll().subscribe({
@@ -129,14 +125,7 @@ chargerConsultations(): void {
   });
 
   }
-  chargerHospitalisations(): void {
-    this.hospitalisationService.getAll().subscribe({
-      next: (data) => {
-        this.hospitalisations = data.filter(h => h.patient === this.patientId);
-        this.cdr.detectChanges();
-      }
-    });
-  }
+  
 
   calculerAge(dateNaissance: string): number {
 

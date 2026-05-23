@@ -18,6 +18,9 @@ export class PatientService {
   getPatients(): Observable<Patients[]> {
     return this.http.get<Patients[]>(`${this.apiUrl}/patients/`);
   }
+  getMedecins(): Observable<any[]> {
+  return this.http.get<any[]>(`${environment.apiUrl}/comptes/personnel/`);
+}
 
   // Détail patient
   getPatient(id: number): Observable<Patients> {

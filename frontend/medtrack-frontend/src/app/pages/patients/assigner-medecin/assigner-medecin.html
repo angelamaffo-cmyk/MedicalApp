@@ -1,0 +1,71 @@
+<div class="page-header">
+  <div>
+    <h4 class="page-title">
+      <i class="bi bi-person-badge-fill me-2 text-primary"></i>Assigner à un médecin spécialiste
+    </h4>
+    <p class="page-subtitle">Référer le patient à un médecin spécialiste</p>
+  </div>
+  <a [routerLink]="['/patients', patientId]" class="btn-retour">
+    <i class="bi bi-arrow-left me-2"></i>Retour
+  </a>
+</div>
+
+<div class="alert alert-success" *ngIf="successMessage">
+  <i class="bi bi-check-circle-fill me-2"></i>{{ successMessage }}
+</div>
+<div class="alert alert-danger" *ngIf="errorMessage">
+  <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-card">
+    <div class="form-card-header">
+      <i class="bi bi-person-badge-fill text-primary"></i>
+      <h6>Informations d'assignation</h6>
+    </div>
+    <div class="form-card-body">
+      <div class="row g-3">
+
+        <div class="col-md-6">
+          <label class="form-label">Médecin spécialiste <span class="text-danger">*</span></label>
+          <select class="form-select" formControlName="medecin_cible"
+                  [class.is-invalid]="form.get('medecin_cible')?.invalid && form.get('medecin_cible')?.touched">
+            <option value="">Sélectionner un médecin</option>
+            <option *ngFor="let m of medecins" [value]="m.utilisateur_id">
+              {{ m.nom_complet }} — {{ m.specialite }}
+            </option>
+          </select>
+          <div class="invalid-feedback">Le médecin est requis.</div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Service</label>
+          <select class="form-select" formControlName="service">
+            <option value="">Sélectionner un service</option>
+            <option *ngFor="let s of services" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Motif de référence <span class="text-danger">*</span></label>
+          <textarea class="form-control" formControlName="motif" rows="4"
+                    [class.is-invalid]="form.get('motif')?.invalid && form.get('motif')?.touched"
+                    placeholder="Décrivez la raison de cette référence..."></textarea>
+          <div class="invalid-feedback">Le motif est requis.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions mt-3">
+    <a [routerLink]="['/patients', patientId]" class="btn-annuler">
+      <i class="bi bi-x-lg me-2"></i>Annuler
+    </a>
+    <button type="submit" class="btn-sauvegarder" [disabled]="isLoading">
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+      <i *ngIf="!isLoading" class="bi bi-check-lg me-2"></i>
+      {{ isLoading ? 'Assignation...' : 'Assigner' }}
+    </button>
+  </div>
+</form>

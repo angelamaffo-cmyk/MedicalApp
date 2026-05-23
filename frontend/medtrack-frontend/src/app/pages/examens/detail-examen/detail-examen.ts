@@ -5,6 +5,7 @@ import { ExamenService } from '../../../services/examen.service';
 import { Examen } from '../../../models/examens.model';
 import { ResultatsService } from '../../../services/resultats.service';
 import { Resultat } from '../../../models/resultats.model';
+import { AuthRoleService } from '../../../services/auth-role.service';
 @Component({
   selector: 'app-detail-examen',
   standalone: true,
@@ -25,7 +26,8 @@ export class DetailExamenComponent implements OnInit {
     private route: ActivatedRoute,
     private examenService: ExamenService,
      private resultatService: ResultatsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public roleService:AuthRoleService,
   ) {}
 
   ngOnInit(): void {

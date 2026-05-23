@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PatientService } from '../../../services/patients.service';
 import { Patients } from '../../../models/patients.model';
-
+import { AuthRoleService } from '../../../services/auth-role.service';
 @Component({
   selector: 'app-liste-patients',
   standalone: true,
@@ -21,7 +21,9 @@ export class ListePatientsComponent implements OnInit {
 
   constructor(
     private patientService: PatientService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+      public roleService: AuthRoleService,
+
   ) {}
 
   ngOnInit(): void {

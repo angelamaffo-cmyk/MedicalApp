@@ -1,30 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule,FormBuilder,FormGroup,Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-profil',
-  standalone:true,
-  imports: [CommonModule,ReactiveFormsModule, RouterLink],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './profil.html',
-  styleUrl: './profil.css',
+  styleUrl: './profil.css'
 })
-export class ProfilComponent {
-//simulation
+export class ProfilComponent implements OnInit {
 
-  profil = {
-    nom_complet: 'Angela Maffo Temgoua',
-    username: 'angela.maffo',
-    email: 'angela.maffo@medtrack.com',
-    role: 'MEDECIN',
-    telephone: '677000001',
-    specialite: 'Médecine Générale',
-    premiere_connexion: false,
-    date_creation: '2026-01-10',
-  };
+  profil: any = null;
+  isLoading = false;
+  errorMessage = '';
 
-   // Formulaire changement mot de passe
   mdpForm: FormGroup;
   isLoadingMdp = false;
   successMdp = '';
@@ -33,7 +26,13 @@ export class ProfilComponent {
   showNouveau = false;
   showConfirmer = false;
   showMdpForm = false;
-   constructor(private fb: FormBuilder) {
+
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
+  ) {
     this.mdpForm = this.fb.group({
       ancien_mot_de_passe: ['', Validators.required],
       nouveau_mot_de_passe: ['', [Validators.required, Validators.minLength(8)]],
@@ -41,7 +40,38 @@ export class ProfilComponent {
     }, { validators: this.passwordsMatch });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.chargerProfil();
+  }
+
+  chargerProfil(): void {
+    this.isLoading = true;
+    this.http.get(`${environment.apiUrl}/comptes/mon-profil/`).subscribe({
+      next: (data: any) => {
+        this.profil = data;
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        // Si admin (pas de profil), on affiche quand même les infos de base
+        if (err.status === 404) {
+          this.profil = {
+            nom_complet: 'Administrateur',
+            username: 'admin',
+            email: 'admin@medtrack.com',
+            role: 'ADMIN',
+            telephone: '',
+            specialite: '',
+            premiere_connexion: false,
+          };
+        } else {
+          this.errorMessage = 'Impossible de charger le profil.';
+        }
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
   passwordsMatch(form: FormGroup) {
     const nouveau = form.get('nouveau_mot_de_passe')?.value;
@@ -57,12 +87,20 @@ export class ProfilComponent {
   get confirmer() { return this.mdpForm.get('confirmer_mot_de_passe'); }
 
   getRoleLabel(): string {
-    return this.profil.role === 'MEDECIN' ? 'Médecin' : 'Infirmier';
+    const labels: any = { 'MEDECIN': 'Médecin', 'INFIRMIER': 'Infirmier', 'ADMIN': 'Administrateur' };
+    return labels[this.profil?.role] || this.profil?.role;
   }
 
   getRoleIcon(): string {
-    return this.profil.role === 'MEDECIN' ? 'bi-person-badge-fill' : 'bi-heart-pulse-fill';
+    const icons: any = { 'MEDECIN': 'bi-person-badge-fill', 'INFIRMIER': 'bi-heart-pulse-fill', 'ADMIN': 'bi-shield-fill' };
+    return icons[this.profil?.role] || 'bi-person-fill';
   }
+
+  getRoleCouleur(): string {
+    const couleurs: any = { 'MEDECIN': 'primary', 'INFIRMIER': 'success', 'ADMIN': 'danger' };
+    return couleurs[this.profil?.role] || 'secondary';
+  }
+
   onSubmitMdp(): void {
     if (this.mdpForm.invalid) {
       this.mdpForm.markAllAsTouched();
@@ -71,14 +109,28 @@ export class ProfilComponent {
     this.isLoadingMdp = true;
     this.errorMdp = '';
 
-    // Simulation
-    setTimeout(() => {
-      this.isLoadingMdp = false;
-      this.successMdp = 'Mot de passe changé avec succès !';
-      this.mdpForm.reset();
-      this.showMdpForm = false;
-      setTimeout(() => this.successMdp = '', 4000);
-    }, 1000);
+    this.http.post(`${environment.apiUrl}/comptes/changer-mot-de-passe/`, this.mdpForm.value).subscribe({
+      next: () => {
+        this.isLoadingMdp = false;
+        this.successMdp = 'Mot de passe changé avec succès !';
+        this.mdpForm.reset();
+        this.showMdpForm = false;
+        this.cdr.detectChanges();
+        setTimeout(() => { this.successMdp = ''; this.cdr.detectChanges(); }, 4000);
+      },
+      error: (err) => {
+        this.isLoadingMdp = false;
+        if (err.error?.ancien_mot_de_passe) {
+          this.errorMdp = err.error.ancien_mot_de_passe;
+        } else {
+          this.errorMdp = 'Erreur lors du changement de mot de passe.';
+        }
+        this.cdr.detectChanges();
+      }
+    });
   }
-  
+
+  logout(): void {
+    this.authService.logout();
+  }
 }

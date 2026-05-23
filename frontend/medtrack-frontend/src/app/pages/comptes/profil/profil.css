@@ -7,7 +7,7 @@
 .page-title { font-size: 1.4rem; font-weight: 800; color: #1a1f5e; margin: 0; }
 .page-subtitle { color: #6c757d; font-size: 0.9rem; margin: 0; }
 
-/* Carte profil gauche */
+/* Carte profil */
 .profil-card {
   background: white;
   border-radius: 16px;
@@ -18,137 +18,96 @@
 }
 
 .profil-avatar-big {
-  width: 90px;
-  height: 90px;
+  width: 90px; height: 90px;
   background: linear-gradient(135deg, #0d6efd, #084298);
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 2.5rem;
-  font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 2.5rem; font-weight: 800;
   margin: 0 auto 1rem;
 }
 
 .profil-nom {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: #1a1f5e;
-  margin-bottom: 0.5rem;
+  font-size: 1.1rem; font-weight: 800; color: #1a1f5e; margin-bottom: 0.5rem;
 }
 
 .role-badge {
-  display: inline-flex;
-  align-items: center;
-  background: #e8f4ff;
-  color: #0d6efd;
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
+  display: inline-flex; align-items: center;
+  padding: 0.4rem 1rem; border-radius: 20px;
+  font-size: 0.85rem; font-weight: 700; margin-bottom: 1.5rem;
+}
+.role-primary { background: #e8f4ff; color: #0d6efd; }
+.role-success { background: #e8fff0; color: #198754; }
+.role-danger { background: #fff0f0; color: #dc3545; }
+.role-secondary { background: #f0f0f0; color: #6c757d; }
+
+.role-badge-sm {
+  display: inline-flex; align-items: center;
+  padding: 0.3rem 0.7rem; border-radius: 20px;
+  font-size: 0.82rem; font-weight: 700;
 }
 
 .profil-meta {
-  text-align: left;
-  margin-top: 1.5rem;
-  border-top: 1px solid #f0f4ff;
-  padding-top: 1.5rem;
+  text-align: left; margin-top: 1.5rem;
+  border-top: 1px solid #f0f4ff; padding-top: 1.5rem;
 }
 
 .meta-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #f0f4ff;
-  font-size: 0.85rem;
-  color: #495057;
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.5rem 0; border-bottom: 1px solid #f0f4ff;
+  font-size: 0.85rem; color: #495057;
 }
 .meta-item:last-child { border-bottom: none; }
 .meta-item i { font-size: 1rem; width: 20px; text-align: center; }
 
+.btn-deconnexion {
+  width: 100%; padding: 0.65rem;
+  background: #fff0f0; color: #dc3545;
+  border: 1.5px solid #dc3545; border-radius: 10px;
+  font-weight: 600; font-size: 0.9rem; cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-deconnexion:hover { background: #dc3545; color: white; }
+
 /* Cartes détail */
 .detail-card {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-  overflow: hidden;
+  background: white; border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06); overflow: hidden;
 }
 
 .detail-card-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 1.5rem;
-  background: #f8f9ff;
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 1rem 1.5rem; background: #f8f9ff;
   border-bottom: 1px solid #e9ecef;
 }
 .detail-card-header i { font-size: 1.1rem; }
 .detail-card-header h6 { margin: 0; font-weight: 700; color: #1a1f5e; }
-
 .detail-card-body { padding: 1.5rem; }
 
 .info-field { margin-bottom: 0; }
 .info-field label {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: #adb5bd;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 0.2rem;
-  display: block;
+  font-size: 0.78rem; font-weight: 700; color: #adb5bd;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin-bottom: 0.2rem; display: block;
 }
-.info-field p {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #1a1f5e;
-  margin: 0;
-}
-
-.role-badge-sm {
-  display: inline-flex;
-  align-items: center;
-  background: #e8f4ff;
-  color: #0d6efd;
-  padding: 0.3rem 0.7rem;
-  border-radius: 20px;
-  font-size: 0.82rem;
-  font-weight: 700;
-}
+.info-field p { font-size: 0.95rem; font-weight: 600; color: #1a1f5e; margin: 0; }
 
 /* Sécurité */
 .btn-toggle-mdp {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: #e8f4ff;
-  color: #0d6efd;
-  border: none;
-  border-radius: 8px;
-  padding: 0.4rem 0.8rem;
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
+  display: flex; align-items: center; gap: 0.4rem;
+  background: #e8f4ff; color: #0d6efd; border: none;
+  border-radius: 8px; padding: 0.4rem 0.8rem;
+  font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
 }
 .btn-toggle-mdp:hover { background: #0d6efd; color: white; }
 
 .security-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.75rem;
-  background: #f8f9ff;
-  border-radius: 10px;
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.75rem; background: #f8f9ff; border-radius: 10px;
 }
 .security-icon {
-  width: 40px; height: 40px;
-  background: #e8fff0;
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem;
+  width: 40px; height: 40px; background: #e8fff0;
+  border-radius: 10px; display: flex; align-items: center;
+  justify-content: center; font-size: 1.1rem;
 }
 .security-label { font-size: 0.78rem; color: #adb5bd; font-weight: 600; margin: 0; }
 .security-value { font-size: 0.95rem; font-weight: 700; color: #1a1f5e; margin: 0; }
@@ -159,16 +118,11 @@
 .form-control:focus { border-color: #0d6efd; box-shadow: 0 0 0 3px rgba(13,110,253,0.1); }
 
 .btn-changer-mdp {
-  display: flex;
-  align-items: center;
+  display: flex; align-items: center;
   padding: 0.7rem 1.5rem;
   background: linear-gradient(135deg, #0d6efd, #084298);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
+  color: white; border: none; border-radius: 10px;
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
   box-shadow: 0 4px 15px rgba(13,110,253,0.3);
 }
 .btn-changer-mdp:hover { transform: translateY(-1px); }
