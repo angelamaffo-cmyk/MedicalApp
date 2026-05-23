@@ -57,10 +57,11 @@ class CreerCompteSerializer(serializers.ModelSerializer):
         )
 
         # Envoyer l'email
+    try:
         send_mail(
             subject="Bienvenue sur MedTrack — Vos identifiants de connexion",
             message=f"""
-Bonjour {user.first_name} {user.last_name},
+            Bonjour {user.first_name} {user.last_name},
 
 Votre compte MedTrack a été créé avec succès.
 
@@ -75,10 +76,12 @@ L'équipe MedTrack
             """,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[user.email],
-            fail_silently=False,
+            fail_silently=True,
         )
+    except Exception:
+        pass
 
-        return user
+        
 
 
 class ChangerMotDePasseSerializer(serializers.Serializer):
@@ -102,4 +105,4 @@ class ProfilSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProfilUtilisateur
-        fields = ['id', 'username', 'email', 'nom_complet', 'role', 'telephone', 'specialite', 'premiere_connexion', 'est_actif']
+        fields = ['id', 'utilisateur_id','username', 'email', 'nom_complet', 'role', 'telephone', 'specialite', 'premiere_connexion', 'est_actif']

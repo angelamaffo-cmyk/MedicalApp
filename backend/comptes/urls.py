@@ -8,7 +8,7 @@ from .views import (
 )
 
 urlpatterns = [
-    path('comptes/', CreerCompteView.as_view(), name='creer_compte'),
+    path('comptes/creer/', CreerCompteView.as_view(), name='creer_compte'),
     path('comptes/personnel/', ListePersonnelView.as_view(), name='liste_personnel'),
     path('comptes/changer-mot-de-passe/', ChangerMotDePasseView.as_view(), name='changer_mdp'),
     path('comptes/mon-profil/', MonProfilView.as_view(), name='mon_profil'),

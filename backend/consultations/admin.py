@@ -8,7 +8,7 @@ from .models import Consultation
 @admin.register(Consultation)
 class ConsultationAdmin(admin.ModelAdmin):
     list_display = ['patient', 'date_consultation', 'motif', 'diagnostic']
-    list_filter = ['date_consultation', 'patient__personnel_medical']
+    list_filter = ['date_consultation']
     search_fields = ['motif', 'diagnostic', 'patient__nom', 'patient__prenom']
     readonly_fields = ['date_creation', 'date_modification']
 

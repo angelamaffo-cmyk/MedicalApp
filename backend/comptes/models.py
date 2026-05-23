@@ -9,8 +9,7 @@ class ProfilUtilisateur(models.Model):
     ]
 
     utilisateur = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
+        User,on_delete=models.CASCADE,
         related_name='profil'
     )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
@@ -26,6 +25,13 @@ class ProfilUtilisateur(models.Model):
 
     def __str__(self):
         return f"{self.utilisateur.get_full_name()} — {self.role}"
+    @property
+    def est_generaliste(self):
+        return self.role =='MEDECIN' and self.specialite=='Medecine Generale'
+    
+    @property
+    def est_specialiste(self):
+        return self.role == 'MEDECIN' and self.self.specialite !='Medecine Generale'
 
     @property
     def est_medecin(self):
