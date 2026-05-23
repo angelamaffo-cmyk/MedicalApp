@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Examen
 from .serializers import ExamenSerializer
 from django.db import models
+from patients.models import Patient
 
 from django.db.models import Q
 
@@ -31,13 +32,15 @@ class ExamenViewSet(viewsets.ModelViewSet):
             return Examen.objects.all()
         elif role == 'INFIRMIER':
             # Infirmier voit tous les patients
-            return Examen.objects.all()
+            return Examen.objects.none()
         else:
             # Médecin voit uniquement ses patients
             # (ceux qu'il a créés + ceux qui lui sont assignés)
+            mes_patients = Patient.objects.filter(
+                Q(medecin_generaliste=user) | Q(medecin_actuel=user)
+            )
             return Examen.objects.filter(
-                models.Q(consultation__patient__personnel_medical=user) |
-                models.Q(consultation__patient__medecin_responsable=user)
+                consultation__patient__in=mes_patients
             ).distinct()
     
 

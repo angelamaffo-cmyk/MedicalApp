@@ -100,3 +100,12 @@ class DesactiverCompteView(APIView):
                 {"message": "Utilisateur non trouvé."},
                 status=status.HTTP_404_NOT_FOUND
             )
+        
+class ListePersonnelMedicalView(APIView):
+    """Liste du personnel médical — accessible à tout utilisateur connecté"""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        profils = ProfilUtilisateur.objects.filter(est_actif=True)
+        serializer = ProfilSerializer(profils, many=True)
+        return Response(serializer.data)

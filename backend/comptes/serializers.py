@@ -102,7 +102,10 @@ class ProfilSerializer(serializers.ModelSerializer):
     email = serializers.CharField(source='utilisateur.email', read_only=True)
     nom_complet = serializers.CharField(source='utilisateur.get_full_name', read_only=True)
     premiere_connexion = serializers.BooleanField(read_only=True)
+    utilisateur_id = serializers.IntegerField(source='utilisateur.id', read_only=True)
 
     class Meta:
         model = ProfilUtilisateur
-        fields = ['id', 'utilisateur_id','username', 'email', 'nom_complet', 'role', 'telephone', 'specialite', 'premiere_connexion', 'est_actif']
+        fields = ['id', 'utilisateur_id','username', 'email',
+                   'nom_complet', 'role', 'telephone', 'specialite',
+                     'premiere_connexion', 'est_actif']

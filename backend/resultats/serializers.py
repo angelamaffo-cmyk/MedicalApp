@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import Resultat
+from django.db.models import Q
+from patients.models import Patient
 
 
 class ResultatSerializer(serializers.ModelSerializer):
@@ -13,7 +15,7 @@ class ResultatSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'examen', 'examen_nom', 'examen_type',
             'patient_nom', 'patient_prenom',
-            'date_resultat', 'contenu', 'conclusion', 'est_normal',
+            'date_resultat', 'contenu', 'conclusion', 'est_normal','est_actif'
             'date_creation', 'date_modification'
         ]
         read_only_fields = ['date_creation', 'date_modification']
@@ -23,7 +25,10 @@ class ResultatSerializer(serializers.ModelSerializer):
         examen = data.get('examen')
 
         if request and examen:
-            if examen.consultation.patient.personnel_medical != request.user:
+            mes_patients = Patient.objects.filter(
+                Q(medecin_generaliste=request.user) | Q(medecin_actuel=request.user)
+            )
+            if examen.consultation.patient not in mes_patients:
                 raise serializers.ValidationError({
                     'examen': "Cet examen n'appartient pas à l'un de vos patients."
                 })

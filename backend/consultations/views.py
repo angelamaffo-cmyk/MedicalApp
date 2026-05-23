@@ -3,6 +3,8 @@ from rest_framework import viewsets
 from .models import Consultation
 from rest_framework.permissions import IsAuthenticated
 from .serializers import ConsultationsSerializer
+from patients.models import Patient, AssignationInfirmier, AssignationMedecin, Soin
+
 from django.db import models
 
 from django.db.models import Q
@@ -16,8 +18,10 @@ def get_role(user):
         return user.profil.role
     except:
         return 'ADMIN'
+    
+
 class ConsultationViewSet(viewsets.ModelViewSet):
-    queryset = Consultation.objects.all()
+   
 
     serializer_class=ConsultationsSerializer
     permission_classes=[IsAuthenticated]
@@ -27,20 +31,28 @@ class ConsultationViewSet(viewsets.ModelViewSet):
         role = get_role(user)
 
         if role == 'ADMIN':
-            # Admin voit tout
             return Consultation.objects.all()
         elif role == 'INFIRMIER':
-            # Infirmier voit tous les patients
-            return Consultation.objects.all()
+            return Consultation.objects.none()  # Infirmier ne voit pas les consultations
+
         else:
-            # Médecin voit uniquement ses patients
-            # (ceux qu'il a créés + ceux qui lui sont assignés)
             return Consultation.objects.filter(
-                models.Q(patient__personnel_medical=user) |
-                models.Q(patient__medecin_responsable=user)
+                Q(patient__medecin_generaliste=user) |
+                Q(patient__medecin_actuel=user)
+            ).filter(
+                patient__in=self._get_mes_patients(user)
             ).distinct()
+        
+    def _get_mes_patients(self, user):
+        from patients.models import Patient
+        return Patient.objects.filter(
+            Q(medecin_generaliste=user) | Q(medecin_actuel=user)
+        )
     
     def get_serializer_context(self):
         context=super().get_serializer_context()
         context['request']=self.request
         return context
+    
+    def perform_create(self, serializer):
+        serializer.save()

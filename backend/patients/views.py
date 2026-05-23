@@ -25,7 +25,7 @@ def get_role(user):
     
 def est_generaliste(user):
     try:
-        return user.profil.specialite == 'Medecine Generale'
+        return user.profil.specialite == 'Médecine Générale'
     except:
         return False
 
@@ -52,16 +52,9 @@ class PatientViewSet(viewsets.ModelViewSet):
             ).distinct()
         
     def perform_create(self, serializer):
-        serializer.save(mdecin_generaliste=self.request.user)
+        serializer.save(medecin_generaliste=self.request.user)
 
-    def create(self, request, *args, **kwargs):
-        role = get_role(request.user)
-        if role != 'MEDECIN' or not est_generaliste(request.user):
-            return Response(
-                {"detail": "Seul le médecin généraliste peut créer un patient."},
-                status=status.HTTP_403_FORBIDDEN
-            )
-        return super().create(request, *args, **kwargs)
+    
 class AssignationMedecinViewSet(viewsets.ModelViewSet):
     serializer_class = AssignationMedecinSerializer
     permission_classes = [IsAuthenticated]

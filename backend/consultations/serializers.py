@@ -1,21 +1,31 @@
 from rest_framework import serializers
 from datetime import date
 from .models import Consultation
+from django.db.models import Q
+from patients.models import Patient
 
 
 class ConsultationsSerializer(serializers.ModelSerializer):
     patient_nom=serializers.CharField(source='patient.nom' , read_only=True)
     patient_prenom=serializers.CharField(source='patient.prenom' , read_only=True)
+    medecin_nom = serializers.SerializerMethodField()
 
     class Meta:
         model=Consultation
         fields=[
-            'id', 'patient','patient_nom','patient_prenom',
+            'id', 'patient','patient_nom','patient_prenom','medecin_nom',
             'date_consultation', 'motif', 'diagnostic',
-            'traitement','observations',
+            'traitement','observations','est_actif',
             'date_creation','date_modification'
         ]
         read_only_fields=['date creation', 'date_modification']
+
+    def get_medecin_nom(self, obj):
+        request = self.context.get('request')
+        if request:
+            return request.user.get_full_name()
+        return ''
+    
     def validate_date_consultation(self, value):
         if value > date.today():
             raise serializers.ValidationError("La date de consultation ne peut pas etre dans le futur")
@@ -30,6 +40,11 @@ class ConsultationsSerializer(serializers.ModelSerializer):
         request=self.context.get('request')
         patient=data.get('patient')
         if request and patient:
-            if patient.personnel_medical!=request.user:
-                raise serializers.ValidationError('Vous ne pouvez creer une consultaion que pour vos propres patients')
+            mes_patients = Patient.objects.filter(
+                Q(medecin_generaliste=request.user) | Q(medecin_actuel=request.user)
+            )
+            if patient not in mes_patients:
+                raise serializers.ValidationError({
+                    'patient':"Vous ne pouvez consulter que vos propres patients."
+                })
             return data

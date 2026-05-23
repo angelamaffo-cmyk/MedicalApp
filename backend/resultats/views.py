@@ -4,6 +4,8 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from .models import Resultat
+from patients.models import Patient
+
 from .serializers import ResultatSerializer
 from django.db import models
 
@@ -31,13 +33,15 @@ class ResultatViewSet(viewsets.ModelViewSet):
             return Resultat.objects.all()
         elif role == 'INFIRMIER':
             # Infirmier voit tous les patients
-            return Resultat.objects.all()
+            return Resultat.objects.none()
         else:
             # Médecin voit uniquement ses patients
             # (ceux qu'il a créés + ceux qui lui sont assignés)
+            mes_patients = Patient.objects.filter(
+                Q(medecin_generaliste=user) | Q(medecin_actuel=user)
+            )
             return Resultat.objects.filter(
-                models.Q(examen__consultation__patient__personnel_medical=user) |
-                models.Q(examen__consultation__patient__medecin_responsable=user)
+                examen__consultation__patient__in=mes_patients
             ).distinct()
 
     def get_serializer_context(self):

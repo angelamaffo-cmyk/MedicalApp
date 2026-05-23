@@ -6,8 +6,8 @@ from comptes.models import ProfilUtilisateur
 
 class PatientSerializer(serializers.ModelSerializer):
     age = serializers.SerializerMethodField()
-    mdecin_generaliste_nom = serializers.CharField(source='medecin_generaliste.get_full_name', read_only=True)
-    mdecin_actuel_nom = serializers.SerializerMethodField()
+    medecin_generaliste_nom = serializers.CharField(source='medecin_generaliste.get_full_name', read_only=True)
+    medecin_actuel_nom = serializers.SerializerMethodField()
     
     class Meta:
         model = Patient
@@ -98,12 +98,13 @@ class AssignationMedecinSerializer(serializers.ModelSerializer):
     class Meta:
         model = AssignationMedecin
         fields = [
-            'id', 'patient', 'patient_nom', 'patient_prenom',
-            'medecin_source', 'medecin_source_nom',
+            'id', 'patient', 
             'medecin_cible', 'medecin_cible_nom',
+            'medecin_source', 'medecin_source_nom',
+            'patient_nom', 'patient_prenom',
             'motif', 'service', 'date_assignation', 'est_active'
-        ],
-        read_only_fields = ['mdecin_source', 'date_assignation']
+        ]
+        read_only_fields = ['medecin_source', 'date_assignation']
 
 
     
