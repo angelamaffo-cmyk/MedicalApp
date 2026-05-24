@@ -26,6 +26,8 @@ export interface AssignationInfirmier {
   date_debut: string;
   date_fin?: string;
   est_active?: boolean;
+  statut_soins?: string;   // ← Ajoute
+  statut_label?: string;
   soins?: Soin[];
 }
 

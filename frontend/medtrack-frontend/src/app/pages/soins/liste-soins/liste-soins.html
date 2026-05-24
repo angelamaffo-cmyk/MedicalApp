@@ -60,9 +60,13 @@
       </div>
     </div>
     <div class="d-flex align-items-center gap-2">
-      <span class="statut-soin" [class.actif]="a.est_active" [class.termine]="!a.est_active">
-        {{ a.est_active ? 'En cours' : 'Terminé' }}
-      </span>
+      <span class="statut-soin"
+      [class.actif]="a.statut_soins === 'EN_COURS'"
+      [class.attente]="a.statut_soins === 'EN_ATTENTE'"
+      [class.termine]="a.statut_soins === 'TERMINE'"
+      [class.non-effectue]="a.statut_soins === 'NON_EFFECTUE'">
+  {{ a.statut_label }}
+</span>
       <!-- Bouton ajouter soin : infirmier seulement -->
       <a [routerLink]="['/soins/nouveau']" [queryParams]="{assignation: a.id}"
          class="btn-soin" *ngIf="roleService.isInfirmier() && a.est_active">

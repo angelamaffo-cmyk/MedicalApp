@@ -1,19 +1,18 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-changer-mot-de-passe',
-    standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './changer-mot-de-passe.html',
   styleUrl: './changer-mot-de-passe.css',
 })
 export class ChangerMotDePasseComponent {
- form: FormGroup;
+  form: FormGroup;
   isLoading = false;
   successMessage = '';
   errorMessage = '';
@@ -46,6 +45,21 @@ export class ChangerMotDePasseComponent {
   get nouveau() { return this.form.get('nouveau_mot_de_passe'); }
   get confirmer() { return this.form.get('confirmer_mot_de_passe'); }
 
+  // Marque premiere_connexion = False dans le backend ET le localStorage
+  private marquerPremiereConnexionFaite(): void {
+    this.http.patch(`${environment.apiUrl}/comptes/mon-profil/`, {}).subscribe({
+      next: () => {
+        const profilStr = localStorage.getItem('profil');
+        if (profilStr) {
+          const profil = JSON.parse(profilStr);
+          profil.premiere_connexion = false;
+          localStorage.setItem('profil', JSON.stringify(profil));
+        }
+      },
+      error: (err) => console.error('Erreur patch profil:', err)
+    });
+  }
+
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -54,12 +68,15 @@ export class ChangerMotDePasseComponent {
 
     this.isLoading = true;
     this.errorMessage = '';
-    this.successMessage = '';
 
-    this.http.post(`${environment.apiUrl}/comptes/changer-mot-de-passe/`, this.form.value).subscribe({
+    this.http.post(
+      `${environment.apiUrl}/comptes/changer-mot-de-passe/`,
+      this.form.value
+    ).subscribe({
       next: () => {
         this.isLoading = false;
         this.successMessage = 'Mot de passe changé avec succès !';
+        this.marquerPremiereConnexionFaite();
         setTimeout(() => this.router.navigate(['/dashboard']), 2000);
       },
       error: (err) => {
@@ -67,13 +84,15 @@ export class ChangerMotDePasseComponent {
         if (err.error?.ancien_mot_de_passe) {
           this.errorMessage = err.error.ancien_mot_de_passe;
         } else {
-          this.errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+          this.errorMessage = 'Une erreur est survenue.';
         }
       }
     });
   }
 
+  // Passer = marquer comme fait + aller au dashboard
   passer(): void {
+    this.marquerPremiereConnexionFaite();
     this.router.navigate(['/dashboard']);
   }
 }

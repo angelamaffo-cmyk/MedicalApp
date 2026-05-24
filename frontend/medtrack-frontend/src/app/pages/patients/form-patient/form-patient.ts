@@ -40,7 +40,7 @@ export class FormPatientComponent implements OnInit {
       date_naissance: ['', Validators.required],
       telephone: ['', [Validators.required, Validators.minLength(8)]],
       adresse: [''],
-      groupe_sanguin: ['', Validators.required],
+      groupe_sanguin: [''],
       contact_urgence_nom: [''],
       contact_urgence_telephone: [''],
       medecin_responsable: [''],

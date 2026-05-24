@@ -8,7 +8,7 @@
   </div>
   <div class="date-badge">
     <i class="bi bi-calendar3 me-2"></i>
-    <!-- {{ today | date:'EEEE dd MMMM yyyy' }} -->
+    {{ today | date:'EEEE dd MMMM yyyy' }}
   </div>
 </div>
 
@@ -37,13 +37,13 @@
   <div class="col-md-4">
     <div class="examen-stat-card attente">
       <i class="bi bi-hourglass-split"></i>
-      <div><h4>{{ statsExamens.enAttente }}</h4><p>En attente de réalisation</p></div>
+      <div><h4>{{ statsExamens.enAttente }}</h4><p>Examen En attente de réalisation</p></div>
     </div>
   </div>
   <div class="col-md-4">
     <div class="examen-stat-card realise">
       <i class="bi bi-check-circle-fill"></i>
-      <div><h4>{{ statsExamens.realises }}</h4><p>Réalisés</p></div>
+      <div><h4>{{ statsExamens.realises }}</h4><p>Examen Réalisés</p></div>
     </div>
   </div>
 </div>
@@ -59,21 +59,21 @@
       </div>
       <div class="card-body-custom">
         <div class="activite-item" *ngFor="let activite of activitesRecentes">
-  <div class="activite-icon bg-{{ activite.couleur }}-light">
-    <i class="bi {{ activite.icon }} text-{{ activite.couleur }}"></i>
-  </div>
-  <div class="activite-info">
-    <p class="activite-message">{{ activite.message }}</p>
-    <span class="activite-temps">{{ activite.temps }}</span>
-  </div>
-</div>
-<div *ngIf="activitesRecentes.length === 0" class="text-center text-muted py-3">
-  <i class="bi bi-clock-history fs-2"></i>
-  <p class="mt-2">Aucune activité récente</p>
-</div>
+          <div class="activite-icon bg-{{ activite.couleur }}-light">
+            <i class="bi {{ activite.icon }} text-{{ activite.couleur }}"></i>
+          </div>
+        <div class="activite-info">
+          <p class="activite-message">{{ activite.message }}</p>
+          <span class="activite-temps">{{ activite.temps }}</span>
+        </div>
+      </div>
+      <div *ngIf="activitesRecentes.length === 0" class="text-center text-muted py-3">
+        <i class="bi bi-clock-history fs-2"></i>
+        <p class="mt-2">Aucune activité récente</p>
       </div>
     </div>
   </div>
+</div>
 
   <!-- Raccourcis -->
   <div class="col-md-5">
@@ -96,7 +96,7 @@
     </div>
 
     <!-- Infos système -->
-    <div class="dashboard-card mt-4">
+    <div class="dashboard-card mt-3">
       <div class="card-header-custom">
         <h6><i class="bi bi-info-circle-fill me-2 text-info"></i>Informations</h6>
       </div>
