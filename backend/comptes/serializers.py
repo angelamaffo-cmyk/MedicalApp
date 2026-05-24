@@ -57,30 +57,30 @@ class CreerCompteSerializer(serializers.ModelSerializer):
         )
 
         # Envoyer l'email
-    try:
-        send_mail(
-            subject="Bienvenue sur MedTrack — Vos identifiants de connexion",
-            message=f"""
-            Bonjour {user.first_name} {user.last_name},
+        try:
+            send_mail(
+                subject="Bienvenue sur MedTrack — Vos identifiants de connexion",
+                message=f"""
+                Bonjour {user.first_name} {user.last_name},
 
 Votre compte MedTrack a été créé avec succès.
 
-Vos identifiants de connexion :
-    - Nom d'utilisateur : {username}
-    - Mot de passe : {MOT_DE_PASSE_DEFAUT}
+ Vos identifiants de connexion :
+        - Nom d'utilisateur : {username}
+        - Mot de passe : {MOT_DE_PASSE_DEFAUT}
 
 Veuillez vous connecter et changer votre mot de passe dès votre première connexion.
 
 Cordialement,
 L'équipe MedTrack
-            """,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[user.email],
-            fail_silently=True,
-        )
-    except Exception:
-        pass
-
+                """,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[user.email],
+                fail_silently=True,
+            )
+        except Exception as e:
+            print(f"Erreur email:{e}")
+        return user
         
 
 

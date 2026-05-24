@@ -81,6 +81,14 @@ class MonProfilView(APIView):
                 {"message": "Profil non trouvé."},
                 status=status.HTTP_404_NOT_FOUND
             )
+    def patch(self, request):
+        try:
+            profil = request.user.profil
+            profil.premiere_connexion = False
+            profil.save()
+            return Response({"message": "Profil mis à jour."})
+        except ProfilUtilisateur.DoesNotExist:
+            return Response({"detail": "Profil non trouvé."}, status=404)
 
 
 class DesactiverCompteView(APIView):

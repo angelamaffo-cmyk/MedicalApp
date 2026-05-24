@@ -77,6 +77,8 @@ class AssignationInfirmierSerializer(serializers.ModelSerializer):
     patient_prenom = serializers.CharField(source='patient.prenom', read_only=True)
     medecin_nom = serializers.CharField(source='medecin.get_full_name', read_only=True)
     soins = SoinSerializer(many=True, read_only=True)
+    statut_soins = serializers.CharField(read_only=True)
+    statut_label = serializers.CharField(read_only=True)
 
     class Meta:
         model = AssignationInfirmier
@@ -84,6 +86,7 @@ class AssignationInfirmierSerializer(serializers.ModelSerializer):
             'id', 'patient', 'patient_nom', 'patient_prenom',
             'medecin', 'medecin_nom', 'infirmier', 'infirmier_nom',
             'soins_a_faire', 'date_debut', 'date_fin', 'est_active',
+            'statut_soins', 'statut_label',
             'soins', 'date_creation'
         ]
         read_only_fields = ['medecin', 'date_creation']

@@ -26,7 +26,7 @@ class Patient(models.Model):
     date_naissance = models.DateField()
     telephone = models.CharField(max_length=20)
     adresse = models.TextField(blank=True)
-    groupe_sanguin = models.CharField(max_length=3, choices=GROUPE_SANGUIN_CHOICES)
+    groupe_sanguin = models.CharField(max_length=3, choices=GROUPE_SANGUIN_CHOICES, blank=True)
     contact_urgence_nom = models.CharField(max_length=200, blank=True)
     contact_urgence_telephone = models.CharField(max_length=20, blank=True)
     est_actif = models.BooleanField(default=True)
@@ -67,6 +67,34 @@ class AssignationInfirmier(models.Model):
     date_fin = models.DateField(null=True, blank=True)
     est_active = models.BooleanField(default=True)
     date_creation = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def statut_soins(self):
+        """Calcule le statut automatiquement"""
+        from datetime import date
+        today = date.today()
+    
+        # Si date de fin passée
+        if self.date_fin and self.date_fin < today:
+            if self.soins.count() == 0:
+                return 'NON_EFFECTUE'
+            return 'TERMINE'
+    
+        # Pas encore terminé
+        if self.soins.count() == 0:
+            return 'EN_ATTENTE'
+    
+        return 'EN_COURS'
+
+    @property
+    def statut_label(self):
+        labels = {
+            'EN_ATTENTE': 'En attente',
+            'EN_COURS': 'En cours',
+            'TERMINE': 'Terminé',
+            'NON_EFFECTUE': 'Non effectué',
+        }
+        return labels.get(self.statut_soins, self.statut_soins)
 
     class Meta:
         ordering = ['-date_creation']
