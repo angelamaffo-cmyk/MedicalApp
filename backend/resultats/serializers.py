@@ -15,7 +15,7 @@ class ResultatSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'examen', 'examen_nom', 'examen_type',
             'patient_nom', 'patient_prenom',
-            'date_resultat', 'contenu', 'conclusion', 'est_normal','est_actif',
+            'date_resultat', 'contenu', 'conclusion', 'est_normal',
             'date_creation', 'date_modification'
         ]
         read_only_fields = ['date_creation', 'date_modification']

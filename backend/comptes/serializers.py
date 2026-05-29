@@ -3,8 +3,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework import serializers
 from .models import ProfilUtilisateur
+from django.utils.html import strip_tags  
 
-MOT_DE_PASSE_DEFAUT = "MedTrack2026"
 
 class CreerCompteSerializer(serializers.ModelSerializer):
     # Champs de l'utilisateur
@@ -38,6 +38,7 @@ class CreerCompteSerializer(serializers.ModelSerializer):
             username = f"{base_username}{counter}"
             counter += 1
 
+        MOT_DE_PASSE_DEFAUT = "MedTrack2026"
         # Créer l'utilisateur avec mot de passe par défaut
         user = User.objects.create_user(
             username=username,
@@ -56,30 +57,149 @@ class CreerCompteSerializer(serializers.ModelSerializer):
             premiere_connexion=True
         )
 
+
+        # 1. Le design de ton e-mail en HTML et CSS inline
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <style>
+                body {{
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    background-color: #f4f6f9;
+                    margin: 0;
+                    padding: 0;
+                }}
+                .container {{
+                    max-width: 600px;
+                    margin: 30px auto;
+                    background: #ffffff;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                    border: 1px solid #e1e8ed;
+                }}
+                .header {{
+                    background-color: #0056b3;
+                    color: #ffffff;
+                    padding: 30px;
+                    text-align: center;
+                }}
+                .header h1 {{
+                    margin: 0;
+                    font-size: 24px;
+                    font-weight: 600;
+                    letter-spacing: 0.5px;
+                }}
+                .content {{
+                    padding: 30px;
+                    color: #495057;
+                    line-height: 1.6;
+                }}
+                .welcome {{
+                    font-size: 18px;
+                    color: #1a1a1a;
+                    font-weight: bold;
+                    margin-bottom: 20px;
+                }}
+                .credentials-box {{
+                    background-color: #f8f9fa;
+                    border-left: 4px solid #0056b3;
+                    padding: 20px;
+                    margin: 25px 0;
+                    border-radius: 4px;
+                }}
+                .credentials-item {{
+                    margin: 8px 0;
+                    font-size: 15px;
+                }}
+                .credentials-item strong {{
+                    color: #212529;
+                }}
+                .btn-container {{
+                    text-align: center;
+                    margin: 30px 0 20px 0;
+                }}
+                .btn {{
+                    background-color: #0056b3;
+                    color: #ffffff !important;
+                    text-decoration: none;
+                    padding: 12px 30px;
+                    font-size: 15px;
+                    font-weight: 600;
+                    border-radius: 5px;
+                    display: inline-block;
+                    box-shadow: 0 3px 6px rgba(0,86,179,0.2);
+                }}
+                .footer {{
+                    background-color: #f8f9fa;
+                    padding: 20px;
+                    text-align: center;
+                    font-size: 12px;
+                    color: #6c757d;
+                    border-top: 1px solid #eeeeee;
+                }}
+                .warning {{
+                    font-size: 13px;
+                    color: #dc3545;
+                    background-color: #fff5f5;
+                    padding: 10px;
+                    border-radius: 4px;
+                    margin-top: 20px;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>MedTrack</h1>
+                </div>
+                <div class="content">
+                    <div class="welcome">Bienvenue sur la plateforme, {user.first_name} {user.last_name} !</div>
+                    <p>Un administrateur vient de vous créer un accès sécurisé pour la gestion et le suivi des dossiers des patients.</p>
+                    
+                    <p>Voici vos identifiants de connexion provisoires :</p>
+                    
+                    <div class="credentials-box">
+                        <div class="credentials-item"><strong>Nom d'utilisateur :</strong> {username}</div>
+                        <div class="credentials-item"><strong>Mot de passe :</strong> <code>{MOT_DE_PASSE_DEFAUT}</code></div>
+                    </div>
+                    
+                    <div class="btn-container">
+                        <a href="http://localhost:4200" class="btn" target="_blank">Se connecter à MedTrack</a>
+                    </div>
+                    
+                    <div class="warning">
+                        <strong>Sécurité Médicale :</strong> Par mesure de confidentialité, vous serez invité à modifier ce mot de passe dès votre première connexion.
+                    </div>
+                </div>
+                <div class="footer">
+                    Ceci est un message automatique, merci de ne pas y répondre.<br>
+                    &copy; 2026 MedTrack — Système de Gestion Hospitalière Securisée.
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        text_content = strip_tags(html_content)
+
+        
+       
+
         # Envoyer l'email
         try:
             send_mail(
-                subject="Bienvenue sur MedTrack — Vos identifiants de connexion",
-                message=f"""
-                Bonjour {user.first_name} {user.last_name},
-
-Votre compte MedTrack a été créé avec succès.
-
- Vos identifiants de connexion :
-        - Nom d'utilisateur : {username}
-        - Mot de passe : {MOT_DE_PASSE_DEFAUT}
-
-Veuillez vous connecter et changer votre mot de passe dès votre première connexion.
-
-Cordialement,
-L'équipe MedTrack
-                """,
+                subject="Création de votre compte MedTrack — Identifiants sécurisés",
+                message=text_content,
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[user.email],
-                fail_silently=True,
+                fail_silently=False,
+                html_message=html_content,  # Permet d'afficher l'erreur dans le terminal si l'envoi échoue
             )
         except Exception as e:
-            print(f"Erreur email:{e}")
+            print(f"\n[ERREUR SMTP MEDTRACK] Impossible d'envoyer l'email à {user.email}. Détails : {e}\n")        
+
         return user
         
 

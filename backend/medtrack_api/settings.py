@@ -14,6 +14,7 @@ from pathlib import Path
 from decouple import config
 from datetime import timedelta
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -170,13 +171,17 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS=True
 
+import ssl  # <--- Ajoute cet import tout en haut de ton settings.py si ce n'est pas fait
+
 # ─────────────────────────────────────────
-# EMAIL
+# EMAIL (Version Forcée avec Backend Custom)
 # ─────────────────────────────────────────
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# On cible le fichier et la classe qu'on vient de créer
+EMAIL_BACKEND = 'medtrack_api.email_backend.SSLEmailBackend'
+
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER', default='noreply@medtrack.com')
+DEFAULT_FROM_EMAIL = f"MedTrack <{config('EMAIL_HOST_USER', default='')}>"

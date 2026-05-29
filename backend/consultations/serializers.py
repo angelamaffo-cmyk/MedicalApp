@@ -15,7 +15,7 @@ class ConsultationsSerializer(serializers.ModelSerializer):
         fields=[
             'id', 'patient','patient_nom','patient_prenom','medecin_nom',
             'date_consultation', 'motif', 'diagnostic',
-            'traitement','observations','est_actif',
+            'traitement','observations',
             'date_creation','date_modification'
         ]
         read_only_fields=['date creation', 'date_modification']

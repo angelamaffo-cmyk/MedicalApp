@@ -12,7 +12,6 @@ class Resultat(models.Model):
     contenu = models.TextField()
     conclusion = models.TextField()
     est_normal = models.BooleanField(default=True)
-    est_actif = models.BooleanField(default=True)
     date_creation = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)
 

@@ -13,7 +13,6 @@ class Consultation(models.Model):
     diagnostic = models.TextField()
     traitement = models.TextField(blank=True)
     observations = models.TextField(blank=True)
-    est_actif = models.BooleanField(default=True)
     date_creation = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)
 

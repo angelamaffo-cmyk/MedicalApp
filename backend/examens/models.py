@@ -24,7 +24,6 @@ class Examen(models.Model):
     date_realisation = models.DateField(null=True, blank=True)
     laboratoire = models.CharField(max_length=255, blank=True)
     notes = models.TextField(blank=True)
-    est_actif = models.BooleanField(default=True)
     date_creation = models.DateTimeField(auto_now_add=True)
 
     class Meta:

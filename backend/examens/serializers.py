@@ -18,7 +18,7 @@ class ExamenSerializer(serializers.ModelSerializer):
             'id', 'consultation', 'patient_nom', 'patient_prenom',
             'consultation_date', 'type_examen', 'nom_examen',
             'date_prescription', 'date_realisation',
-            'laboratoire', 'notes','est_actif','a_resultat' ,'date_creation'
+            'laboratoire', 'notes','a_resultat' ,'date_creation'
         ]
         read_only_fields = ['date_creation']
 
