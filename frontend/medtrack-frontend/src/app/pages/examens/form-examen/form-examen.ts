@@ -68,7 +68,7 @@ export class FormExamenComponent implements OnInit {
   chargerConsultations(): void {
     this.consultationService.getAll().subscribe({
       next: (data) => {
-        this.consultations = data;
+        this.consultations = data.filter((c: any) => c.patient && c.patient.est_actif === true); 
         this.cdr.detectChanges();
       }
     });

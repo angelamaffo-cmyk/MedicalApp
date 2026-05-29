@@ -69,7 +69,7 @@
         <th>Type</th>
         <th>Prescription</th>
         <th>Réalisation</th>
-        <th>Statut</th>
+        
         <th>Actions</th>
       </tr>
     </thead>
@@ -95,12 +95,7 @@
           <span *ngIf="e.date_realisation" class="date-text">{{ e.date_realisation | date:'dd/MM/yyyy' }}</span>
           <span *ngIf="!e.date_realisation" class="en-attente"><i class="bi bi-clock me-1"></i>En attente</span>
         </td>
-        <td>
-          <span class="statut-badge" [class.actif]="e.est_actif" [class.inactif]="!e.est_actif">
-            <i class="bi" [class.bi-check-circle-fill]="e.est_actif" [class.bi-x-circle-fill]="!e.est_actif"></i>
-            {{ e.est_actif ? 'Actif' : 'Inactif' }}
-          </span>
-        </td>
+        
         <td>
           <div class="actions">
             <a [routerLink]="['/examens', e.id]" class="btn-action view" title="Voir">

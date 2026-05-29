@@ -1,32 +1,32 @@
 <nav class="navbar-top">
 
-  <!-- Bouton toggle sidebar -->
   <button class="toggle-btn" (click)="onToggle()">
     <i class="bi bi-list"></i>
   </button>
 
-  <!-- Titre page courante -->
   <div class="navbar-title">
-    <h5 class="mb-0 fw-bold">Tableau de bord</h5>
+    <h5>Tableau de bord</h5>
   </div>
 
-  <!-- Droite navbar -->
   <div class="navbar-right">
 
+    <!-- Toggle Dark Mode -->
+    <button class="theme-toggle" (click)="toggleTheme()" [title]="isDarkMode ? 'Mode clair' : 'Mode sombre'">
+      <i class="bi" [class.bi-moon-fill]="!isDarkMode" [class.bi-sun-fill]="isDarkMode"></i>
+    </button>
+
     <!-- Notifications -->
-    <button class="icon-btn">
+    <button class="notif-btn">
       <i class="bi bi-bell"></i>
-      <span class="badge-dot"></span>
+      <span class="notif-dot"></span>
     </button>
 
     <!-- Profil -->
     <a routerLink="/profil" class="profil-btn">
-      <div class="profil-avatar">
-        <i class="bi bi-person-fill"></i>
-      </div>
-      <div class="profil-info d-none d-md-block">
-        <span class="profil-nom">Personnel Médical</span>
-        <span class="profil-role">Médecin</span>
+      <div class="profil-avatar">{{ getInitiales() }}</div>
+      <div class="profil-info d-none d-md-flex">
+        <span class="profil-nom">{{ profil?.nom_complet || 'Administrateur' }}</span>
+        <span class="profil-role">{{ getRoleLabel() }}</span>
       </div>
     </a>
 

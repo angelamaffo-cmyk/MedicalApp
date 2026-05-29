@@ -7,6 +7,8 @@ import { ExamenService } from '../../services/examen.service';
 import { Activite } from '../../models/dashboard.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { AuthRoleService } from '../../services/auth-role.service';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -19,9 +21,9 @@ export class DashboardComponent implements OnInit {
 
   stats = [
     { label: 'Patients actifs', valeur: 0, icon: 'bi-people-fill', couleur: 'primary', route: '/patients' },
+    { label: 'Patients inactifs', valeur: 0, icon: 'bi-people-fill', couleur: 'danger', route: '/patients' },
     { label: 'Consultations', valeur: 0, icon: 'bi-clipboard2-pulse-fill', couleur: 'success', route: '/consultations' },
-    { label: 'Examens en attente', valeur: 0, icon: 'bi-droplet-fill', couleur: 'warning', route: '/examens' },
-    { label: 'Hospitalisations en cours', valeur: 0, icon: 'bi-hospital-fill', couleur: 'danger', route: '/hospitalisations' },
+    { label: 'Examens ', valeur: 0, icon: 'bi-droplet-fill', couleur: 'warning', route: '/examens' },
   ];
  statsExamens = { total: 0, enAttente: 0, realises: 0 };
   activitesRecentes: Activite[] = [];
@@ -38,10 +40,16 @@ export class DashboardComponent implements OnInit {
     private examenService: ExamenService,
     private cdr: ChangeDetectorRef,
     private http: HttpClient,
+    public roleService:AuthRoleService
+    
 
   ) {}
+  profil: any = null;
+
 
   ngOnInit(): void {
+    this.profil = JSON.parse(localStorage.getItem('profil') || 'null');
+
     this.chargerStats();
   }
 
@@ -97,16 +105,7 @@ this.http.get<any[]>(`${environment.apiUrl}/assignations-medecin/`).subscribe({
       }
     });
 
-    // Examens en attente
-    this.examenService.getAll().subscribe({
-      next: (data) => {
-        this.statsExamens.total = data.length;
-        this.statsExamens.enAttente = data.filter(e => !e.date_realisation).length;
-        this.statsExamens.realises = data.filter(e => !!e.date_realisation).length;
-        this.stats[2].valeur = this.statsExamens.enAttente;
-        this.cdr.detectChanges();
-      }
-    });
+  
 
   
 

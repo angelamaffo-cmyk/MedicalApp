@@ -47,24 +47,8 @@ export class DetailResultatComponent implements OnInit {
       }
     });
   }
-   toggleStatut(): void {
-    if (!this.resultat) return;
-    const newStatut = !this.resultat.est_actif;
-    this.resultatService.toggleStatut(this.resultatId, newStatut).subscribe({
-      next: (data) => {
-        this.resultat!.est_actif = data.est_actif;
-        this.successMessage = newStatut ? 'Résultat activé !' : 'Résultat désactivé !';
-        this.confirmToggle = false;
-        this.cdr.detectChanges();
-        setTimeout(() => { this.successMessage = ''; this.cdr.detectChanges(); }, 3000);
-      },
-      error: () => {
-        this.errorMessage = 'Erreur lors du changement de statut.';
-        this.confirmToggle = false;
-        this.cdr.detectChanges();
-      }
-    });
-  }
+   
+ 
     
 
 }

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -30,6 +31,9 @@ export class LoginComponent {
       username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+  }
+   togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 
   get username() { return this.loginForm.get('username'); }

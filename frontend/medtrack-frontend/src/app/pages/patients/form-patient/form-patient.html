@@ -92,12 +92,10 @@
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">Groupe sanguin 
-                
-              </label>
+              <label class="form-label">Groupe sanguin </label>
               <select
                 class="form-select"
-                
+                [class.is-invalid]="groupe_sanguin?.invalid && groupe_sanguin?.touched"
                 formControlName="groupe_sanguin"
               >
                 <option value="">----</option>
@@ -211,7 +209,7 @@
         <a routerLink="/patients" class="btn-annuler">
           <i class="bi bi-x-lg me-2"></i> Annuler
         </a>
-        <button type="submit" class="btn-sauvegarder" [disabled]="isLoading">
+        <button type="submit" class="btn-save" [disabled]="isLoading">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
           <i *ngIf="!isLoading" class="bi bi-check-lg me-2"></i>
           {{ isLoading ? 'Enregistrement...' : (isEditMode ? 'Modifier' : 'Enregistrer') }}

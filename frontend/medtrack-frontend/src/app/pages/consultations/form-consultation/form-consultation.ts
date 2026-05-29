@@ -55,7 +55,7 @@ form: FormGroup;
   chargerPatients(): void {
     this.patientService.getPatients().subscribe({
       next: (data) => {
-        this.patients = data;
+        this.patients = data.filter((p: any) => p.est_actif === true);
         this.cdr.detectChanges();
       }
     });

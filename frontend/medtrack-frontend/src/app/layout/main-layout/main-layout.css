@@ -1,16 +1,18 @@
 .app-container {
   display: flex;
   min-height: 100vh;
-  background: #f0f4ff;
+  background: var(--bg-main);
+  transition: var(--transition);
 }
 
 .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 260px;
-  transition: margin-left 0.3s ease;
+  margin-left: var(--sidebar-width);
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   min-height: 100vh;
+  min-width: 0;
 }
 
 .app-container.sidebar-closed .main-content {
@@ -19,12 +21,17 @@
 
 .page-content {
   flex: 1;
-  padding: 1.5rem;
+  padding: 1.75rem;
   overflow-y: auto;
+  animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 768px) {
-  .main-content {
-    margin-left: 0;
-  }
+  .main-content { margin-left: 0; }
+  .page-content { padding: 1rem; }
 }

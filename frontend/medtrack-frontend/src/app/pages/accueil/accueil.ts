@@ -15,4 +15,7 @@ constructor(private router: Router) {}
   allerLogin(): void {
     this.router.navigate(['/login']);
   }
+  scrollToFeatures(): void {
+  document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
+}
 }

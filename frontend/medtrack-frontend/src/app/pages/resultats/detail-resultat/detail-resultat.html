@@ -20,9 +20,7 @@
             <i class="bi" [class.bi-check-circle-fill]="resultat.est_normal" [class.bi-exclamation-triangle-fill]="!resultat.est_normal"></i>
             {{ resultat.est_normal ? 'Normal' : 'Anormal' }}
           </span>
-          <span class="statut-badge" [class.actif]="resultat.est_actif" [class.inactif]="!resultat.est_actif">
-            {{ resultat.est_actif ? 'Actif' : 'Inactif' }}
-          </span>
+          
         </div>
       </div>
     </div>
@@ -34,37 +32,13 @@
       <a [routerLink]="['/resultats/modifier', resultat.id]" class="btn-modifier">
         <i class="bi bi-pencil-fill me-1"></i>Modifier
       </a>
-      <button
-        class="btn-toggle-statut"
-        [class.btn-desactiver]="resultat.est_actif"
-        [class.btn-activer]="!resultat.est_actif"
-        (click)="confirmToggle = true"
-      >
-        <i class="bi" [class.bi-toggle-on]="resultat.est_actif" [class.bi-toggle-off]="!resultat.est_actif"></i>
-        {{ resultat.est_actif ? 'Désactiver' : 'Activer' }}
-      </button>
+      
     </div>
   </div>
 
-  <div class="alert alert-success d-flex align-items-center gap-2 mb-3" *ngIf="successMessage">
-    <i class="bi bi-check-circle-fill"></i><span>{{ successMessage }}</span>
-  </div>
+  
 
-  <div class="confirm-modal" *ngIf="confirmToggle">
-    <div class="confirm-box">
-      <div class="confirm-icon" [class.danger]="resultat.est_actif" [class.success]="!resultat.est_actif">
-        <i class="bi" [class.bi-toggle-off]="resultat.est_actif" [class.bi-toggle-on]="!resultat.est_actif"></i>
-      </div>
-      <h5>{{ resultat.est_actif ? 'Désactiver ce résultat ?' : 'Activer ce résultat ?' }}</h5>
-      <p class="text-muted">Les données seront conservées.</p>
-      <div class="confirm-actions">
-        <button class="btn-annuler-confirm" (click)="confirmToggle = false">Annuler</button>
-        <button class="btn-confirmer" [class.danger]="resultat.est_actif" [class.success]="!resultat.est_actif" (click)="toggleStatut()">
-          {{ resultat.est_actif ? 'Désactiver' : 'Activer' }}
-        </button>
-      </div>
-    </div>
-  </div>
+  
 
   <div class="row g-4">
 

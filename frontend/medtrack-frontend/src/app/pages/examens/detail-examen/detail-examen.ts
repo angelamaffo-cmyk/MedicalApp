@@ -67,22 +67,5 @@ export class DetailExamenComponent implements OnInit {
     });
   }
 
-  toggleStatut(): void {
-    if (!this.examen) return;
-    const newStatut = !this.examen.est_actif;
-    this.examenService.toggleStatut(this.examenId, newStatut).subscribe({
-      next: (data) => {
-        this.examen!.est_actif = data.est_actif;
-        this.successMessage = newStatut ? 'Examen activé !' : 'Examen désactivé !';
-        this.confirmToggle = false;
-        this.cdr.detectChanges();
-        setTimeout(() => { this.successMessage = ''; this.cdr.detectChanges(); }, 3000);
-      },
-      error: () => {
-        this.errorMessage = 'Erreur lors du changement de statut.';
-        this.confirmToggle = false;
-        this.cdr.detectChanges();
-      }
-    });
-  }
+  
 }

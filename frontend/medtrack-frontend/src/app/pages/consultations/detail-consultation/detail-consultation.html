@@ -19,10 +19,7 @@
             <i class="bi bi-calendar3 me-1"></i>
             {{ consultation.date_consultation | date:'dd/MM/yyyy' }}
           </span>
-          <span class="statut-badge" [class.actif]="consultation.est_actif" [class.inactif]="!consultation.est_actif">
-            <i class="bi" [class.bi-check-circle-fill]="consultation.est_actif" [class.bi-x-circle-fill]="!consultation.est_actif"></i>
-            {{ consultation.est_actif ? 'Active' : 'Inactive' }}
-          </span>
+         
         </div>
       </div>
     </div>
@@ -36,50 +33,14 @@
    *ngIf="roleService.peutFaireConsultation()">
   <i class="bi bi-pencil-fill me-1"></i>Modifier
 </a>
-      <button *ngIf="roleService.peutFaireConsultation()"
-        class="btn-toggle-statut"
-        [class.btn-desactiver]="consultation.est_actif"
-        [class.btn-activer]="!consultation.est_actif"
-        (click)="confirmToggle = true"
-      >
-        <i class="bi" [class.bi-toggle-on]="consultation.est_actif" [class.bi-toggle-off]="!consultation.est_actif"></i>
-        {{ consultation.est_actif ? 'Désactiver' : 'Activer' }}
-      </button>
+     
     </div>
   </div>
 
   <!-- Message succès -->
-  <div class="alert alert-success d-flex align-items-center gap-2 mb-3" *ngIf="successMessage">
-    <i class="bi bi-check-circle-fill"></i>
-    <span>{{ successMessage }}</span>
-  </div>
+  
 
-  <!-- Modal confirmation -->
-  <div class="confirm-modal" *ngIf="confirmToggle">
-    <div class="confirm-box">
-      <div class="confirm-icon" [class.danger]="consultation.est_actif" [class.success]="!consultation.est_actif">
-        <i class="bi" [class.bi-toggle-off]="consultation.est_actif" [class.bi-toggle-on]="!consultation.est_actif"></i>
-      </div>
-      <h5>{{ consultation.est_actif ? 'Désactiver cette consultation ?' : 'Activer cette consultation ?' }}</h5>
-      <p class="text-muted">
-        {{ consultation.est_actif
-          ? 'La consultation sera archivée mais les données seront conservées.'
-          : 'La consultation sera réactivée.'
-        }}
-      </p>
-      <div class="confirm-actions">
-        <button class="btn-annuler-confirm" (click)="confirmToggle = false">Annuler</button>
-        <button
-          class="btn-confirmer"
-          [class.danger]="consultation.est_actif"
-          [class.success]="!consultation.est_actif"
-          (click)="toggleStatut()"
-        >
-          {{ consultation.est_actif ? 'Désactiver' : 'Activer' }}
-        </button>
-      </div>
-    </div>
-  </div>
+  
 
   <div class="row g-4">
 

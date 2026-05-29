@@ -63,22 +63,6 @@ chargerExamens(): void {
   }
     
 
-  toggleStatut(): void {
-    if (!this.consultation) return;
-    const newStatut = !this.consultation.est_actif;
-    this.consultationService.toggleStatut(this.consultationId, newStatut).subscribe({
-      next: (data) => {
-        this.consultation!.est_actif = data.est_actif;
-        this.successMessage = newStatut ? 'Consultation activée !' : 'Consultation désactivée !';
-        this.confirmToggle = false;
-        this.cdr.detectChanges();
-        setTimeout(() => { this.successMessage = ''; this.cdr.detectChanges(); }, 3000);
-      },
-      error: () => {
-        this.errorMessage = 'Erreur lors du changement de statut.';
-        this.confirmToggle = false;
-        this.cdr.detectChanges();
-      }
-    });
-  }
+  
+  
 }

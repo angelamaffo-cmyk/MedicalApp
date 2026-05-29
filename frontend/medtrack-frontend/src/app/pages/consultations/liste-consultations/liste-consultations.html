@@ -1,33 +1,40 @@
-<div class="page-header">
+<div class="page-header-custom">
   <div>
-    <h4 class="page-title">
+    <h4 class="page-title-custom">
       <i class="bi bi-clipboard2-pulse-fill me-2 text-success"></i>Consultations
     </h4>
-    <p class="page-subtitle">Gérez les consultations de vos patients</p>
+    <p class="page-subtitle-custom">Gérez les consultations de vos patients</p>
   </div>
-<a routerLink="/consultations/nouveau" class="btn-add"
-   *ngIf="roleService.peutFaireConsultation()">
-  <i class="bi bi-plus-lg me-2"></i>Nouvelle consultation
-</a>
+
+  <a routerLink="/consultations/nouveau"
+     class="btn-primary-custom"
+     *ngIf="roleService.peutFaireConsultation()">
+    <i class="bi bi-plus-lg me-2"></i>Nouvelle consultation
+  </a>
 </div>
 
 <!-- Stats -->
 <div class="row g-3 mb-4">
   <div class="col-md-4">
-    <div class="mini-stat">
-      <i class="bi bi-clipboard2-pulse-fill text-success"></i>
+    <div class="stat-mini">
+      <div class="stat-mini-icon badge-success">
+        <i class="bi bi-clipboard2-pulse-fill"></i>
+      </div>
       <div>
-        <h5>{{ total }}</h5>
-        <small>Total consultations</small>
+        <p class="stat-mini-value">{{ total }}</p>
+        <p class="stat-mini-label">Total consultations</p>
       </div>
     </div>
   </div>
+
   <div class="col-md-4">
-    <div class="mini-stat">
-      <i class="bi bi-check-circle-fill text-primary"></i>
+    <div class="stat-mini">
+      <div class="stat-mini-icon badge-primary">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
       <div>
-        <h5>{{ totalActives }}</h5>
-        <small>Actives</small>
+        <p class="stat-mini-value">{{ totalActives }}</p>
+        <p class="stat-mini-label">Actives</p>
       </div>
     </div>
   </div>
@@ -40,9 +47,10 @@
 </div>
 
 <!-- Recherche -->
-<div class="search-bar">
-  <div class="search-input">
-    <i class="bi bi-search search-icon"></i>
+<div class="toolbar">
+  <div class="search-wrap">
+    <i class="bi bi-search"></i>
+
     <input
       type="text"
       [(ngModel)]="recherche"
@@ -50,18 +58,21 @@
       placeholder="Rechercher par patient, motif ou diagnostic..."
     />
   </div>
-  <span class="results-count">{{ consultationsFiltrees.length }} / {{ total }} consultation(s)</span>
+
+  <span class="results-badge">
+    {{ consultationsFiltrees.length }} / {{ total }} consultation(s)
+  </span>
 </div>
 
-<!-- Spinner -->
-<div class="text-center py-5" *ngIf="isLoading">
-  <div class="spinner-border text-success"></div>
-  <p class="mt-2 text-muted">Chargement...</p>
+<!-- Chargement -->
+<div class="loading-container" *ngIf="isLoading">
+  <div class="spinner-custom"></div>
+  <p>Chargement...</p>
 </div>
 
 <!-- Tableau -->
 <div class="table-card" *ngIf="!isLoading">
-  <table class="consultations-table">
+  <table class="table-custom">
     <thead>
       <tr>
         <th>Patient</th>
@@ -69,60 +80,101 @@
         <th>Motif</th>
         <th>Diagnostic</th>
         <th>Traitement</th>
-        <th>Statut</th>
+        
         <th>Actions</th>
       </tr>
     </thead>
+
     <tbody>
       <tr *ngFor="let c of consultationsFiltrees">
+
         <td>
           <div class="patient-info">
             <div class="patient-avatar">
               {{ c.patient_prenom?.[0] }}{{ c.patient_nom?.[0] }}
             </div>
-            <span class="patient-nom">{{ c.patient_prenom }} {{ c.patient_nom }}</span>
+
+            <span class="patient-nom">
+              {{ c.patient_prenom }} {{ c.patient_nom }}
+            </span>
           </div>
         </td>
+
         <td>
           <span class="date-badge">
             <i class="bi bi-calendar3 me-1"></i>
             {{ c.date_consultation | date:'dd/MM/yyyy' }}
           </span>
         </td>
-        <td><span class="motif-text">{{ c.motif }}</span></td>
-        <td><span class="diagnostic-badge">{{ c.diagnostic }}</span></td>
-        <td><span class="traitement-text">{{ c.traitement || '—' }}</span></td>
+
         <td>
-          <span class="statut-badge" [class.actif]="c.est_actif" [class.inactif]="!c.est_actif">
-            <i class="bi" [class.bi-check-circle-fill]="c.est_actif" [class.bi-x-circle-fill]="!c.est_actif"></i>
-            {{ c.est_actif ? 'Active' : 'Inactive' }}
+          <span class="motif-text">
+            {{ c.motif }}
           </span>
         </td>
+
         <td>
-          <div class="actions">
-            <a [routerLink]="['/consultations', c.id]" class="btn-action view" title="Voir">
+          <span class="diagnostic-badge">
+            {{ c.diagnostic }}
+          </span>
+        </td>
+
+        <td>
+          <span class="traitement-text">
+            {{ c.traitement || '—' }}
+          </span>
+        </td>
+
+       
+        <td>
+          <div class="actions-cell">
+
+            <a
+              [routerLink]="['/consultations', c.id]"
+              class="btn-icon btn-icon-view"
+              title="Voir">
+
               <i class="bi bi-eye-fill"></i>
             </a>
-            <a [routerLink]="['/consultations/modifier', c.id]" class="btn-action edit"
-   *ngIf="roleService.peutFaireConsultation()" title="Modifier">
-  <i class="bi bi-pencil-fill"></i>
-</a>
+
+            <a
+              [routerLink]="['/consultations/modifier', c.id]"
+              class="btn-icon btn-icon-edit"
+              *ngIf="roleService.peutFaireConsultation()"
+              title="Modifier">
+
+              <i class="bi bi-pencil-fill"></i>
+            </a>
+
           </div>
         </td>
+
       </tr>
 
       <tr *ngIf="consultationsFiltrees.length === 0 && !isLoading">
         <td colspan="7" class="empty-state">
-          <i class="bi bi-clipboard2 fs-1 text-muted"></i>
+
+          <i class="bi bi-clipboard2 empty-icon"></i>
+
           <p class="mt-2 text-muted">
-            {{ recherche ? 'Aucune consultation ne correspond à votre recherche' : 'Aucune consultation enregistrée' }}
+            {{
+              recherche
+              ? 'Aucune consultation ne correspond à votre recherche'
+              : 'Aucune consultation enregistrée'
+            }}
           </p>
-  
-          <button class="btn btn-outline-secondary btn-sm" *ngIf="recherche" (click)="reinitialiser()">
+
+          <button
+            class="btn btn-outline-secondary btn-sm"
+            *ngIf="recherche"
+            (click)="reinitialiser()">
+
             Effacer la recherche
           </button>
+
         </td>
       </tr>
+
     </tbody>
   </table>
 </div>

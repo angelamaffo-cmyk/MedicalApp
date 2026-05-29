@@ -1,18 +1,18 @@
 <div class="text-center py-5" *ngIf="isLoading">
-  <div class="spinner-border text-primary"></div>
+  <div class="spinner-custom text-primary"></div>
   <p class="mt-2 text-muted">Chargement du dossier patient...</p>
 </div>
 
 <div *ngIf="!isLoading && patient">
 
   <!-- Header -->
-  <div class="page-header">
+  <div class="page-header-custom">
     <div class="patient-header-info">
       <div class="patient-big-avatar">{{ patient.prenom[0] }}{{ patient.nom[0] }}</div>
       <div>
-        <h4 class="page-title">{{ patient.prenom }} {{ patient.nom }}</h4>
+        <h4 class="page-title-custom">{{ patient.prenom }} {{ patient.nom }}</h4>
         <div class="d-flex align-items-center gap-2 mt-1">
-          <span class="statut-badge" [class.actif]="patient.est_actif" [class.inactif]="!patient.est_actif">
+          <span class="badge-custom" [class.badge-actif]="patient.est_actif" [class.badge-inactif]="!patient.est_actif">
             <i class="bi" [class.bi-check-circle-fill]="patient.est_actif" [class.bi-x-circle-fill]="!patient.est_actif"></i>
             {{ patient.est_actif ? 'Actif' : 'Inactif' }}
           </span>
@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="header-actions">
-      <a routerLink="/patients" class="btn-retour"><i class="bi bi-arrow-left me-1"></i>Retour</a>
+      <a routerLink="/patients" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Retour</a>
       <a [routerLink]="['/patients/modifier', patient.id]" class="btn-modifier"
    *ngIf="roleService.peutModifierPatient()">
     <i class="bi bi-pencil-fill me-1"></i>Modifier
@@ -30,7 +30,7 @@
     <button class="btn-toggle-statut"
         *ngIf="roleService.peutDesactiverPatient()"
         [class.btn-desactiver]="patient.est_actif"
-        [class.btn-activer]="!patient.est_actif"
+        [class.btn-active]="!patient.est_actif"
         (click)="confirmDesactiver = true">
     <i class="bi" [class.bi-toggle-on]="patient.est_actif" [class.bi-toggle-off]="!patient.est_actif"></i>
     {{ patient.est_actif ? 'Désactiver' : 'Activer' }}
@@ -61,16 +61,16 @@
   </div>
 
   <!-- Modal confirmation -->
-  <div class="confirm-modal" *ngIf="confirmDesactiver">
+  <div class="confirm-overlay" *ngIf="confirmDesactiver">
     <div class="confirm-box">
-      <div class="confirm-icon" [class.danger]="patient.est_actif" [class.success]="!patient.est_actif">
+      <div class="confirm-icon-wrap" [class.confirm-icon-danger]="patient.est_actif" [class.confirm-icon-success]="!patient.est_actif">
         <i class="bi" [class.bi-toggle-off]="patient.est_actif" [class.bi-toggle-on]="!patient.est_actif"></i>
       </div>
       <h5>{{ patient.est_actif ? 'Désactiver ce patient ?' : 'Activer ce patient ?' }}</h5>
       <p class="text-muted">Les données seront conservées.</p>
       <div class="confirm-actions">
-        <button class="btn-annuler-confirm" (click)="confirmDesactiver = false">Annuler</button>
-        <button class="btn-confirmer" [class.danger]="patient.est_actif" [class.success]="!patient.est_actif" (click)="toggleStatut()">
+        <button class="btn-confirm-cancel" (click)="confirmDesactiver = false">Annuler</button>
+        <button class="btn-confirm-ok" [class.danger]="patient.est_actif" [class.success]="!patient.est_actif" (click)="toggleStatut()">
           {{ patient.est_actif ? 'Désactiver' : 'Activer' }}
         </button>
       </div>
@@ -187,7 +187,7 @@
   <div *ngIf="ongletActif === 'consultations'">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h6 class="fw-bold text-success mb-0"><i class="bi bi-clipboard2-pulse-fill me-2"></i>{{ consultations.length }} consultation(s)</h6>
-      <a routerLink="/consultations/nouveau" class="btn-add-small"><i class="bi bi-plus me-1"></i>Nouvelle</a>
+      <a routerLink="/consultations/nouveau" class="btn-primary-custom-small"><i class="bi bi-plus me-1"></i>Nouvelle</a>
     </div>
     <div class="liste-card" *ngFor="let c of consultations">
       <div class="liste-card-left">
@@ -197,7 +197,7 @@
           <p class="liste-sous">{{ c.date_consultation | date:'dd/MM/yyyy' }} — {{ c.diagnostic }}</p>
         </div>
       </div>
-      <a [routerLink]="['/consultations', c.id]" class="btn-voir">
+      <a [routerLink]="['/consultations', c.id]" class="btn-view-sm">
         <i class="bi bi-eye-fill me-1"></i>Voir
       </a>
     </div>
@@ -222,11 +222,11 @@
         </div>
       </div>
       <div class="d-flex gap-2">
-        <a [routerLink]="['/examens', e.id]" class="btn-voir"><i class="bi bi-eye-fill me-1"></i>Voir</a>
+        <a [routerLink]="['/examens', e.id]" class="btn-view-sm"><i class="bi bi-eye-fill me-1"></i>Voir</a>
         <a [routerLink]="['/resultats/nouveau']" [queryParams]="{examen: e.id}" class="btn-resultat-small" *ngIf="!e.a_resultat">
           <i class="bi bi-file-medical-fill me-1"></i>Résultat
         </a>
-        <a routerLink="/resultats" class="btn-voir-resultat-small" *ngIf="e.a_resultat">
+        <a routerLink="/resultats" class="btn-view-sm" *ngIf="e.a_resultat">
           <i class="bi bi-check-circle-fill me-1"></i>Résultat reçu
         </a>
       </div>

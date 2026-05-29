@@ -1,80 +1,72 @@
-<div class="page-header">
+<!-- Header -->
+<div class="page-header-custom animate-fade-in-up">
   <div>
-    <h4 class="page-title">
-      <i class="bi bi-people-fill me-2 text-primary"></i>Patients
+    <h4 class="page-title-custom">
+      <i class="bi bi-people-fill me-2" style="color:var(--primary);"></i>Patients
     </h4>
-    <p class="page-subtitle">Gérez les dossiers de vos patients</p>
+    <p class="page-subtitle-custom">Gérez les dossiers de vos patients</p>
   </div>
-  
-
-
-  <!-- Bouton nouveau patient : médecin ou infirmier seulement -->
-<a routerLink="/patients/nouveau" class="btn-add"
-   *ngIf="roleService.peutCreerPatient()">
-  <i class="bi bi-plus-lg me-2"></i>Nouveau patient
-</a>
+  <a routerLink="/patients/nouveau" class="btn-primary-custom" *ngIf="roleService.peutCreerPatient()">
+    <i class="bi bi-person-plus-fill"></i> Nouveau patient
+  </a>
 </div>
 
-<!-- Stats rapides -->
-<div class="row g-3 mb-4">
-  <div class="col-md-4">
-    <div class="mini-stat">
-      <i class="bi bi-people-fill text-primary"></i>
-      <div>
-        <h5>{{ patients.length }}</h5>
-        <small>Total patients</small>
-      </div>
+<!-- Stats -->
+<div class="stats-row animate-fade-in-up">
+  <div class="stat-mini">
+    <div class="stat-mini-icon" style="background:rgba(26,115,232,0.1);">
+      <i class="bi bi-people-fill" style="color:#1a73e8;"></i>
+    </div>
+    <div>
+      <p class="stat-mini-value">{{ patients.length }}</p>
+      <p class="stat-mini-label">Total patients</p>
     </div>
   </div>
-  <div class="col-md-4">
-    <div class="mini-stat">
-      <i class="bi bi-check-circle-fill text-success"></i>
-      <div>
-        <h5>{{ totalActifs }}</h5>
-        <small>Actifs</small>
-      </div>
+  <div class="stat-mini">
+    <div class="stat-mini-icon" style="background:rgba(16,185,129,0.1);">
+      <i class="bi bi-check-circle-fill" style="color:#10b981;"></i>
+    </div>
+    <div>
+      <p class="stat-mini-value">{{ totalActifs }}</p>
+      <p class="stat-mini-label">Actifs</p>
     </div>
   </div>
-  <div class="col-md-4">
-    <div class="mini-stat">
-      <i class="bi bi-x-circle-fill text-danger"></i>
-      <div>
-        <h5>{{ totalInactifs }}</h5>
-        <small>Inactifs</small>
-      </div>
+  <div class="stat-mini">
+    <div class="stat-mini-icon" style="background:rgba(239,68,68,0.1);">
+      <i class="bi bi-x-circle-fill" style="color:#ef4444;"></i>
+    </div>
+    <div>
+      <p class="stat-mini-value">{{ totalInactifs }}</p>
+      <p class="stat-mini-label">Inactifs</p>
     </div>
   </div>
 </div>
-<!-- Erreur -->
-<div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
-  <i class="bi bi-exclamation-triangle-fill"></i>
-  <span>{{ errorMessage }}</span>
+
+<!-- Alert erreur -->
+<div class="alert-custom alert-custom-danger" *ngIf="errorMessage">
+  <i class="bi bi-exclamation-circle-fill"></i>{{ errorMessage }}
 </div>
 
-<!-- Recherche -->
-<div class="search-bar">
-  <div class="search-input">
-    <i class="bi bi-search search-icon"></i>
-    <input
-      type="text"
-      [(ngModel)]="recherche"
-      (ngModelChange)="filtrer()"
-      placeholder="Rechercher par nom, prénom ou téléphone..."
-    />
+<!-- Toolbar -->
+<div class="toolbar animate-fade-in-up">
+  <div class="search-wrap">
+    <i class="bi bi-search"></i>
+    <input type="text" [(ngModel)]="recherche" (ngModelChange)="filtrer()"
+           placeholder="Rechercher par nom, prénom ou téléphone..." />
   </div>
-  <span class="results-count">
-    <i class="bi bi-funnel me-1"></i>{{ patientsFiltres.length }} / {{ patients.length }} patient(s)
+  <span class="results-badge">
+    {{ patientsFiltres.length }} / {{ patients.length }} patient(s)
   </span>
 </div>
 
 <!-- Spinner -->
-<div class="text-center py-5" *ngIf="isLoading">
-  <div class="spinner-border text-primary"></div>
-  <p class="mt-2 text-muted">Chargement des patients...</p>
+<div class="loading-container" *ngIf="isLoading">
+  <div class="spinner-custom"></div>
+  <span>Chargement des patients...</span>
 </div>
 
-<!-- Tableau -->
-<div class="table-card" *ngIf="!isLoading">
+<!-- Table -->
+<div class="table-card animate-fade-in-up" *ngIf="!isLoading">
   <table class="patients-table">
     <thead>
       <tr>
@@ -82,7 +74,7 @@
         <th>Sexe</th>
         <th>Âge</th>
         <th>Téléphone</th>
-        <th>Groupe sanguin</th>
+        <th>Groupe</th>
         <th>Statut</th>
         <th>Actions</th>
       </tr>
@@ -90,53 +82,61 @@
     <tbody>
       <tr *ngFor="let patient of patientsFiltres">
         <td>
-          <div class="patient-info">
+          <div class="patient-cell">
             <div class="patient-avatar">
               {{ patient.prenom[0] }}{{ patient.nom[0] }}
             </div>
-            <div>
-              <div class="patient-nom">{{ patient.prenom }} {{ patient.nom }}</div>
-            </div>
+            <span class="patient-nom">{{ patient.prenom }} {{ patient.nom }}</span>
           </div>
         </td>
         <td>
-          <span class="badge-sexe" [class.masculin]="patient.sexe === 'M'" [class.feminin]="patient.sexe === 'F'">
+          <span class="badge-custom" [class.badge-masculin]="patient.sexe === 'M'" [class.badge-feminin]="patient.sexe === 'F'">
             <i class="bi" [class.bi-gender-male]="patient.sexe === 'M'" [class.bi-gender-female]="patient.sexe === 'F'"></i>
             {{ patient.sexe === 'M' ? 'Masculin' : 'Féminin' }}
           </span>
         </td>
-        <td><span class="age-badge">{{ patient.age || calculerAge(patient.date_naissance) }} ans</span></td>
-        <td>{{ patient.telephone }}</td>
-        <td><span class="groupe-badge">{{ patient.groupe_sanguin }}</span></td>
+        <td style="font-weight:600;color:var(--text-primary);">
+          {{ patient.age || calculerAge(patient.date_naissance) }} ans
+        </td>
+        <td style="color:var(--text-secondary);">{{ patient.telephone }}</td>
         <td>
-          <span class="statut-badge" [class.actif]="patient.est_actif" [class.inactif]="!patient.est_actif">
+          <span class="badge-custom badge-groupe">{{ patient.groupe_sanguin }}</span>
+        </td>
+        <td>
+          <span class="badge-custom" [class.badge-actif]="patient.est_actif" [class.badge-inactif]="!patient.est_actif">
             <i class="bi" [class.bi-check-circle-fill]="patient.est_actif" [class.bi-x-circle-fill]="!patient.est_actif"></i>
             {{ patient.est_actif ? 'Actif' : 'Inactif' }}
           </span>
         </td>
         <td>
-          <div class="actions">
-            <a [routerLink]="['/patients', patient.id]" class="btn-action view" title="Voir détails">
+          <div class="actions-cell">
+            <a [routerLink]="['/patients', patient.id]" class="btn-icon btn-icon-view" title="Voir">
               <i class="bi bi-eye-fill"></i>
             </a>
-            <a [routerLink]="['/patients/modifier', patient.id]" class="btn-action edit"
-   *ngIf="roleService.peutModifierPatient()" title="Modifier">
-  <i class="bi bi-pencil-fill"></i>
-</a>
+            <a [routerLink]="['/patients/modifier', patient.id]" class="btn-icon btn-icon-edit"
+               title="Modifier" *ngIf="roleService.peutModifierPatient()">
+              <i class="bi bi-pencil-fill"></i>
+            </a>
           </div>
         </td>
       </tr>
 
-      <tr *ngIf="patientsFiltres.length === 0 && !isLoading">
-        <td colspan="7" class="empty-state">
-          <i class="bi bi-people fs-1 text-muted"></i>
-          <p class="mt-2 text-muted">
-            {{ recherche ? 'Aucun patient ne correspond à votre recherche' : 'Aucun patient enregistré' }}
-          </p>
-        
-          <button class="btn btn-outline-secondary btn-sm" *ngIf="recherche" (click)="reinitialiser()">
-            Effacer la recherche
-          </button>
+      <tr *ngIf="patientsFiltres.length === 0">
+        <td colspan="7">
+          <div class="empty-state">
+            <i class="bi bi-people empty-icon"></i>
+            <p style="color:var(--text-secondary);font-size:0.95rem;">
+              {{ recherche ? 'Aucun patient ne correspond à votre recherche' : 'Aucun patient enregistré' }}
+            </p>
+            <a routerLink="/patients/nouveau" class="btn-primary-custom"
+               *ngIf="!recherche && roleService.peutCreerPatient()">
+              <i class="bi bi-person-plus-fill"></i> Ajouter un patient
+            </a>
+            <button class="btn-primary-custom" *ngIf="recherche" (click)="reinitialiser()"
+                    style="background:var(--bg-input);color:var(--text-secondary);box-shadow:none;">
+              <i class="bi bi-x-lg"></i> Effacer la recherche
+            </button>
+          </div>
         </td>
       </tr>
     </tbody>

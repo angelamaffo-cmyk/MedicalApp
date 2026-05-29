@@ -135,7 +135,7 @@
         <a routerLink="/consultations" class="btn-annuler">
           <i class="bi bi-x-lg me-2"></i>Annuler
         </a>
-        <button type="submit" class="btn-sauvegarder" [disabled]="isLoading">
+        <button type="submit" class="btn-save" [disabled]="isLoading">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
           <i *ngIf="!isLoading" class="bi bi-check-lg me-2"></i>
           {{ isLoading ? 'Enregistrement...' : (isEditMode ? 'Modifier' : 'Enregistrer') }}

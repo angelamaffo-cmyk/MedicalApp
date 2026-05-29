@@ -10,9 +10,7 @@ export const routes: Routes = [
    // Pages publiques
   { path: 'accueil', component: AccueilComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'changer-mot-de-passe', loadComponent: () =>
-      import('./pages/comptes/changer-mot-de-passe/changer-mot-de-passe').then(m => m.ChangerMotDePasseComponent)
-  },
+ 
 
   // Pages privées avec layout
   {
@@ -20,6 +18,9 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     canActivate: [authGuard],
     children: [
+         { path: 'changer-mot-de-passe', loadComponent: () =>
+      import('./pages/comptes/changer-mot-de-passe/changer-mot-de-passe').then(m => m.ChangerMotDePasseComponent)
+  },
       { path: 'dashboard', loadComponent: () =>
           import('./pages/dashboard/dashboard').then(m => m.DashboardComponent)
       },
