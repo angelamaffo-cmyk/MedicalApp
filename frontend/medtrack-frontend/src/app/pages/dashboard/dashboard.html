@@ -2,7 +2,7 @@
 <div class="welcome-banner animate-fade-in-up">
   <div>
     <h4 class="welcome-title">
-      Bonjour, {{ profil?.nom_complet?.split(' ')[0] || 'Administrateur' }} 👋
+      Bonjour, {{ profil?.nom_complet?.split(' ')[0] || 'Administrateur' }} 
     </h4>
     <p class="welcome-subtitle">
       Voici un aperçu de votre activité médicale aujourd'hui
@@ -30,16 +30,19 @@
 </div>
 <div class="row g-3 mb-4 animate-fade-in-up" *ngIf="roleService.isInfirmier() ">
 
-  
-    <h1>Enregistrez et suivez les soins de vos patients assigners ici </h1>
+  <h1>
+        <p style="text-align: center;">Enregistrez et suivez les soins </p> 
+        <p style="text-align: center;">de vos patients assigners ici</p>
+
+  </h1>
 
  
 </div>
 
-<div class="row g-4" *ngIf="roleService.isMedecin() ||roleService.isAdmin()" >
+<div class="row g-4" >
 
   <!-- Activités récentes -->
-  <div class="col-lg-7" >
+  <div class="col-lg-7" *ngIf="roleService.isAdmin()">
     <div class="dashboard-card animate-fade-in-up">
       <div class="dashboard-card-header">
         <h6 class="dashboard-card-title">
@@ -69,7 +72,7 @@
   </div>
 
   <!-- Colonne droite -->
-  <div class="col-lg-5" *ngIf="roleService.isMedecin() ||roleService.isAdmin()"  >
+  <div class="col-lg-5" *ngIf="roleService.isMedecin() "  >
 
     <!-- Raccourcis -->
     <div class="dashboard-card mb-4 animate-fade-in-up"  >

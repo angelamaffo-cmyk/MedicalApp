@@ -7,10 +7,10 @@ export interface Examen {
   type_examen: string;
   nom_examen: string;
   date_prescription: string;
-  date_realisation?: string;
+  date_realisation?: string | null ;
   laboratoire?: string;
   notes?: string;
-  est_actif?: boolean;
-a_resultat?: boolean;  // ← Ajoute cette ligne
+  statut: 'EN_ATTENTE' | 'REALISE' | 'ANNULE'; // <-- Ajout du type ici
+  a_resultat?: boolean;  // ← Ajoute cette ligne
   date_creation?: string;
 }

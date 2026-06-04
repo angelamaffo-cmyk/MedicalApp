@@ -22,13 +22,13 @@
   <div class="col-md-4">
     <div class="mini-stat">
       <i class="bi bi-hourglass-split text-danger"></i>
-      <div><h5>{{ enAttente }}</h5><small>En attente</small></div>
+      <div><h5>{{ enAttente }}</h5><small>En attente de Realisation</small></div>
     </div>
   </div>
   <div class="col-md-4">
     <div class="mini-stat">
       <i class="bi bi-check-circle-fill text-success"></i>
-      <div><h5>{{ total - enAttente }}</h5><small>Réalisés</small></div>
+      <div><h5>{{ realises }}</h5><small>Réalisés</small></div>
     </div>
   </div>
 </div>
@@ -67,9 +67,9 @@
         <th>Patient</th>
         <th>Examen</th>
         <th>Type</th>
-        <th>Prescription</th>
-        <th>Réalisation</th>
-        
+        <th>Date Prescription</th>
+        <th>Date Réalisation</th>
+        <th>Statut</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -94,6 +94,19 @@
         <td>
           <span *ngIf="e.date_realisation" class="date-text">{{ e.date_realisation | date:'dd/MM/yyyy' }}</span>
           <span *ngIf="!e.date_realisation" class="en-attente"><i class="bi bi-clock me-1"></i>En attente</span>
+        </td>
+        <td>
+          <span *ngIf="e.statut === 'EN_ATTENTE'" class="badge bg-danger-subtle text-danger px-2 py-1.5 rounded">
+            <i class="bi bi-clock-history me-1"></i> En attente
+          </span>
+          
+          <span *ngIf="e.statut === 'REALISE'" class="badge bg-success-subtle text-success px-2 py-1.5 rounded">
+            <i class="bi bi-check-circle-fill me-1"></i> Réalisé
+          </span>
+
+          <span *ngIf="e.statut === 'ANNULE'" class="badge bg-secondary-subtle text-secondary px-2 py-1.5 rounded">
+            <i class="bi bi-x-circle me-1"></i> Annulé
+          </span>
         </td>
         
         <td>

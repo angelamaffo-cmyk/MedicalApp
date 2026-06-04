@@ -54,7 +54,12 @@ export class ListeExamensComponent implements OnInit{
     });
   }
   get total(): number { return this.examens.length; }
-  get enAttente(): number { return this.examens.filter(e => !e.date_realisation).length; }
+  get enAttente(): number { return this.examens.filter(e => 
+    e.statut === 'EN_ATTENTE'
+  ).length;}
+  get realises():number {
+    return this.examens.filter(e => e.statut === 'REALISE').length;
+  }
 
     filtrer(): void {
     if(!this.recherche.trim()){

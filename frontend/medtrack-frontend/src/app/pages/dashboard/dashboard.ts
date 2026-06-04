@@ -1,3 +1,4 @@
+import { Consultation } from './../../models/consultations.model';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -21,17 +22,15 @@ export class DashboardComponent implements OnInit {
 
   stats = [
     { label: 'Patients actifs', valeur: 0, icon: 'bi-people-fill', couleur: 'primary', route: '/patients' },
-    { label: 'Patients inactifs', valeur: 0, icon: 'bi-people-fill', couleur: 'danger', route: '/patients' },
     { label: 'Consultations', valeur: 0, icon: 'bi-clipboard2-pulse-fill', couleur: 'success', route: '/consultations' },
     { label: 'Examens ', valeur: 0, icon: 'bi-droplet-fill', couleur: 'warning', route: '/examens' },
   ];
- statsExamens = { total: 0, enAttente: 0, realises: 0 };
+ 
   activitesRecentes: Activite[] = [];
   raccourcis = [
     { label: 'Nouveau patient', icon: 'bi-person-plus-fill', route: '/patients/nouveau', couleur: 'primary' },
     { label: 'Nouvelle consultation', icon: 'bi-clipboard2-plus-fill', route: '/consultations/nouveau', couleur: 'success' },
     { label: 'Prescrire examen', icon: 'bi-droplet-fill', route: '/examens/nouveau', couleur: 'warning' },
-    { label: 'Admettre patient', icon: 'bi-hospital-fill', route: '/hospitalisations/nouveau', couleur: 'danger' },
   ];
 
   constructor(
@@ -104,6 +103,29 @@ this.http.get<any[]>(`${environment.apiUrl}/assignations-medecin/`).subscribe({
         this.cdr.detectChanges();
       }
     });
+    this.examenService.getAll().subscribe({
+      next: (data) => {
+        this.stats[2].valeur = data.length;
+        data.slice(0,2).forEach(e => {
+          const statutTexte = e.statut === 'EN_ATTENTE' ? 'prescrit' : 'réalisé';
+          this.activitesRecentes.push({
+            message: `Examen ${statutTexte} — ${e.patient_prenom} ${e.patient_nom} : ${e.nom_examen} (${e.type_examen})`,
+            // On utilise la date de création ou de prescription pour le timestamp de l'activité
+            temps: new Date(e.date_prescription).toLocaleDateString('fr-FR'),
+            icon: e.statut === 'EN_ATTENTE' ? 'bi-hourglass-split' : 'bi-check-circle-fill',
+            couleur: e.statut === 'EN_ATTENTE' ? 'danger' : 'success'
+
+          });
+        });
+      this.activitesRecentes = this.activitesRecentes.slice(0, 5);
+    
+    this.cdr.detectChanges();
+  },
+  error: (err) => {
+    console.error("Erreur lors du chargement des examens pour le dashboard", err);
+  }
+    });
+   
 
   
 

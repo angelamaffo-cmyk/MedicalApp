@@ -53,6 +53,7 @@ export class FormExamenComponent implements OnInit {
       date_realisation: [''],
       laboratoire: [''],
       notes: [''],
+      statut: ['EN_ATTENTE']
     });
   }
 
@@ -68,7 +69,7 @@ export class FormExamenComponent implements OnInit {
   chargerConsultations(): void {
     this.consultationService.getAll().subscribe({
       next: (data) => {
-        this.consultations = data.filter((c: any) => c.patient && c.patient.est_actif === true); 
+        this.consultations = data; 
         this.cdr.detectChanges();
       }
     });
@@ -99,7 +100,12 @@ export class FormExamenComponent implements OnInit {
       return;
     }
       this.isLoading = true;
-      const data: Examen = this.form.value;
+      const data: Examen = { ...this.form.value};
+      if (data.date_realisation) {
+      data.statut = 'REALISE';
+    } else {
+      data.statut = 'EN_ATTENTE';
+    }
     if (this.isEditMode) {
       this.examenService.update(this.examenId, data).subscribe({
         next: () => {
