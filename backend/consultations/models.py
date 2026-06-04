@@ -1,5 +1,7 @@
 from django.db import models
 from patients.models import Patient
+from django.contrib.auth.models import User
+
 
 
 class Consultation(models.Model):
@@ -7,6 +9,11 @@ class Consultation(models.Model):
         Patient,
         on_delete=models.PROTECT,
         related_name='consultations'
+    )
+    medecin = models.ForeignKey(
+        User, on_delete=models.PROTECT,
+        related_name='consultations_faites',
+        null=True, blank=True
     )
     date_consultation = models.DateField()
     motif = models.CharField(max_length=255)

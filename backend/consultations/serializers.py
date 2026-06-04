@@ -8,23 +8,19 @@ from patients.models import Patient
 class ConsultationsSerializer(serializers.ModelSerializer):
     patient_nom=serializers.CharField(source='patient.nom' , read_only=True)
     patient_prenom=serializers.CharField(source='patient.prenom' , read_only=True)
-    medecin_nom = serializers.SerializerMethodField()
+    medecin_nom = serializers.CharField(source='medecin.get_full_name', read_only=True)
 
     class Meta:
         model=Consultation
         fields=[
-            'id', 'patient','patient_nom','patient_prenom','medecin_nom',
+            'id', 'patient','patient_nom','patient_prenom','medecin','medecin_nom',
             'date_consultation', 'motif', 'diagnostic',
             'traitement','observations',
             'date_creation','date_modification'
         ]
         read_only_fields=['date creation', 'date_modification']
 
-    def get_medecin_nom(self, obj):
-        request = self.context.get('request')
-        if request:
-            return request.user.get_full_name()
-        return ''
+   
     
     def validate_date_consultation(self, value):
         if value > date.today():

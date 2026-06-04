@@ -12,7 +12,12 @@ class Examen(models.Model):
         ('ECG', 'ECG'),
         ('AUTRE', 'Autre'),
     ]
-
+    # Ajout des choix pour le statut
+    STATUT_CHOICES = [
+        ('EN_ATTENTE', 'En attente'),
+        ('REALISE', 'Réalisé'),
+        ('ANNULE', 'Annulé'),
+    ]
     consultation = models.ForeignKey(
         Consultation,
         on_delete=models.PROTECT,
@@ -24,6 +29,12 @@ class Examen(models.Model):
     date_realisation = models.DateField(null=True, blank=True)
     laboratoire = models.CharField(max_length=255, blank=True)
     notes = models.TextField(blank=True)
+    # Nouveau champ statut (par défaut EN_ATTENTE)
+    statut = models.CharField(
+        max_length=20, 
+        choices=STATUT_CHOICES, 
+        default='EN_ATTENTE'
+    )
     date_creation = models.DateTimeField(auto_now_add=True)
 
     class Meta:

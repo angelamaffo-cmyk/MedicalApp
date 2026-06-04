@@ -36,11 +36,11 @@ class ExamenViewSet(viewsets.ModelViewSet):
         else:
             # Médecin voit uniquement ses patients
             # (ceux qu'il a créés + ceux qui lui sont assignés)
-            mes_patients = Patient.objects.filter(
-                Q(medecin_generaliste=user) | Q(medecin_actuel=user)
-            )
+            # mes_patients = Patient.objects.filter(
+            #     Q(medecin_generaliste=user) | Q(medecin_actuel=user)
+            # )
             return Examen.objects.filter(
-                consultation__patient__in=mes_patients
+                consultation__medecin=user
             ).distinct()
     
 

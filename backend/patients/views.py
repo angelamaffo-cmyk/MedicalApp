@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.db import models
 # Create your views here.
 from django.db.models import Q
+from django.core.mail import send_mail
+from django.conf import settings
 
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
@@ -71,10 +73,37 @@ class AssignationMedecinViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         patient = serializer.validated_data['patient']
         medecin_cible = serializer.validated_data['medecin_cible']
+        medecin_source = self.request.user
+        motif = serializer.validated_data.get('motif', 'Non spécifié')
+        service = serializer.validated_data.get('service', 'Non spécifié')
         # Mettre à jour le médecin actuel du patient
         patient.medecin_actuel = medecin_cible
         patient.save()
-        serializer.save(medecin_source=self.request.user)
+        serializer.save(medecin_source=medecin_source)
+
+        if medecin_cible.email:
+            sujet = f"[MedTrack] Nouveau patient assigné : {patient.nom} {patient.prenom}"
+            message = (
+                f"Bonjour Dr. {medecin_cible.last_name},\n\n"
+                f"Le Dr. {medecin_source.get_full_name()} vous a assigné un nouveau patient.\n\n"
+                f"Détails du Patient :\n"
+                f"- Nom complet : {patient.nom} {patient.prenom}\n"
+                f"- Sexe : {patient.get_sexe_display()}\n"
+                f"- Service concerné : {service}\n"
+                f"- Motif de l'assignation : {motif}\n\n"
+                f"Connectez-vous à votre espace MedTrack pour consulter son dossier médical.\n\n"
+                f"Cordialement,\nL'équipe MedTrack."
+            )
+            try:
+                send_mail(
+                    subject=sujet,
+                    message=message,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[medecin_cible.email],
+                    fail_silently=True # Évite de faire planter l'API Angular si l'envoi échoue
+                )
+            except Exception as e:
+                print(f"Erreur d'envoi d'email médecin: {e}")
 class AssignationInfirmierViewSet(viewsets.ModelViewSet):
     serializer_class = AssignationInfirmierSerializer
     permission_classes = [IsAuthenticated]
@@ -90,7 +119,39 @@ class AssignationInfirmierViewSet(viewsets.ModelViewSet):
             return AssignationInfirmier.objects.filter(medecin=user)
 
     def perform_create(self, serializer):
-        serializer.save(medecin=self.request.user)
+        patient = serializer.validated_data['patient']
+        infirmier = serializer.validated_data['infirmier']
+        medecin = self.request.user
+        soins_a_faire = serializer.validated_data.get('soins_a_faire', '')
+
+        # 1. Sauvegarder l'assignation
+        serializer.save(medecin=medecin)
+
+
+        if infirmier.email:
+            sujet = f"[MedTrack] Nouvelle prise en charge : {patient.nom} {patient.prenom}"
+            message = (
+                f"Bonjour {infirmier.get_full_name()},\n\n"
+                f"Le Dr. {medecin.get_full_name()} vous a confié des soins pour un patient.\n\n"
+                f"Détails de la prise en charge :\n"
+                f"- Patient : {patient.nom} {patient.prenom}\n"
+                f"- Soins à prodiguer : {soins_a_faire}\n"
+                f"- Date de début : {serializer.validated_data.get('date_debut')}\n\n"
+                f"Veuillez vous connecter sur MedTrack pour valider et enregistrer vos observations après administration des soins.\n\n"
+                f"Cordialement,\nL'équipe MedTrack."
+            )
+            try:
+
+                send_mail(
+                    subject=sujet,
+                    message=message,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[infirmier.email],
+                    fail_silently=True
+                )
+            except Exception as e:
+                print(f"Erreur d'envoi d'email infirmier: {e}")
+
 class SoinViewSet(viewsets.ModelViewSet):
     serializer_class = SoinSerializer
     permission_classes = [IsAuthenticated]

@@ -25,12 +25,9 @@ class ResultatSerializer(serializers.ModelSerializer):
         examen = data.get('examen')
 
         if request and examen:
-            mes_patients = Patient.objects.filter(
-                Q(medecin_generaliste=request.user) | Q(medecin_actuel=request.user)
-            )
-            if examen.consultation.patient not in mes_patients:
+            if examen.consultation.medecin != request.user:
                 raise serializers.ValidationError({
-                    'examen': "Cet examen n'appartient pas à l'un de vos patients."
+                    'examen': "Cet examen ne vous appartient pas."
                 })
 
         date_resultat = data.get('date_resultat')

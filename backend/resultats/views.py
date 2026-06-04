@@ -37,11 +37,11 @@ class ResultatViewSet(viewsets.ModelViewSet):
         else:
             # Médecin voit uniquement ses patients
             # (ceux qu'il a créés + ceux qui lui sont assignés)
-            mes_patients = Patient.objects.filter(
-                Q(medecin_generaliste=user) | Q(medecin_actuel=user)
-            )
+            # mes_patients = Patient.objects.filter(
+            #     examen__consultation__medecin=user
+            # ).distinct()
             return Resultat.objects.filter(
-                examen__consultation__patient__in=mes_patients
+                examen__consultation__medecin=user
             ).distinct()
 
     def get_serializer_context(self):

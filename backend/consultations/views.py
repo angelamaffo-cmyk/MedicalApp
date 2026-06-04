@@ -26,6 +26,7 @@ class ConsultationViewSet(viewsets.ModelViewSet):
     serializer_class=ConsultationsSerializer
     permission_classes=[IsAuthenticated]
 
+   
     def get_queryset(self):
         user = self.request.user
         role = get_role(user)
@@ -33,21 +34,11 @@ class ConsultationViewSet(viewsets.ModelViewSet):
         if role == 'ADMIN':
             return Consultation.objects.all()
         elif role == 'INFIRMIER':
-            return Consultation.objects.none()  # Infirmier ne voit pas les consultations
-
+            return Consultation.objects.none()
         else:
-            return Consultation.objects.filter(
-                Q(patient__medecin_generaliste=user) |
-                Q(patient__medecin_actuel=user)
-            ).filter(
-                patient__in=self._get_mes_patients(user)
-            ).distinct()
+            return Consultation.objects.filter(medecin=user)
         
-    def _get_mes_patients(self, user):
-        from patients.models import Patient
-        return Patient.objects.filter(
-            Q(medecin_generaliste=user) | Q(medecin_actuel=user)
-        )
+ 
     
     def get_serializer_context(self):
         context=super().get_serializer_context()
@@ -55,4 +46,4 @@ class ConsultationViewSet(viewsets.ModelViewSet):
         return context
     
     def perform_create(self, serializer):
-        serializer.save()
+        serializer.save(medecin=self.request.user)

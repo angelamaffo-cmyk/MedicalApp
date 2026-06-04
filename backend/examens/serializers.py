@@ -9,7 +9,6 @@ class ExamenSerializer(serializers.ModelSerializer):
     patient_nom = serializers.CharField(source='consultation.patient.nom', read_only=True)
     patient_prenom = serializers.CharField(source='consultation.patient.prenom', read_only=True)
     consultation_date = serializers.DateField(source='consultation.date_consultation', read_only=True)
-    consultation_date = serializers.DateField(source='consultation.date_consultation', read_only=True)
     a_resultat = serializers.SerializerMethodField()
 
     class Meta:
@@ -18,7 +17,7 @@ class ExamenSerializer(serializers.ModelSerializer):
             'id', 'consultation', 'patient_nom', 'patient_prenom',
             'consultation_date', 'type_examen', 'nom_examen',
             'date_prescription', 'date_realisation',
-            'laboratoire', 'notes','a_resultat' ,'date_creation'
+            'laboratoire', 'notes', 'statut', 'a_resultat' ,'date_creation'
         ]
         read_only_fields = ['date_creation']
 
@@ -31,12 +30,12 @@ class ExamenSerializer(serializers.ModelSerializer):
         consultation = data.get('consultation')
 
         if request and consultation:
-            mes_patients = Patient.objects.filter(
-                Q(medecin_generaliste=request.user) | Q(medecin_actuel=request.user)
-            )
-            if consultation.patient not in mes_patients:
+            # mes_patients = Patient.objects.filter(
+            #     Q(medecin_generaliste=request.user) | Q(medecin_actuel=request.user)
+            # )
+            if consultation.medecin != request.user:
                 raise serializers.ValidationError({
-                    'consultation': "Cette consultation n'appartient pas à l'un de vos patients."
+                    'consultation': "Cette consultation ne vous appartient pas."
                 })
 
         date_prescription = data.get('date_prescription')
