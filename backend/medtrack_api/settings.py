@@ -13,7 +13,9 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
-
+import dj_database_url
+import ssl
+import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -30,7 +32,9 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-me-in-producti
 DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
-
+RENDER_EXTERNAL_HOSTNAME = config('RENDER_EXTERNAL_HOSTNAME', default=None)
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
 
@@ -76,9 +80,10 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
+
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                  'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
@@ -90,9 +95,18 @@ WSGI_APPLICATION = 'medtrack_api.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
+DATABASES_URL = config('DATABASE_URL', default=None)
+if DATABASES_URL:
+    DATABASES = {
+        'default' : dj_database_url.parse(
+            DATABASES_URL,
+            conn_max_age=600,
+            ssl_require=True,
+        )
+    }
+else:
+    DATABASES = {
+        'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
@@ -135,7 +149,14 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
- 
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+} 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
  
 # ─────────────────────────────────────────
@@ -164,15 +185,17 @@ SIMPLE_JWT = {
 # ─────────────────────────────────────────
 # CORS — Autorise le frontend Angular
 # ─────────────────────────────────────────
+FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:4200')
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',
     'http://127.0.0.1:4200',
 ]
+if FRONTEND_URL not in CORS_ALLOWED_ORIGINS:
+    CORS_ALLOWED_ORIGINS.append(FRONTEND_URL)
  
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS=True
 
-import ssl  # <--- Ajoute cet import tout en haut de ton settings.py si ce n'est pas fait
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # ─────────────────────────────────────────
 # EMAIL (Version Forcée avec Backend Custom)
@@ -185,4 +208,4 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-DEFAULT_FROM_EMAIL = f"MedTrack <{config('EMAIL_HOST_USER', default='')}>"
+DEFAULT_FROM_EMAIL = f"ANGELYS <{config('EMAIL_HOST_USER', default='')}>"
