@@ -1,7 +1,7 @@
 <div class="app-container" [class.sidebar-closed]="!sidebarOpen">
 
   <!-- Sidebar -->
-  <app-sidebar [isOpen]="sidebarOpen"></app-sidebar>
+  <app-sidebar [isOpen]="sidebarOpen" (closeSidebar)="toggleSidebar()"></app-sidebar>
 
   <!-- Contenu principal -->
   <div class="main-content">

@@ -32,6 +32,11 @@
 }
 
 @media (max-width: 768px) {
-  .main-content { margin-left: 0; }
-  .page-content { padding: 1rem; }
+  .main-content {
+    margin-left: 0 !important;
+  }
+
+  .page-content {
+    padding: 1rem !important;
+  }
 }

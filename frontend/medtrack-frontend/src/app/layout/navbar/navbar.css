@@ -158,3 +158,18 @@
   font-size: 0.72rem;
   color: var(--text-secondary);
 }
+@media (max-width: 768px) {
+  .toggle-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .profil-info {
+    display: none !important;
+  }
+
+  .notif-btn {
+    display: none;
+  }
+}

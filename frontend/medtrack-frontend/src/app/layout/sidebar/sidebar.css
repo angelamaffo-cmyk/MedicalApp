@@ -32,7 +32,7 @@
   width: 70px;
   height: 70px;
   background: #ffffff;         /* Remplacement du gradient par un fond blanc uni */
-  border-radius: 50%;          /* Forme parfaitement ronde pour épouser ton logo */
+  border-radius: 40%;          /* Forme parfaitement ronde pour épouser ton logo */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -155,3 +155,65 @@
 /* Scrollbar sidebar */
 .sidebar::-webkit-scrollbar { width: 3px; }
 .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+
+/* Bouton fermer — visible seulement en mobile */
+.sidebar-close-btn {
+  display: none;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.1);
+  border: none; border-radius: 10px;
+  color: white; font-size: 1rem;
+  cursor: pointer; transition: all 0.2s;
+  align-items: center; justify-content: center;
+  z-index: 10;
+}
+
+.sidebar-close-btn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* Overlay sombre derrière la sidebar en mobile */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(2px);
+  z-index: 99;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none; /* ← Désactive les clics quand invisible */
+}
+
+/* Mode responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 280px !important;
+  }
+
+  /* Sidebar ouverte en mobile */
+  .sidebar.sidebar-visible  {
+    transform: translateX(0) !important;
+  }
+
+  .sidebar-close-btn {
+    display: flex !important;
+  }
+
+  .sidebar-overlay {
+    display: block;
+  }
+
+  .sidebar-overlay.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+}

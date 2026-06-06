@@ -52,17 +52,17 @@
 
 .hero-title {
   font-size: 3.5rem; /* Ajusté pour mobile plus bas */
-  font-weight: 800;
-  line-height: 1.2;
+  font-weight: 900;
+  line-height: 0.9;
   margin-bottom: 1.5rem;
 }
 
 .hero-subtitle {
-  font-size: 1.2rem;
+  font-size: 1.0rem;
   opacity: 0.9;
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
-  line-height: 1.8;
+  line-height: 1.4;
 }
 
 /* ==========================================================================
@@ -173,11 +173,11 @@
   }
 }
 .app-logo {
-  height: 170px;          /* Hauteur idéale pour une navbar Bootstrap */
-  width: 140px;           /* Largeur identique pour garder un ratio carré */
+  height: 160px;          /* Hauteur idéale pour une navbar Bootstrap */
+  width: 150px;           /* Largeur identique pour garder un ratio carré */
   object-fit: contain;   /* Évite de déformer l'image */
   background-color: #ffffff; /* Fond blanc pour faire ressortir le logo sur fond sombre */
-  border-radius: 50%;    /* Rend le fond parfaitement circulaire comme le logo */
+  border-radius: 40%;    /* Rend le fond parfaitement circulaire comme le logo */
   padding: 4px;          /* Petit espace de respiration entre le logo et le bord du cercle */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease; /* Légère ombre pour donner du relief */

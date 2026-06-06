@@ -7,10 +7,16 @@ import { MainLayoutComponent } from './layout/main-layout/main-layout';
 import { adminGuard } from './guards/admin-guard';
 import { medecinGuard } from './guards/medecin-guard';
 export const routes: Routes = [
+     // Redirections
+  { path: '', redirectTo: '/accueil', pathMatch: 'full' },
+//   { path: '**', redirectTo: '/accueil' },
    // Pages publiques
-  { path: 'accueil', component: AccueilComponent },
-  { path: 'login', component: LoginComponent },
- 
+  { path: 'accueil', loadComponent: () =>
+      import('./pages/accueil/accueil').then(m => m.AccueilComponent)
+  },
+  { path: 'login', loadComponent: () =>
+      import('./pages/login/login').then(m => m.LoginComponent)
+  },
 
   // Pages privées avec layout
   {
@@ -18,6 +24,7 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     canActivate: [authGuard],
     children: [
+        
          { path: 'changer-mot-de-passe', loadComponent: () =>
       import('./pages/comptes/changer-mot-de-passe/changer-mot-de-passe').then(m => m.ChangerMotDePasseComponent)
   },
@@ -99,8 +106,6 @@ export const routes: Routes = [
     ]
   },
 
-  // Redirections
-  { path: '', redirectTo: '/accueil', pathMatch: 'full' },
-  { path: '**', redirectTo: '/accueil' }
+ 
 ];
 

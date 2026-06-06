@@ -12,8 +12,14 @@ import { NavbarComponent } from '../navbar/navbar';
 })
 export class MainLayoutComponent {
 sidebarOpen = true;
+ngOnInit(): void {
+    // En mobile, fermer la sidebar par défaut
+    if (window.innerWidth <= 768) {
+      this.sidebarOpen = false;
+    }
+  }
 
-  toggleSidebar(): void {
+   toggleSidebar(): void {
     this.sidebarOpen = !this.sidebarOpen;
   }
 }
