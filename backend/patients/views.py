@@ -82,7 +82,7 @@ class AssignationMedecinViewSet(viewsets.ModelViewSet):
         serializer.save(medecin_source=medecin_source)
 
         if medecin_cible.email:
-            sujet = f"[MedTrack] Nouveau patient assigné : {patient.nom} {patient.prenom}"
+            sujet = f"[ANGELYS] Nouveau patient assigné : {patient.nom} {patient.prenom}"
             message = (
                 f"Bonjour Dr. {medecin_cible.last_name},\n\n"
                 f"Le Dr. {medecin_source.get_full_name()} vous a assigné un nouveau patient.\n\n"
@@ -91,8 +91,8 @@ class AssignationMedecinViewSet(viewsets.ModelViewSet):
                 f"- Sexe : {patient.get_sexe_display()}\n"
                 f"- Service concerné : {service}\n"
                 f"- Motif de l'assignation : {motif}\n\n"
-                f"Connectez-vous à votre espace MedTrack pour consulter son dossier médical.\n\n"
-                f"Cordialement,\nL'équipe MedTrack."
+                f"Connectez-vous a la plateforme pour consulter son dossier médical.\n\n"
+                f"Cordialement,\nL'équipe ANGELYS."
             )
             try:
                 send_mail(
@@ -129,16 +129,17 @@ class AssignationInfirmierViewSet(viewsets.ModelViewSet):
 
 
         if infirmier.email:
-            sujet = f"[MedTrack] Nouvelle prise en charge : {patient.nom} {patient.prenom}"
+            sujet = f"[ANGELYS] Nouvelle prise en charge : {patient.nom} {patient.prenom}"
             message = (
                 f"Bonjour {infirmier.get_full_name()},\n\n"
                 f"Le Dr. {medecin.get_full_name()} vous a confié des soins pour un patient.\n\n"
                 f"Détails de la prise en charge :\n"
                 f"- Patient : {patient.nom} {patient.prenom}\n"
                 f"- Soins à prodiguer : {soins_a_faire}\n"
-                f"- Date de début : {serializer.validated_data.get('date_debut')}\n\n"
-                f"Veuillez vous connecter sur MedTrack pour valider et enregistrer vos observations après administration des soins.\n\n"
-                f"Cordialement,\nL'équipe MedTrack."
+                f"- Date de début : {serializer.validated_data.get('date_debut')}\n"
+                f"- Date de fin : {serializer.validated_data.get('date_fin')}\n\n"
+                f"Veuillez vous connecter sur la plateforme pour valider et enregistrer vos observations après administration des soins.\n\n"
+                f"Cordialement,\nL'équipe ANGELYS."
             )
             try:
 

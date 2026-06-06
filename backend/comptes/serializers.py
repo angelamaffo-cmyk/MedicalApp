@@ -153,22 +153,20 @@ class CreerCompteSerializer(serializers.ModelSerializer):
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>MedTrack</h1>
+                    <h1>ANGELYS</h1>
                 </div>
                 <div class="content">
                     <div class="welcome">Bienvenue sur la plateforme, {user.first_name} {user.last_name} !</div>
-                    <p>Un administrateur vient de vous créer un accès sécurisé pour la gestion et le suivi des dossiers des patients.</p>
+                    <p>Un administrateur vient de vous créer , un accès sécurisé pour la gestion et le suivi des dossiers des patients.</p>
                     
-                    <p>Voici vos identifiants de connexion provisoires :</p>
+                    <p>Voici vos identifiants de connexion  :</p>
                     
                     <div class="credentials-box">
                         <div class="credentials-item"><strong>Nom d'utilisateur :</strong> {username}</div>
                         <div class="credentials-item"><strong>Mot de passe :</strong> <code>{MOT_DE_PASSE_DEFAUT}</code></div>
                     </div>
                     
-                    <div class="btn-container">
-                        <a href="http://localhost:4200" class="btn" target="_blank">Se connecter à MedTrack</a>
-                    </div>
+                    
                     
                     <div class="warning">
                         <strong>Sécurité Médicale :</strong> Par mesure de confidentialité, vous serez invité à modifier ce mot de passe dès votre première connexion.
@@ -176,7 +174,7 @@ class CreerCompteSerializer(serializers.ModelSerializer):
                 </div>
                 <div class="footer">
                     Ceci est un message automatique, merci de ne pas y répondre.<br>
-                    &copy; 2026 MedTrack — Système de Gestion Hospitalière Securisée.
+                    &copy; 2026 ANGELYS — Système de Gestion Hospitalière Securisée.
                 </div>
             </div>
         </body>
