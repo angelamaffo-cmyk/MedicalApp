@@ -12,11 +12,17 @@ python manage.py collectstatic --no-input
 python manage.py migrate
 
 # Créer superuser automatiquement si il n'existe pas
-python manage.py shell -c "
-from django.contrib.auth.models import User
+# Création automatique du superutilisateur via un script Python inline sécurisé
+python -c "
+import os, django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'medtrack_api.settings')
+django.setup()
+from django.contrib.auth import get_user_model
+User = get_user_model()
 if not User.objects.filter(username='admin').exists():
-    User.objects.create_superuser('admin', 'admin@medtrack.com', 'MedTrack2026')
-    print("Superuser créé!")
+    User.objects.create_superuser('admin', 'admin2@medtrack.com', 'VotreMotDePasseIci123')
+    print('Superuser cree avec succes')
 else:
-    print("Superuser existe déjà.")
+    print('Le superuser existe deja')
 "
+
