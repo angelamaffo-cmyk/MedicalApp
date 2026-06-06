@@ -1,4 +1,6 @@
-/* HERO */
+/* ==========================================================================
+   HERO SECTION
+   ========================================================================== */
 .hero-section {
   min-height: 100vh;
   background: linear-gradient(135deg, #0d6efd 0%, #084298 50%, #052c65 100%);
@@ -9,6 +11,7 @@
   overflow: hidden;
 }
 
+/* Cercles décoratifs masqués sur mobile pour éviter le scroll horizontal */
 .hero-section::before {
   content: '';
   position: absolute;
@@ -34,7 +37,7 @@
 .hero-content {
   position: relative;
   z-index: 2;
-  padding: 8rem 1rem 4rem;
+  padding: 8rem 1rem 4rem; /* Ajusté dynamiquement plus bas pour le mobile */
 }
 
 .hero-badge {
@@ -48,7 +51,7 @@
 }
 
 .hero-title {
-  font-size: 3.5rem;
+  font-size: 3.5rem; /* Ajusté pour mobile plus bas */
   font-weight: 800;
   line-height: 1.2;
   margin-bottom: 1.5rem;
@@ -62,7 +65,9 @@
   line-height: 1.8;
 }
 
-/* FEATURES */
+/* ==========================================================================
+   FEATURES
+   ========================================================================== */
 .features-section {
   background: #f8f9fa;
 }
@@ -97,7 +102,9 @@
   color: white;
 }
 
-/* STATS */
+/* ==========================================================================
+   STATS
+   ========================================================================== */
 .stats-section {
   background: white;
   border-top: 1px solid #e9ecef;
@@ -109,7 +116,72 @@
   font-weight: 800;
 }
 
-/* FOOTER */
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
 .footer-section {
   background: linear-gradient(135deg, #7aa2dc, #7499d1);
+}
+
+/* ==========================================================================
+   MEDIA QUERIES (RESPONSIVE)
+   ========================================================================== */
+
+/* Tablettes et écrans intermédiaires (max 768px) */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem; /* Réduction du titre pour que ça ne prenne pas tout l'écran */
+  }
+  
+  .hero-content {
+    padding: 7rem 1rem 3rem; /* On remonte un peu le contenu */
+  }
+}
+
+/* Smartphones et petits écrans (max 576px) */
+@media (max-width: 576px) {
+  /* Évite que les cercles du background créent une barre de défilement horizontale */
+  .hero-section::before,
+  .hero-section::after {
+    display: none; 
+  }
+
+  .hero-content {
+    padding: 6rem 0.5rem 2rem;
+  }
+
+  .hero-title {
+    font-size: 2rem; /* Titre adapté aux petits écrans de téléphone */
+  }
+
+  .hero-subtitle {
+    font-size: 1rem; /* Texte un poil plus petit pour lisibilité */
+    line-height: 1.6;
+  }
+
+  .hero-badge {
+    font-size: 0.8rem; /* Badge plus discret */
+    padding: 0.4rem 1rem;
+  }
+  
+  /* Force le bouton de connexion de la navbar à s'aligner joliment sur mobile */
+  .navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+}
+.app-logo {
+  height: 170px;          /* Hauteur idéale pour une navbar Bootstrap */
+  width: 140px;           /* Largeur identique pour garder un ratio carré */
+  object-fit: contain;   /* Évite de déformer l'image */
+  background-color: #ffffff; /* Fond blanc pour faire ressortir le logo sur fond sombre */
+  border-radius: 50%;    /* Rend le fond parfaitement circulaire comme le logo */
+  padding: 4px;          /* Petit espace de respiration entre le logo et le bord du cercle */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease; /* Légère ombre pour donner du relief */
+}
+.app-logo:hover{
+  transform: scale(1.05);
 }

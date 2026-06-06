@@ -1,9 +1,17 @@
+/* --- Global Layout & Header --- */
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1rem; }
 .page-title { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin: 0; letter-spacing: -0.3px; }
 .page-subtitle { color: var(--text-secondary); font-size: 0.88rem; margin: 0.2rem 0 0; }
 
-.btn-add { display: inline-flex; align-items: center; padding: 0.65rem 1.25rem; background: var(--primary); color: white; border-radius: 12px; font-size: 0.88rem; font-weight: 600; text-decoration: none; transition: all 0.2s; border: none; cursor: pointer; }
+.btn-add {   display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.5rem; background: var(--primary); color: white; border-radius: 12px; font-size: 0.88rem;  text-decoration: none; transition: all 0.2s; border: none; cursor: pointer;  }
 .btn-add:hover { background: var(--primary-dark, #1557b0); color: white; transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+/* --- Grille de Statistiques Autonome --- */
+.stats-grid-custom {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
 
 .mini-stat { background: var(--bg-card); border-radius: 16px; padding: 1.25rem; display: flex; align-items: center; gap: 1rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: all 0.3s; }
 .mini-stat:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
@@ -11,35 +19,71 @@
 .mini-stat h5 { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin: 0; line-height: 1; }
 .mini-stat small { font-size: 0.78rem; color: var(--text-secondary); font-weight: 500; margin-top: 0.2rem; display: block; }
 
+/* --- Search Bar --- */
 .search-bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
-.search-input { flex: 1; min-width: 250px; position: relative; }
+.search-input { flex: 1; min-width: 260px; position: relative; }
 .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-light); font-size: 0.9rem; pointer-events: none; }
 .search-input input { width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.88rem; color: var(--text-primary); transition: all 0.2s; outline: none; }
 .search-input input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,115,232,0.12); }
 .results-count { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 0.5rem 1rem; font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); white-space: nowrap; }
 
+/* --- Alertes --- */
+.alert-custom { display: flex; align-items: center; gap: 0.75rem; padding: 0.9rem 1.2rem; border-radius: 12px; font-size: 0.88rem; font-weight: 500; margin-bottom: 1rem; }
+.alert-custom-danger { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #dc2626; }
+
+/* --- Tableau & Wrapper Responsive --- */
 .table-card { background: var(--bg-card); border-radius: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); overflow: hidden; }
-.resultats-table { width: 100%; border-collapse: collapse; }
+
+.table-responsive-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.resultats-table { width: 100%; border-collapse: collapse; min-width: 950px; table-layout: fixed; } /* Fixed permet le contrôle précis des largeurs de colonnes */
 .resultats-table thead tr { background: var(--bg-input); border-bottom: 1px solid var(--border); }
+
+/* Définition chirurgicale des proportions pour la stabilité d'affichage */
+.resultats-table th:nth-child(1) { width: 18%; }
+.resultats-table th:nth-child(2) { width: 16%; }
+.resultats-table th:nth-child(3) { width: 12%; }
+.resultats-table th:nth-child(4) { width: 12%; }
+.resultats-table th:nth-child(5) { width: 24%; }
+.resultats-table th:nth-child(6) { width: 10%; }
+.resultats-table th:nth-child(7) { width: 8%; }
+
 .resultats-table th { padding: 0.9rem 1.25rem; font-size: 0.72rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.8px; text-align: left; white-space: nowrap; }
 .resultats-table td { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); vertical-align: middle; font-size: 0.88rem; color: var(--text-primary); }
 .resultats-table tbody tr { transition: all 0.2s; }
 .resultats-table tbody tr:hover td { background: var(--primary-light); }
 .resultats-table tbody tr:last-child td { border-bottom: none; }
 
+/* --- Contenus internes des cellules --- */
 .patient-info { display: flex; align-items: center; gap: 0.85rem; }
 .patient-avatar { width: 38px; height: 38px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 11px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.82rem; flex-shrink: 0; }
-.patient-nom { font-weight: 700; color: var(--text-primary); font-size: 0.88rem; }
+.patient-nom { font-weight: 700; color: var(--text-primary); font-size: 0.88rem; white-space: nowrap; }
 
-.examen-nom { font-weight: 700; color: var(--text-primary); font-size: 0.88rem; }
+.examen-nom { font-weight: 700; color: var(--text-primary); font-size: 0.88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
 .type-badge { display: inline-flex; align-items: center; padding: 0.25rem 0.7rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; background: rgba(16,185,129,0.12); color: #059669; }
 .date-text { font-size: 0.82rem; color: var(--text-secondary); font-weight: 600; }
+
+/* SÉCURITÉ : Empêche l'éclatement des données de conclusion textuelle */
+.text-truncate-custom {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .conclusion-text { font-size: 0.82rem; color: var(--text-secondary); font-style: italic; }
 
 .etat-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.3rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
 .etat-badge.normal { background: rgba(16,185,129,0.1); color: #10b981; }
 .etat-badge.anormal { background: rgba(239,68,68,0.1); color: #ef4444; }
 
+.text-nowrap-custom { white-space: nowrap !important; }
+
+/* Actions */
 .actions { display: flex; gap: 0.4rem; }
 .btn-action { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; font-size: 0.82rem; transition: all 0.2s; text-decoration: none; }
 .btn-action.view { background: rgba(16,185,129,0.1); color: #10b981; }
@@ -48,3 +92,21 @@
 .btn-action.edit:hover { background: var(--primary); color: white; }
 
 .empty-state { text-align: center; padding: 4rem 2rem; }
+
+/* --- MÉDIAS QUERIES MOBILE --- */
+@media (max-width: 576px) {
+  .page-header, .search-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .w-sm-auto, .results-count {
+    width: 100% !important;
+    text-align: center;
+  }
+}
+/* @media (min-width: 768px) {
+  .btn-add {
+    width: auto; 
+    display: inline-flex; 
+  }
+} */

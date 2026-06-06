@@ -29,17 +29,24 @@
 }
 
 .logo-icon {
-  width: 42px;
-  height: 42px;
-  background: linear-gradient(135deg, #1a73e8, #00bcd4);
-  border-radius: 12px;
+  width: 70px;
+  height: 70px;
+  background: #ffffff;         /* Remplacement du gradient par un fond blanc uni */
+  border-radius: 50%;          /* Forme parfaitement ronde pour épouser ton logo */
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
-  color: white;
-  box-shadow: 0 4px 15px rgba(26,115,232,0.4);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35); /* Ombre ajustée pour le fond sombre */
   flex-shrink: 0;
+  overflow: hidden;            /* Masque tout ce qui dépasse du cercle */
+  padding: 5px;                /* Léger espace interne pour aérer le design */
+}
+
+/* Style dédié à l'image à l'intérieur de la boîte */
+.sidebar-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;         /* Conserve parfaitement le ratio carré/circulaire */
 }
 
 .logo-text {

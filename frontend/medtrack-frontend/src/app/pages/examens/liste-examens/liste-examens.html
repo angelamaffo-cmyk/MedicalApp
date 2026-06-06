@@ -5,41 +5,32 @@
     </h4>
     <p class="page-subtitle">Gérez les examens prescrits à vos patients</p>
   </div>
-<a routerLink="/examens/nouveau" class="btn-add"
-   *ngIf="roleService.peutFaireExamen()">
-  <i class="bi bi-plus-lg me-2"></i>Nouvel examen
-</a>
+  <a routerLink="/examens/nouveau" class="btn-add  justify-content-center"
+     *ngIf="roleService.peutFaireExamen()">
+    <i class="bi bi-plus-lg me-2"></i>Nouvel examen
+  </a>
 </div>
 
-<!-- Stats -->
-<div class="row g-3 mb-4">
-  <div class="col-md-4">
-    <div class="mini-stat">
-      <i class="bi bi-droplet-fill text-warning"></i>
-      <div><h5>{{ total }}</h5><small>Total examens</small></div>
-    </div>
+<div class="stats-grid-custom mb-4">
+  <div class="mini-stat">
+    <i class="bi bi-droplet-fill text-warning"></i>
+    <div><h5>{{ total }}</h5><small>Total examens</small></div>
   </div>
-  <div class="col-md-4">
-    <div class="mini-stat">
-      <i class="bi bi-hourglass-split text-danger"></i>
-      <div><h5>{{ enAttente }}</h5><small>En attente de Realisation</small></div>
-    </div>
+  <div class="mini-stat">
+    <i class="bi bi-hourglass-split text-danger"></i>
+    <div><h5>{{ enAttente }}</h5><small>En attente de Réalisation</small></div>
   </div>
-  <div class="col-md-4">
-    <div class="mini-stat">
-      <i class="bi bi-check-circle-fill text-success"></i>
-      <div><h5>{{ realises }}</h5><small>Réalisés</small></div>
-    </div>
+  <div class="mini-stat">
+    <i class="bi bi-check-circle-fill text-success"></i>
+    <div><h5>{{ realises }}</h5><small>Réalisés</small></div>
   </div>
 </div>
 
-<!-- Erreur -->
-<div class="alert alert-danger d-flex align-items-center gap-2" *ngIf="errorMessage">
+<div class="alert-custom alert-custom-danger" *ngIf="errorMessage">
   <i class="bi bi-exclamation-triangle-fill"></i>
   <span>{{ errorMessage }}</span>
 </div>
 
-<!-- Recherche -->
 <div class="search-bar">
   <div class="search-input">
     <i class="bi bi-search search-icon"></i>
@@ -53,87 +44,87 @@
   <span class="results-count">{{ examensFiltres.length }} / {{ total }} examen(s)</span>
 </div>
 
-<!-- Spinner -->
 <div class="text-center py-5" *ngIf="isLoading">
   <div class="spinner-border text-warning"></div>
   <p class="mt-2 text-muted">Chargement...</p>
 </div>
 
-<!-- Tableau -->
 <div class="table-card" *ngIf="!isLoading">
-  <table class="examens-table">
-    <thead>
-      <tr>
-        <th>Patient</th>
-        <th>Examen</th>
-        <th>Type</th>
-        <th>Date Prescription</th>
-        <th>Date Réalisation</th>
-        <th>Statut</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let e of examensFiltres">
-        <td>
-          <div class="patient-info">
-            <div class="patient-avatar">
-              {{ e.patient_prenom?.[0] }}{{ e.patient_nom?.[0] }}
+  <div class="table-responsive-wrapper">
+    <table class="examens-table">
+      <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Examen</th>
+          <th>Type</th>
+          <th>Date Prescription</th>
+          <th>Date Réalisation</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let e of examensFiltres">
+          <td>
+            <div class="patient-info">
+              <div class="patient-avatar">
+                {{ e.patient_prenom?.[0] }}{{ e.patient_nom?.[0] }}
+              </div>
+              <span class="patient-nom">{{ e.patient_prenom }} {{ e.patient_nom }}</span>
             </div>
-            <span class="patient-nom">{{ e.patient_prenom }} {{ e.patient_nom }}</span>
-          </div>
-        </td>
-        <td>
-          <span class="examen-nom">{{ e.nom_examen }}</span>
-          <span class="labo-text" *ngIf="e.laboratoire">{{ e.laboratoire }}</span>
-        </td>
-        <td>
-          <span class="type-badge type-{{ getTypeColor(e.type_examen) }}">{{ e.type_examen }}</span>
-        </td>
-        <td><span class="date-text">{{ e.date_prescription | date:'dd/MM/yyyy' }}</span></td>
-        <td>
-          <span *ngIf="e.date_realisation" class="date-text">{{ e.date_realisation | date:'dd/MM/yyyy' }}</span>
-          <span *ngIf="!e.date_realisation" class="en-attente"><i class="bi bi-clock me-1"></i>En attente</span>
-        </td>
-        <td>
-          <span *ngIf="e.statut === 'EN_ATTENTE'" class="badge bg-danger-subtle text-danger px-2 py-1.5 rounded">
-            <i class="bi bi-clock-history me-1"></i> En attente
-          </span>
-          
-          <span *ngIf="e.statut === 'REALISE'" class="badge bg-success-subtle text-success px-2 py-1.5 rounded">
-            <i class="bi bi-check-circle-fill me-1"></i> Réalisé
-          </span>
+          </td>
+          <td>
+            <div class="examen-cell-wrap">
+              <span class="examen-nom">{{ e.nom_examen }}</span>
+              <span class="labo-text" *ngIf="e.laboratoire">{{ e.laboratoire }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="type-badge type-{{ getTypeColor(e.type_examen) }}">{{ e.type_examen }}</span>
+          </td>
+          <td><span class="date-text">{{ e.date_prescription | date:'dd/MM/yyyy' }}</span></td>
+          <td>
+            <span *ngIf="e.date_realisation" class="date-text">{{ e.date_realisation | date:'dd/MM/yyyy' }}</span>
+            <span *ngIf="!e.date_realisation" class="en-attente"><i class="bi bi-clock me-1"></i>En attente</span>
+          </td>
+          <td>
+            <span *ngIf="e.statut === 'EN_ATTENTE'" class="badge bg-danger-subtle text-danger px-2 py-1.5 rounded text-nowrap-custom">
+              <i class="bi bi-clock-history me-1"></i> En attente
+            </span>
+            
+            <span *ngIf="e.statut === 'REALISE'" class="badge bg-success-subtle text-success px-2 py-1.5 rounded text-nowrap-custom">
+              <i class="bi bi-check-circle-fill me-1"></i> Réalisé
+            </span>
 
-          <span *ngIf="e.statut === 'ANNULE'" class="badge bg-secondary-subtle text-secondary px-2 py-1.5 rounded">
-            <i class="bi bi-x-circle me-1"></i> Annulé
-          </span>
-        </td>
-        
-        <td>
-          <div class="actions">
-            <a [routerLink]="['/examens', e.id]" class="btn-action view" title="Voir">
-              <i class="bi bi-eye-fill"></i>
-            </a>
-            <a [routerLink]="['/examens/modifier', e.id]" class="btn-action edit"
-   *ngIf="roleService.peutFaireExamen()" title="Modifier">
-  <i class="bi bi-pencil-fill"></i>
-</a>
-          </div>
-        </td>
-      </tr>
-
-      <tr *ngIf="examensFiltres.length === 0 && !isLoading">
-        <td colspan="7" class="empty-state">
-          <i class="bi bi-droplet fs-1 text-muted"></i>
-          <p class="mt-2 text-muted">
-            {{ recherche ? 'Aucun examen ne correspond à votre recherche' : 'Aucun examen enregistré' }}
-          </p>
+            <span *ngIf="e.statut === 'ANNULE'" class="badge bg-secondary-subtle text-secondary px-2 py-1.5 rounded text-nowrap-custom">
+              <i class="bi bi-x-circle me-1"></i> Annulé
+            </span>
+          </td>
           
-          <button class="btn btn-outline-secondary btn-sm" *ngIf="recherche" (click)="reinitialiser()">
-            Effacer la recherche
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          <td>
+            <div class="actions">
+              <a [routerLink]="['/examens', e.id]" class="btn-action view" title="Voir">
+                <i class="bi bi-eye-fill"></i>
+              </a>
+              <a [routerLink]="['/examens/modifier', e.id]" class="btn-action edit" *ngIf="roleService.peutFaireExamen()" title="Modifier">
+                <i class="bi bi-pencil-fill"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+
+        <tr *ngIf="examensFiltres.length === 0 && !isLoading">
+          <td colspan="7" class="empty-state">
+            <i class="bi bi-droplet fs-1 text-muted"></i>
+            <p class="mt-2 text-muted">
+              {{ recherche ? 'Aucun examen ne correspond à votre recherche' : 'Aucun examen enregistré' }}
+            </p>
+            <button class="btn btn-outline-secondary btn-sm" *ngIf="recherche" (click)="reinitialiser()">
+              Effacer la recherche
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

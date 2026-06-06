@@ -1,35 +1,31 @@
-<!-- Spinner -->
-<div class="text-center py-5" *ngIf="isLoading">
-  <div class="spinner-border text-primary"></div>
+<div class="loading-container" *ngIf="isLoading">
+  <div class="spinner-custom"></div>
   <p class="mt-2 text-muted">Chargement du profil...</p>
 </div>
 
-<!-- Erreur -->
-<div class="alert alert-danger" *ngIf="errorMessage">
+<div class="alert-custom alert-custom-danger" *ngIf="errorMessage">
   <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
 </div>
 
 <div *ngIf="!isLoading && profil">
 
-  <div class="page-header">
+  <div class="page-header-custom">
     <div>
-      <h4 class="page-title">
+      <h4 class="page-title-custom">
         <i class="bi bi-person-circle me-2 text-primary"></i>Mon profil
       </h4>
-      <p class="page-subtitle">Gérez vos informations et votre sécurité</p>
+      <p class="page-subtitle-custom">Gerez vos informations et votre securite</p>
     </div>
   </div>
 
-  <!-- Message succès mdp -->
-  <div class="alert alert-success d-flex align-items-center gap-2 mb-4" *ngIf="successMdp">
+  <div class="alert-custom alert-custom-success mb-4" *ngIf="successMdp">
     <i class="bi bi-check-circle-fill"></i>
     <span>{{ successMdp }}</span>
   </div>
 
   <div class="row g-4">
 
-    <!-- Carte profil gauche -->
-    <div class="col-md-4">
+    <div class="col-xl-4 col-lg-5 col-md-12">
       <div class="profil-card">
         <div class="profil-avatar-big">
           {{ profil.nom_complet?.[0] || 'U' }}
@@ -60,15 +56,13 @@
         </div>
 
         <button class="btn-deconnexion mt-3" (click)="logout()">
-          <i class="bi bi-box-arrow-right me-2"></i>Se déconnecter
+          <i class="bi bi-box-arrow-right me-2"></i>Se deconnecter
         </button>
       </div>
     </div>
 
-    <!-- Infos détaillées -->
-    <div class="col-md-8">
+    <div class="col-xl-8 col-lg-7 col-md-12">
 
-      <!-- Informations du compte -->
       <div class="detail-card mb-4">
         <div class="detail-card-header">
           <i class="bi bi-person-fill text-primary"></i>
@@ -76,43 +70,43 @@
         </div>
         <div class="detail-card-body">
           <div class="row g-3">
-            <div class="col-md-6">
+            <div class="col-sm-6 col-12">
               <div class="info-field">
                 <label>Nom complet</label>
                 <p>{{ profil.nom_complet }}</p>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-sm-6 col-12">
               <div class="info-field">
                 <label>Nom d'utilisateur</label>
                 <p>{{ profil.username }}</p>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-sm-6 col-12">
               <div class="info-field">
                 <label>Email</label>
                 <p>{{ profil.email }}</p>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-sm-6 col-12">
               <div class="info-field">
                 <label>Rôle</label>
                 <p>
-                  <span class="role-badge-sm role-{{ getRoleCouleur() }}">
+                  <span class="role-badge role-{{ getRoleCouleur() }} m-0 px-3 py-1">
                     <i class="bi {{ getRoleIcon() }} me-1"></i>{{ getRoleLabel() }}
                   </span>
                 </p>
               </div>
             </div>
-            <div class="col-md-6" *ngIf="profil.telephone">
+            <div class="col-sm-6 col-12" *ngIf="profil.telephone">
               <div class="info-field">
-                <label>Téléphone</label>
+                <label>Telephone</label>
                 <p>{{ profil.telephone }}</p>
               </div>
             </div>
-            <div class="col-md-6" *ngIf="profil.specialite">
+            <div class="col-sm-6 col-12" *ngIf="profil.specialite">
               <div class="info-field">
-                <label>Spécialité</label>
+                <label>Specialite</label>
                 <p>{{ profil.specialite }}</p>
               </div>
             </div>
@@ -120,18 +114,18 @@
         </div>
       </div>
 
-      <!-- Sécurité -->
       <div class="detail-card">
-        <div class="detail-card-header">
-          <i class="bi bi-shield-lock-fill text-warning"></i>
-          <h6>Sécurité</h6>
-          <button class="btn-toggle-mdp ms-auto" (click)="showMdpForm = !showMdpForm">
+        <div class="detail-card-header flex-wrap gap-2">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-shield-lock-fill text-warning"></i>
+            <h6>Securite</h6>
+          </div>
+          <button class="btn-toggle-mdp ms-sm-auto w-100 w-sm-auto justify-content-center" (click)="showMdpForm = !showMdpForm">
             <i class="bi" [class.bi-chevron-down]="!showMdpForm" [class.bi-chevron-up]="showMdpForm"></i>
             {{ showMdpForm ? 'Fermer' : 'Changer le mot de passe' }}
           </button>
         </div>
 
-        <!-- Info mdp si formulaire fermé -->
         <div class="detail-card-body" *ngIf="!showMdpForm">
           <div class="security-item">
             <div class="security-icon">
@@ -144,10 +138,9 @@
           </div>
         </div>
 
-        <!-- Formulaire changement mdp -->
         <div class="detail-card-body" *ngIf="showMdpForm">
 
-          <div class="alert alert-danger d-flex align-items-center gap-2 mb-3" *ngIf="errorMdp">
+          <div class="alert-custom alert-custom-danger mb-3" *ngIf="errorMdp">
             <i class="bi bi-exclamation-triangle-fill"></i>
             <span>{{ errorMdp }}</span>
           </div>
@@ -157,67 +150,67 @@
 
               <div class="col-12">
                 <label class="form-label">Mot de passe actuel</label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <div class="input-group-responsive">
+                  <span class="input-group-icon"><i class="bi bi-lock"></i></span>
                   <input
                     [type]="showAncien ? 'text' : 'password'"
-                    class="form-control"
+                    class="form-control-custom"
                     [class.is-invalid]="ancien?.invalid && ancien?.touched"
                     formControlName="ancien_mot_de_passe"
                     placeholder="Votre mot de passe actuel"
                   />
-                  <button type="button" class="btn btn-outline-secondary" (click)="showAncien = !showAncien">
+                  <button type="button" class="btn-input-action" (click)="showAncien = !showAncien">
                     <i class="bi" [class.bi-eye]="!showAncien" [class.bi-eye-slash]="showAncien"></i>
                   </button>
-                  <div class="invalid-feedback">Ce champ est requis.</div>
                 </div>
+                <div class="invalid-feedback" *ngIf="ancien?.invalid && ancien?.touched">Ce champ est requis.</div>
               </div>
 
-              <div class="col-md-6">
+              <div class="col-md-6 col-12">
                 <label class="form-label">Nouveau mot de passe</label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                <div class="input-group-responsive">
+                  <span class="input-group-icon"><i class="bi bi-lock-fill"></i></span>
                   <input
                     [type]="showNouveau ? 'text' : 'password'"
-                    class="form-control"
+                    class="form-control-custom"
                     [class.is-invalid]="nouveau?.invalid && nouveau?.touched"
                     formControlName="nouveau_mot_de_passe"
-                    placeholder="Minimum 8 caractères"
+                    placeholder="Minimum 8 caracteres"
                   />
-                  <button type="button" class="btn btn-outline-secondary" (click)="showNouveau = !showNouveau">
+                  <button type="button" class="btn-input-action" (click)="showNouveau = !showNouveau">
                     <i class="bi" [class.bi-eye]="!showNouveau" [class.bi-eye-slash]="showNouveau"></i>
                   </button>
-                  <div class="invalid-feedback">
-                    <span *ngIf="nouveau?.errors?.['required']">Requis.</span>
-                    <span *ngIf="nouveau?.errors?.['minlength']">Minimum 8 caractères.</span>
-                  </div>
+                </div>
+                <div class="invalid-feedback" *ngIf="nouveau?.invalid && nouveau?.touched">
+                  <span *ngIf="nouveau?.errors?.['required']">Requis.</span>
+                  <span *ngIf="nouveau?.errors?.['minlength']">Minimum 8 caracteres.</span>
                 </div>
               </div>
 
-              <div class="col-md-6">
+              <div class="col-md-6 col-12">
                 <label class="form-label">Confirmer le mot de passe</label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                <div class="input-group-responsive">
+                  <span class="input-group-icon"><i class="bi bi-lock-fill"></i></span>
                   <input
                     [type]="showConfirmer ? 'text' : 'password'"
-                    class="form-control"
+                    class="form-control-custom"
                     [class.is-invalid]="confirmer?.invalid && confirmer?.touched"
                     formControlName="confirmer_mot_de_passe"
-                    placeholder="Répétez le nouveau mot de passe"
+                    placeholder="Repetez le mot de passe"
                   />
-                  <button type="button" class="btn btn-outline-secondary" (click)="showConfirmer = !showConfirmer">
+                  <button type="button" class="btn-input-action" (click)="showConfirmer = !showConfirmer">
                     <i class="bi" [class.bi-eye]="!showConfirmer" [class.bi-eye-slash]="showConfirmer"></i>
                   </button>
-                  <div class="invalid-feedback">
-                    <span *ngIf="confirmer?.errors?.['required']">Requis.</span>
-                    <span *ngIf="confirmer?.errors?.['notMatch']">Les mots de passe ne correspondent pas.</span>
-                  </div>
+                </div>
+                <div class="invalid-feedback" *ngIf="confirmer?.invalid && confirmer?.touched">
+                  <span *ngIf="confirmer?.errors?.['required']">Requis.</span>
+                  <span *ngIf="confirmer?.errors?.['notMatch']">Les mots de passe ne correspondent pas.</span>
                 </div>
               </div>
 
-              <div class="col-12">
-                <button type="submit" class="btn-changer-mdp" [disabled]="isLoadingMdp">
-                  <span *ngIf="isLoadingMdp" class="spinner-border spinner-border-sm me-2"></span>
+              <div class="col-12 mt-4">
+                <button type="submit" class="btn-changer-mdp w-100 w-sm-auto justify-content-center" [disabled]="isLoadingMdp">
+                  <span *ngIf="isLoadingMdp" class="spinner-custom-sm me-2"></span>
                   <i *ngIf="!isLoadingMdp" class="bi bi-check-lg me-2"></i>
                   {{ isLoadingMdp ? 'Enregistrement...' : 'Changer le mot de passe' }}
                 </button>

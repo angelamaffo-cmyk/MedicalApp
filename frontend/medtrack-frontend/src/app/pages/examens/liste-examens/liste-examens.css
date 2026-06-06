@@ -1,3 +1,4 @@
+/* --- Mise en page globale & En-tête --- */
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1rem; }
 .page-title { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin: 0; letter-spacing: -0.3px; }
 .page-subtitle { color: var(--text-secondary); font-size: 0.88rem; margin: 0.2rem 0 0; }
@@ -5,21 +6,41 @@
 .btn-add { display: inline-flex; align-items: center; padding: 0.65rem 1.25rem; background: var(--primary); color: white; border-radius: 12px; font-size: 0.88rem; font-weight: 600; text-decoration: none; transition: all 0.2s; border: none; cursor: pointer; }
 .btn-add:hover { background: var(--primary-dark, #1557b0); color: white; transform: translateY(-1px); box-shadow: var(--shadow-md); }
 
+/* --- Grille de Statistiques Autonome --- */
+.stats-grid-custom {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
 .mini-stat { background: var(--bg-card); border-radius: 16px; padding: 1.25rem; display: flex; align-items: center; gap: 1rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: all 0.3s; }
 .mini-stat:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
 .mini-stat i { font-size: 1.6rem; flex-shrink: 0; }
 .mini-stat h5 { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin: 0; line-height: 1; }
 .mini-stat small { font-size: 0.78rem; color: var(--text-secondary); font-weight: 500; margin-top: 0.2rem; display: block; }
 
+/* --- Barre de recherche --- */
 .search-bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
-.search-input { flex: 1; min-width: 250px; position: relative; }
+.search-input { flex: 1; min-width: 260px; position: relative; }
 .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-light); font-size: 0.9rem; pointer-events: none; }
 .search-input input { width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.88rem; color: var(--text-primary); transition: all 0.2s; outline: none; }
 .search-input input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,115,232,0.12); }
 .results-count { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 0.5rem 1rem; font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); white-space: nowrap; }
 
+/* --- Alertes --- */
+.alert-custom { display: flex; align-items: center; gap: 0.75rem; padding: 0.9rem 1.2rem; border-radius: 12px; font-size: 0.88rem; font-weight: 500; margin-bottom: 1rem; }
+.alert-custom-danger { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #dc2626; }
+
+/* --- Tableau & Wrapper de protection horizontal --- */
 .table-card { background: var(--bg-card); border-radius: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); overflow: hidden; }
-.examens-table { width: 100%; border-collapse: collapse; }
+
+.table-responsive-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.examens-table { width: 100%; border-collapse: collapse; min-width: 900px; } /* Protection de la structure globale */
 .examens-table thead tr { background: var(--bg-input); border-bottom: 1px solid var(--border); }
 .examens-table th { padding: 0.9rem 1.25rem; font-size: 0.72rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.8px; text-align: left; white-space: nowrap; }
 .examens-table td { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); vertical-align: middle; font-size: 0.88rem; color: var(--text-primary); }
@@ -27,25 +48,30 @@
 .examens-table tbody tr:hover td { background: var(--primary-light); }
 .examens-table tbody tr:last-child td { border-bottom: none; }
 
+/* --- Éléments internes du tableau --- */
 .patient-info { display: flex; align-items: center; gap: 0.85rem; }
 .patient-avatar { width: 38px; height: 38px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 11px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.82rem; flex-shrink: 0; }
-.patient-nom { font-weight: 700; color: var(--text-primary); font-size: 0.88rem; }
+.patient-nom { font-weight: 700; color: var(--text-primary); font-size: 0.88rem; white-space: nowrap; }
 
+.examen-cell-wrap { min-width: 140px; }
 .examen-nom { font-weight: 700; color: var(--text-primary); font-size: 0.88rem; display: block; }
 .labo-text { font-size: 0.78rem; color: var(--text-secondary); font-style: italic; display: block; margin-top: 0.15rem; }
 
-.type-badge { display: inline-flex; align-items: center; padding: 0.25rem 0.7rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; background: rgba(245,158,11,0.12); color: #d97706; }
+.type-badge { display: inline-flex; align-items: center; padding: 0.25rem 0.7rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; background: rgba(245,158,11,0.12); color: #d97706; white-space: nowrap; }
 .type-biologique { background: rgba(16,185,129,0.12); color: #059669; }
 .type-radiologique { background: rgba(99,102,241,0.12); color: #6366f1; }
 .type-cardiologique { background: rgba(239,68,68,0.12); color: #ef4444; }
 .type-autre { background: rgba(107,114,128,0.12); color: #6b7280; }
 
-.date-text { font-size: 0.82rem; color: var(--text-secondary); font-weight: 600; }
-.en-attente { display: inline-flex; align-items: center; font-size: 0.8rem; color: #ef4444; font-weight: 600; }
+.date-text { font-size: 0.82rem; color: var(--text-secondary); font-weight: 600; white-space: nowrap; }
+.en-attente { display: inline-flex; align-items: center; font-size: 0.8rem; color: #ef4444; font-weight: 600; white-space: nowrap; }
 
-.statut-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.3rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; }
-.statut-badge.actif { background: rgba(16,185,129,0.1); color: #10b981; }
-.statut-badge.inactif { background: rgba(239,68,68,0.1); color: #ef4444; }
+/* Sécurité d'affichage pour les badges Bootstrap natifs */
+.text-nowrap-custom {
+  display: inline-flex !important;
+  align-items: center;
+  white-space: nowrap !important;
+}
 
 .actions { display: flex; gap: 0.4rem; }
 .btn-action { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; font-size: 0.82rem; transition: all 0.2s; text-decoration: none; }
@@ -55,3 +81,15 @@
 .btn-action.edit:hover { background: var(--primary); color: white; }
 
 .empty-state { text-align: center; padding: 4rem 2rem; }
+
+/* --- MÉDIAS QUERIES COMPATIBILITÉ TACTILE & CRAN REDUIT --- */
+@media (max-width: 576px) {
+  .page-header, .search-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .w-sm-auto, .results-count {
+    width: 100% !important;
+    text-align: center;
+  }
+}

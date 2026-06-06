@@ -51,12 +51,19 @@
 }
 
 .login-brand-icon {
-  width: 48px; height: 48px;
-  background: linear-gradient(135deg, #1a73e8, #00bcd4);
-  border-radius: 14px;
+  width: 80px; height: 80px;   /* Légèrement agrandi (de 48px à 54px) pour le confort visuel */
+  background: #ffffff;         /* Fond blanc pour que le logo ressorte magnifiquement */
+  border-radius: 50%;          /* Forme parfaitement ronde comme ton logo */
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.4rem; color: white;
-  box-shadow: 0 8px 25px rgba(26,115,232,0.4);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  overflow: hidden;            /* Empêche l'image de déborder */
+  padding: 2px;                /* Espace de respiration pour le logo */
+}
+/* Style dédié à l'image du logo */
+.login-logo-img {
+  width: 90%;
+  height: 100%;
+  object-fit: contain;         /* Conserve les proportions du logo sans le déformer */
 }
 
 .login-brand-name {
@@ -271,10 +278,73 @@
   font-weight: 500; margin-bottom: 1.25rem;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .login-bg { clip-path: none; display: none; }
-  .login-left { display: none; }
-  .login-right { padding: 2rem 1rem; background: linear-gradient(135deg, #0d1b4b, #1565c0); }
-  .login-form-card { background: rgba(255,255,255,0.95); }
+/* ==========================================================================
+   MEDIA QUERIES (RESPONSIVE CONFIGURATION)
+   ========================================================================== */
+
+/* Écrans intermédiaires / Tablettes (max-width: 991px) 
+   C'est ici que la partie gauche (d-lg-flex) disparaît, on doit donc adapter le fond immédiatement */
+@media (max-width: 991px) {
+  .login-page {
+    justify-content: center; /* Centre la carte blanche horizontalement */
+  }
+
+  .login-bg {
+    clip-path: none; /* On retire la diagonale pour occuper tout l'écran */
+    width: 100%;
+  }
+
+  /* On repositionne les cercles lumineux pour habiller le fond global */
+  .login-bg-orb-1 {
+    top: -50px;
+    left: -50px;
+  }
+  
+  .login-bg-orb-2 {
+    bottom: -50px;
+    left: 60%;
+  }
+
+  .login-right {
+    flex: none;
+    width: 100%;
+    max-width: 540px; /* Évite que le formulaire devienne trop large sur tablette */
+    background: transparent; /* Laisse transparaître le magnifique dégradé bleu */
+    padding: 3rem 1.5rem;
+  }
+  
+  .login-form-card {
+    border: none;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Smartphones et petits écrans (max-width: 576px) */
+@media (max-width: 576px) {
+  .login-right {
+    padding: 1.5rem 1rem; /* Moins d'espace perdu autour de la carte */
+  }
+
+  .login-form-card {
+    padding: 1.75rem 1.25rem; /* Réduction du padding interne pour donner de l'air aux champs */
+    border-radius: 20px; /* Légèrement plus arrondi pour les petits écrans */
+  }
+
+  .login-form-title {
+    font-size: 1.4rem; /* Titre légèrement plus petit */
+  }
+
+  .login-tabs {
+    margin-bottom: 1.25rem; /* Rapproche un peu les onglets du formulaire */
+  }
+
+  .field-input {
+    padding: 0.75rem 1rem 0.75rem 2.5rem; /* Inputs légèrement plus compacts */
+    font-size: 0.88rem;
+  }
+
+  .btn-login-submit {
+    padding: 0.8rem; /* Bouton plus adapté aux pouces sur mobile */
+    font-size: 0.9rem;
+  }
 }
