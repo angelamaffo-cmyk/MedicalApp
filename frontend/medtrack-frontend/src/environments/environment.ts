@@ -5,5 +5,5 @@ export const environment = {
   apiUrl: 
   isDevMode()
   ?'http://localhost:8000/api'
-  : 'https://medtrack-api-xke8.onrender.com'
+  : 'https://medtrack-api-xke8.onrender.com/api'
 };
