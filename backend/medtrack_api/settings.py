@@ -193,6 +193,11 @@ CORS_ALLOWED_ORIGINS = [
 if FRONTEND_URL not in CORS_ALLOWED_ORIGINS:
     CORS_ALLOWED_ORIGINS.append(FRONTEND_URL)
  
+ # Autorise TOUTES les URLs qui commencent par medical- et se finissent par .vercel.app
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https:\/\/medical-.*\.vercel\.app$",
+]
+ 
 CORS_ALLOW_CREDENTIALS = True
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
