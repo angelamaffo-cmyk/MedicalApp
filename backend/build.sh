@@ -13,16 +13,17 @@ python manage.py migrate
 
 # Créer superuser automatiquement si il n'existe pas
 # Création automatique du superutilisateur via un script Python inline sécurisé
+# Création et mise à jour forcée du mot de passe administrateur
 python -c "
 import os, django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'medtrack_api.settings')
 django.setup()
 from django.contrib.auth import get_user_model
 User = get_user_model()
-if not User.objects.filter(username='admin').exists():
-    User.objects.create_superuser('admin', 'admin2@medtrack.com', 'MedTrack2026')
-    print('Superuser cree avec succes')
-else:
-    print('Le superuser existe deja')
+user, created = User.objects.get_or_create(username='admin', defaults={'email': 'angelatemgoua2@gmail.com'})
+user.set_password('MedTrack2026!')
+user.save()
+print('Mot de passe administrateur configure avec succes')
 "
+
 
