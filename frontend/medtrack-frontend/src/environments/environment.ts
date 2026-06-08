@@ -1,4 +1,9 @@
+import { isDevMode } from "@angular/core";
+
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:8000/api'
+  production: !isDevMode(),
+  apiUrl: 
+  isDevMode()
+  ?'http://localhost:8000/api'
+  : 'https://medtrack-api-xke8.onrender.com'
 };

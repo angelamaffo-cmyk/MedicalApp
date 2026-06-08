@@ -25,7 +25,7 @@ export class FormExamenComponent implements OnInit {
 
   typesExamen = [
     'BIOLOGIE', 'RADIOLOGIE', 'ECHOGRAPHIE',
-    'SCANNER', 'IRM', 'ECG', 'AUTRE'
+    'SCANNER', 'CARDIOLOGIE', 'AUTRE'
   ];
   laboratoires = [
   'Laboratoire Central',

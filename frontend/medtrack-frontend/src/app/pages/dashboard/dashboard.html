@@ -1,103 +1,274 @@
-<!-- Welcome Banner -->
-<div class="welcome-banner animate-fade-in-up">
-  <div>
-    <h4 class="welcome-title">
-      Bonjour, {{ profil?.nom_complet?.split(' ')[0] || 'Administrateur' }} 
-    </h4>
-    <p class="welcome-subtitle">
-      Voici un aperçu de votre activité médicale aujourd'hui
-    </p>
-  </div>
-  <div class="welcome-date">
-    <i class="bi bi-calendar3 me-2"></i>
-    {{ today | date:'EEEE dd MMMM yyyy' }}
-  </div>
+<!-- Loading -->
+<div class="loading-container" *ngIf="isLoading">
+  <div class="spinner-custom"></div>
+  <p>Chargement...</p>
 </div>
 
-<!-- Stats principales -->
-<div class="row g-3 mb-4 animate-fade-in-up" *ngIf="roleService.isMedecin() ||roleService.isAdmin()"  >
-  <div class="col-md-3 col-sm-6" *ngFor="let stat of stats">
-    <a [routerLink]="stat.route" class="stat-card stat-card-{{ stat.couleur }} text-decoration-none d-flex">
-      <div class="stat-icon stat-icon-{{ stat.couleur }}">
-        <i class="bi {{ stat.icon }}"></i>
+<div *ngIf="!isLoading">
+
+  <!-- ── BANNER ── -->
+  <div class="welcome-banner animate-fade-in-up">
+    <div>
+      <h4 class="welcome-title">
+        Bonjour, {{ profil?.nom_complet?.split(' ')[0] || 'Administrateur' }} 
+      </h4>
+      <p class="welcome-subtitle">
+        Voici un aperçu de votre activité médicale aujourd'hui
+      </p>
+    </div>
+    <div class="welcome-date">
+      <i class="bi bi-calendar3 me-2"></i>
+      {{ today | date:'EEEE dd MMMM yyyy' }}
+    </div>
+  </div>
+
+  <!-- ── INFIRMIER : message simplifié ── -->
+  <div *ngIf="roleService.isInfirmier()" class="infirmier-banner animate-fade-in-up">
+    <div class="infirmier-icon">
+      <i class="bi bi-heart-pulse-fill"></i>
+    </div>
+    <div>
+      <h5 class="infirmier-title">Bienvenue sur votre espace soins</h5>
+      <p class="infirmier-sub">Enregistrez et suivez les soins de vos patients assignés</p>
+    </div>
+    <a routerLink="/soins" class="btn-infirmier">
+      <i class="bi bi-heart-pulse-fill me-2"></i>Mes soins
+    </a>
+  </div>
+
+  <!-- ── STATS (Admin + Médecin) ── -->
+  <div class="stats-grid mb-4 animate-fade-in-up"
+       *ngIf="roleService.isMedecin() || roleService.isAdmin()">
+    <a *ngFor="let s of stats"
+       [routerLink]="s.route"
+       class="stat-card stat-card-{{ s.couleur }} text-decoration-none">
+      <div class="stat-icon stat-icon-{{ s.couleur }}">
+        <i class="bi {{ s.icon }}"></i>
       </div>
       <div class="stat-info">
-        <h3 class="stat-value">{{ stat.valeur }}</h3>
-        <p class="stat-label">{{ stat.label }}</p>
+        <h3 class="stat-value">{{ s.valeur }}</h3>
+        <p class="stat-label">{{ s.label }}</p>
       </div>
     </a>
   </div>
-</div>
-<div class="row g-3 mb-4 animate-fade-in-up" *ngIf="roleService.isInfirmier() ">
 
-  <h1>
-        <p style="text-align: center;">Enregistrez et suivez les soins </p> 
-        <p style="text-align: center;">de vos patients assigners ici</p>
+  <!-- ── ROW 1 : Chart bar + Activités (Admin) ── -->
+  <div class="row g-4 mb-4" *ngIf="roleService.isAdmin()">
 
-  </h1>
-
- 
-</div>
-
-<div class="row g-4" >
-
-  <!-- Activités récentes -->
-  <div class="col-lg-7" *ngIf="roleService.isAdmin()">
-    <div class="dashboard-card animate-fade-in-up">
-      <div class="dashboard-card-header">
-        <h6 class="dashboard-card-title">
-          <i class="bi bi-clock-history text-primary"></i>
-          Activités récentes
-        </h6>
-        <span class="badge" style="background:var(--primary-light);color:var(--primary);border-radius:8px;font-size:0.75rem;">
-          {{ activitesRecentes.length }} activité(s)
-        </span>
-      </div>
-      <div class="dashboard-card-body">
-        <div class="activite-item" *ngFor="let a of activitesRecentes">
-          <div class="activite-icon" [style.background]="'rgba(26,115,232,0.1)'">
-            <i class="bi {{ a.icon }}" [style.color]="'#1a73e8'"></i>
-          </div>
-          <div style="flex:1;min-width:0;">
-            <p class="activite-message">{{ a.message }}</p>
-            <span class="activite-temps">{{ a.temps }}</span>
+    <div class="col-lg-7">
+      <div class="dashboard-card animate-fade-in-up">
+        <div class="dashboard-card-header">
+          <h6 class="dashboard-card-title">
+            <i class="bi bi-bar-chart-fill text-primary me-2"></i>
+            Consultations & Examens par mois
+          </h6>
+          <div class="chart-legend">
+            <span>
+              <span class="leg-sq" style="background:#378add"></span>
+              Consultations
+            </span>
+            <span>
+              <span class="leg-sq leg-dashed" style="border-color:#10b981"></span>
+              Examens
+            </span>
           </div>
         </div>
-        <div class="empty-state-custom" *ngIf="activitesRecentes.length === 0">
-          <i class="bi bi-clock-history"></i>
-          <p>Aucune activité récente</p>
+        <div class="dashboard-card-body">
+          <div style="position:relative; height:220px;">
+            <canvas #chartConsult
+              role="img"
+              aria-label="Graphique consultations et examens par mois">
+            </canvas>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Colonne droite -->
-  <div class="col-lg-5" *ngIf="roleService.isMedecin() "  >
-
-    <!-- Raccourcis -->
-    <div class="dashboard-card mb-4 animate-fade-in-up"  >
-      <div class="dashboard-card-header">
-        <h6 class="dashboard-card-title">
-          <i class="bi bi-lightning-fill text-warning"></i>
-          Accès rapide
-        </h6>
-      </div>
-      <div class="dashboard-card-body">
-        <div class="raccourci-grid">
-          <a *ngFor="let r of raccourcis" [routerLink]="r.route" class="raccourci-card">
-            <div class="raccourci-icon" [style.background]="'rgba(26,115,232,0.1)'">
-              <i class="bi {{ r.icon }}" [style.color]="'#1a73e8'"></i>
+    <div class="col-lg-5">
+      <div class="dashboard-card animate-fade-in-up" style="height:auto;">
+        <div class="dashboard-card-header">
+          <h6 class="dashboard-card-title">
+            <i class="bi bi-clock-history text-primary me-2"></i>
+            Activités récentes
+          </h6>
+          <span class="badge-count">{{ activitesRecentes.length }}</span>
+        </div>
+        <div class="dashboard-card-body">
+          <div class="activite-item" *ngFor="let a of activitesRecentes">
+            <div class="activite-icon"
+              [style.background]="a.couleur === 'success' ? 'rgba(16,185,129,0.1)' :
+                                   a.couleur === 'danger'  ? 'rgba(239,68,68,0.1)' :
+                                   'rgba(26,115,232,0.1)'"
+              [style.color]="a.couleur === 'success' ? '#10b981' :
+                              a.couleur === 'danger'  ? '#ef4444' :
+                              '#1a73e8'">
+              <i class="bi {{ a.icon }}"></i>
             </div>
-            <span class="raccourci-label">{{ r.label }}</span>
-          </a>
+            <div style="flex:1;min-width:0;">
+              <p class="activite-message">{{ a.message }}</p>
+              <span class="activite-temps">{{ a.temps }}</span>
+            </div>
+          </div>
+          <div class="empty-state-custom" *ngIf="activitesRecentes.length === 0">
+            <i class="bi bi-clock-history"></i>
+            <p>Aucune activité récente</p>
+          </div>
         </div>
       </div>
     </div>
 
-  
-    
-
-   
-    
   </div>
+
+  <!-- ── ROW 2 : Donut + Progress + Accès rapide (Admin + Médecin) ── -->
+  <div class="row g-4" *ngIf="roleService.isAdmin() || roleService.isMedecin()">
+
+    <!-- Donut types examens (Admin seulement) -->
+    <div class="col-lg-4" *ngIf="roleService.isAdmin()">
+      <div class="dashboard-card animate-fade-in-up">
+        <div class="dashboard-card-header">
+          <h6 class="dashboard-card-title">
+            <i class="bi bi-pie-chart-fill text-warning me-2"></i>
+            Types d'examens
+          </h6>
+        </div>
+        <div class="dashboard-card-body">
+          <div style="position:relative; height:175px;">
+            <canvas #chartDonut
+              role="img"
+              aria-label="Répartition des types d'examens">
+            </canvas>
+          </div>
+          <div class="donut-legend">
+            <div class="donut-leg-row"
+              *ngFor="let k of typesExamensKeys">
+              <span class="leg-sq"
+                [style.background]="typeCouleurs[k] || '#888'"></span>
+              <span class="leg-lbl">{{ k }}</span>
+              <span class="leg-val">
+                {{ typesExamens[k] }} ({{ getPct(typesExamens[k]) }}%)
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress examens + résultats (Admin seulement) -->
+    <div class="col-lg-4" *ngIf="roleService.isAdmin()">
+      <div class="dashboard-card animate-fade-in-up">
+        <div class="dashboard-card-header">
+          <h6 class="dashboard-card-title">
+            <i class="bi bi-activity text-success me-2"></i>
+            Aperçu global
+          </h6>
+        </div>
+        <div class="dashboard-card-body">
+
+          <p class="prog-title">Examens</p>
+          <div class="prog-row">
+            <span class="prog-lbl">Total</span>
+            <div class="prog-bar-wrap">
+              <div class="prog-bar" style="background:#378add;width:100%"></div>
+            </div>
+            <span class="prog-val">{{ stats[2].valeur }}</span>
+          </div>
+          <div class="prog-row">
+            <span class="prog-lbl">En attente</span>
+            <div class="prog-bar-wrap">
+              <div class="prog-bar" style="background:#f59e0b"
+                [style.width.%]="stats[2].valeur ? (totalExamensAttente/stats[2].valeur)*100 : 0">
+              </div>
+            </div>
+            <span class="prog-val">{{ totalExamensAttente }}</span>
+          </div>
+          <div class="prog-row">
+            <span class="prog-lbl">Réalisés</span>
+            <div class="prog-bar-wrap">
+              <div class="prog-bar" style="background:#10b981"
+                [style.width.%]="stats[2].valeur ? ((stats[2].valeur-totalExamensAttente)/stats[2].valeur)*100 : 0">
+              </div>
+            </div>
+            <span class="prog-val">{{ stats[2].valeur - totalExamensAttente }}</span>
+          </div>
+
+          <div class="prog-divider"></div>
+
+          <p class="prog-title">Résultats</p>
+          <div class="prog-row">
+            <span class="prog-lbl">Normaux</span>
+            <div class="prog-bar-wrap">
+              <div class="prog-bar" style="background:#10b981"
+                [style.width.%]="stats[3].valeur ? ((stats[3].valeur-totalResultatsAnormaux)/stats[3].valeur)*100 : 0">
+              </div>
+            </div>
+            <span class="prog-val">{{ stats[3].valeur - totalResultatsAnormaux }}</span>
+          </div>
+          <div class="prog-row">
+            <span class="prog-lbl">Anormaux</span>
+            <div class="prog-bar-wrap">
+              <div class="prog-bar" style="background:#ef4444"
+                [style.width.%]="stats[3].valeur ? (totalResultatsAnormaux/stats[3].valeur)*100 : 0">
+              </div>
+            </div>
+            <span class="prog-val">{{ totalResultatsAnormaux }}</span>
+          </div>
+             <div class="prog-divider"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Accès rapide + Système (Admin + Médecin) -->
+    <div [class]="roleService.isAdmin() ? 'col-lg-4' : 'col-lg-6'">
+      <div class="dashboard-card mb-3 animate-fade-in-up">
+        <div class="dashboard-card-header">
+          <h6 class="dashboard-card-title">
+            <i class="bi bi-lightning-fill text-warning me-2"></i>
+            Accès rapide
+          </h6>
+        </div>
+        <div class="dashboard-card-body">
+          <div class="raccourci-grid">
+            <a *ngFor="let r of raccourcis"
+               [routerLink]="r.route"
+               class="raccourci-card">
+              <div class="raccourci-icon"
+                [style.background]="r.bg"
+                [style.color]="r.color">
+                <i class="bi {{ r.icon }}"></i>
+              </div>
+              <span class="raccourci-label">{{ r.label }}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      
+    </div>
+
+    <!-- Médecin : activités + chart -->
+    <div class="col-lg-6" *ngIf="roleService.isMedecin()">
+      <div class="dashboard-card animate-fade-in-up">
+        <div class="dashboard-card-header">
+          <h6 class="dashboard-card-title">
+            <i class="bi bi-bar-chart-fill text-primary me-2"></i>
+            Consultations & Examens par mois
+          </h6>
+          <div class="chart-legend">
+            <span><span class="leg-sq" style="background:#378add"></span>Consultations</span>
+            <span><span class="leg-sq leg-dashed" style="border-color:#10b981"></span>Examens</span>
+          </div>
+        </div>
+        <div class="dashboard-card-body">
+          <div style="position:relative; height:200px;">
+            <canvas #chartConsult
+              role="img"
+              aria-label="Graphique consultations et examens par mois">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
 </div>
