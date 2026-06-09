@@ -4,7 +4,7 @@ from django.conf import settings
 from rest_framework import serializers
 from .models import ProfilUtilisateur
 from django.utils.html import strip_tags  
-
+import ssl
 
 class CreerCompteSerializer(serializers.ModelSerializer):
     # Champs de l'utilisateur
@@ -187,21 +187,23 @@ class CreerCompteSerializer(serializers.ModelSerializer):
         if settings.DEBUG:
         # Envoyer l'email
             try:
+
                 send_mail(
                     subject="Création de votre compte MedTrack — Identifiants sécurisés",
                     message=text_content,
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[user.email],
-                    fail_silently=True,
+                    fail_silently=False,
                     html_message=html_content,  # Permet d'afficher l'erreur dans le terminal si l'envoi échoue
                 )
+
             except Exception as e:
                 print(f"\n[ERREUR SMTP MEDTRACK] Impossible d'envoyer l'email à {user.email}. Détails : {e}\n")        
         else:
             print(f"[Production Render] Utilisateur {user.username} créé avec succès. Envoi d'email ignoré par sécurité.")
         return user
         
-
+# xsmtpsib-840f9ca8772ea6964c693325952ef880b45d34f636b760cd05d9ed7d18844d53-sXdKGcOLDXob2pBe
 
 class ChangerMotDePasseSerializer(serializers.Serializer):
     ancien_mot_de_passe = serializers.CharField()

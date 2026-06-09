@@ -208,16 +208,11 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # EMAIL (Version Forcée avec Backend Custom)
 # ─────────────────────────────────────────
 # ─────────────────────────────────────────
-# EMAIL (Configuration Standard et Sécurisée)
-# ─────────────────────────────────────────
-# Utilisation du backend SMTP officiel de Django
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+if 'anymail' not in INSTALLED_APPS:
+    INSTALLED_APPS.append('anymail')
+EMAIL_BACKEND = "anymail.backends.brevo.EmailBack"
+ANYMAIL = {
+    "BREVO_API_KEY" : config("BREVO_API_KEY", default=""),
 
-EMAIL_HOST = '74.125.140.108'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True   # Obligatoire pour le port 587
-EMAIL_USE_SSL = False  # Doit être à False quand TLS est actif
-
-EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-DEFAULT_FROM_EMAIL = f"ANGELYS <{config('EMAIL_HOST_USER', default='')}>"
+}
+DEFAULT_FROM_EMAIL= f"ANGELYS <{config('EMAIL_HOST_USER', default='angelatemgoua2@gmail.com')}"
