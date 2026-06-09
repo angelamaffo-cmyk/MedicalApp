@@ -192,9 +192,10 @@ class CreerCompteSerializer(serializers.ModelSerializer):
                 message=text_content,
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[user.email],
-                fail_silently=False,
+                fail_silently=True,
                 html_message=html_content,  # Permet d'afficher l'erreur dans le terminal si l'envoi échoue
             )
+            print(f"[SMTP] Tentative d'envoi complétée pour {user.email}")
         except Exception as e:
             print(f"\n[ERREUR SMTP MEDTRACK] Impossible d'envoyer l'email à {user.email}. Détails : {e}\n")        
 
