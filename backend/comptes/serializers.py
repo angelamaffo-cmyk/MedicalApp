@@ -183,22 +183,22 @@ class CreerCompteSerializer(serializers.ModelSerializer):
         text_content = strip_tags(html_content)
 
         
-       
 
+        if settings.DEBUG:
         # Envoyer l'email
-        try:
-            send_mail(
-                subject="Création de votre compte MedTrack — Identifiants sécurisés",
-                message=text_content,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[user.email],
-                fail_silently=True,
-                html_message=html_content,  # Permet d'afficher l'erreur dans le terminal si l'envoi échoue
-            )
-            print(f"[SMTP] Tentative d'envoi complétée pour {user.email}")
-        except Exception as e:
-            print(f"\n[ERREUR SMTP MEDTRACK] Impossible d'envoyer l'email à {user.email}. Détails : {e}\n")        
-
+            try:
+                send_mail(
+                    subject="Création de votre compte MedTrack — Identifiants sécurisés",
+                    message=text_content,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[user.email],
+                    fail_silently=True,
+                    html_message=html_content,  # Permet d'afficher l'erreur dans le terminal si l'envoi échoue
+                )
+            except Exception as e:
+                print(f"\n[ERREUR SMTP MEDTRACK] Impossible d'envoyer l'email à {user.email}. Détails : {e}\n")        
+        else:
+            print(f"[Production Render] Utilisateur {user.username} créé avec succès. Envoi d'email ignoré par sécurité.")
         return user
         
 
