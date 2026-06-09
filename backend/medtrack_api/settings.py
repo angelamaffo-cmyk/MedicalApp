@@ -205,12 +205,17 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # ─────────────────────────────────────────
 # EMAIL (Version Forcée avec Backend Custom)
 # ─────────────────────────────────────────
-# On cible le fichier et la classe qu'on vient de créer
-EMAIL_BACKEND = 'medtrack_api.email_backend.SSLEmailBackend'
+# ─────────────────────────────────────────
+# EMAIL (Configuration Standard et Sécurisée)
+# ─────────────────────────────────────────
+# Utilisation du backend SMTP officiel de Django
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = '://gmail.com'
 EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_USE_TLS = True   # Obligatoire pour le port 587
+EMAIL_USE_SSL = False  # Doit être à False quand TLS est actif
+
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = f"ANGELYS <{config('EMAIL_HOST_USER', default='')}>"
