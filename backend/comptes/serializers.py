@@ -203,7 +203,6 @@ class CreerCompteSerializer(serializers.ModelSerializer):
             print(f"[Production Render] Utilisateur {user.username} créé avec succès. Envoi d'email ignoré par sécurité.")
         return user
         
-# xsmtpsib-840f9ca8772ea6964c693325952ef880b45d34f636b760cd05d9ed7d18844d53-sXdKGcOLDXob2pBe
 
 class ChangerMotDePasseSerializer(serializers.Serializer):
     ancien_mot_de_passe = serializers.CharField()
