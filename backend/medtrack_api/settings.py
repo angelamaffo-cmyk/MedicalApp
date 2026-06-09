@@ -210,7 +210,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # ─────────────────────────────────────────
 if 'anymail' not in INSTALLED_APPS:
     INSTALLED_APPS.append('anymail')
-EMAIL_BACKEND = "anymail.backends.brevo.EmailBack"
+EMAIL_BACKEND = "anymail.backends.brevo.EmailBackend"
 ANYMAIL = {
     "BREVO_API_KEY" : config("BREVO_API_KEY", default=""),
 
