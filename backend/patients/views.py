@@ -80,9 +80,9 @@ class AssignationMedecinViewSet(viewsets.ModelViewSet):
         patient.medecin_actuel = medecin_cible
         patient.save()
         serializer.save(medecin_source=medecin_source)
-        if settings.DEBUG:
+        
 
-            if medecin_cible.email:
+        if medecin_cible.email:
                 sujet = f"[ANGELYS] Nouveau patient assigné : {patient.nom} {patient.prenom}"
                 message = (
                 f"Bonjour Dr. {medecin_cible.last_name},\n\n"
@@ -105,9 +105,7 @@ class AssignationMedecinViewSet(viewsets.ModelViewSet):
                     )
                 except Exception as e:
                     print(f"Erreur d'envoi d'email médecin: {e}")
-            else:
-                print(f"[Production Render] Assignation Médecin réussie en base pour le patient {patient.nom}. Envoi d'email ignoré.")
-
+            
                 
 
 
@@ -134,9 +132,9 @@ class AssignationInfirmierViewSet(viewsets.ModelViewSet):
         # 1. Sauvegarder l'assignation
         serializer.save(medecin=medecin)
 
-        if settings.DEBUG:
+       
 
-            if infirmier.email:
+        if infirmier.email:
                 sujet = f"[ANGELYS] Nouvelle prise en charge : {patient.nom} {patient.prenom}"
                 message = (
                 f"Bonjour {infirmier.get_full_name()},\n\n"
@@ -160,8 +158,7 @@ class AssignationInfirmierViewSet(viewsets.ModelViewSet):
                     )
                 except Exception as e:
                     print(f"Erreur d'envoi d'email infirmier: {e}")
-            else:
-                print(f"[Production Render] Assignation Infirmier réussie en base pour le patient {patient.nom}. Envoi d'email ignoré.")
+            
 
 
 class SoinViewSet(viewsets.ModelViewSet):
