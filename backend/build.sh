@@ -29,7 +29,7 @@ username_prod = 'angelatemgoua2'
 if not User.objects.filter(username=username_prod).exists():
     # On crée le compte avec le statut superuser pour que vous gardiez les droits d'accès partout
     user = User.objects.create_superuser(username=username_prod, email=email_prod)
-    user.set_password('MedTrack')
+    user.set_password('MedTrack2026')
     user.save()
     print('Compte de production cree avec succes selon vos regles !')
 else:

@@ -211,7 +211,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Utilisation du backend SMTP officiel de Django
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_HOST = '://gmail.com'
+EMAIL_HOST = '74.125.140.108'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True   # Obligatoire pour le port 587
 EMAIL_USE_SSL = False  # Doit être à False quand TLS est actif
