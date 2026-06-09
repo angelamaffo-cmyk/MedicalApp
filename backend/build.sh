@@ -41,5 +41,4 @@ else:
 "
 
 
-python manage.py loaddata donnees_locales.json
 
