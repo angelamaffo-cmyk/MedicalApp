@@ -197,7 +197,7 @@ if FRONTEND_URL not in CORS_ALLOWED_ORIGINS:
  
  # Autorise TOUTES les URLs qui commencent par medical- et se finissent par .vercel.app
 CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^https:\/\/medical-.*\.vercel\.app$",
+    r"^https:\/\/.*\.vercel\.app$",
 ]
  
 CORS_ALLOW_CREDENTIALS = True
