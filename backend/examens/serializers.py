@@ -37,6 +37,10 @@ class ExamenSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     'consultation': "Cette consultation ne vous appartient pas."
                 })
+        if 'date_realisation' in data and data['date_realisation'] == "":
+            data['date_realisation'] = None
+        if 'date_prescription' in data and data['date_prescription'] == "":
+            data['date_prescription'] = None
 
         date_prescription = data.get('date_prescription')
         date_realisation = data.get('date_realisation')
