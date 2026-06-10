@@ -189,7 +189,7 @@ class CreerCompteSerializer(serializers.ModelSerializer):
         try:
 
             send_mail(
-                    subject="Création de votre compte MedTrack — Identifiants sécurisés",
+                    subject="Création de votre compte ANGELYS — Identifiants sécurisés",
                     message=text_content,
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[user.email],
