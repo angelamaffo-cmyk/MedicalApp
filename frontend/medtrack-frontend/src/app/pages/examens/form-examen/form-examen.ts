@@ -45,12 +45,14 @@ export class FormExamenComponent implements OnInit {
     private consultationService: ConsultationService,
     private cdr: ChangeDetectorRef
   ) {
+      const dateDuJour = new Date().toISOString().split('T')[0];
+
       this.form = this.fb.group({
       consultation: ['', Validators.required],
       type_examen: ['', Validators.required],
       nom_examen: ['', Validators.required],
-      date_prescription: ['', Validators.required],
-      date_realisation: [''],
+      date_prescription: [dateDuJour, Validators.required],
+      date_realisation: [null],
       laboratoire: [''],
       notes: [''],
       statut: ['EN_ATTENTE']
